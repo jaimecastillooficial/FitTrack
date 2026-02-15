@@ -34,6 +34,6 @@ data class WorkoutExerciseEntity(
     val workoutId: Long,
 
     val exerciseId: Long,
-
+    // Para llevar un orden
     val orderIndex: Int
 )

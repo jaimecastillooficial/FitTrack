@@ -14,17 +14,11 @@ import com.TFG_JCF.fittrack.data.database.entities.User_Bonus.UserProfileEntity
             parentColumns = ["uid"],
             childColumns = ["userUid"],
             onDelete = ForeignKey.CASCADE
-        ),
-        ForeignKey(
-            entity = RoutineDayPlanEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["basedOnDayPlanId"],
-            onDelete = ForeignKey.SET_NULL
         )
     ],
+    //Optimiza las consultas que haga ROOM como "SELECT * FROM workouts WHERE userUid = ?" y "SELECT * FROM workouts WHERE userUid = ? AND date = ?"
     indices = [
-        Index(value = ["userUid"]),
-        Index(value = ["basedOnDayPlanId"])
+        Index(value = ["userUid", "date"], unique = true)
     ]
 )
 data class WorkoutEntity(
@@ -34,12 +28,8 @@ data class WorkoutEntity(
 
     val userUid: String,
 
-    val dateTimeStart: Long,
+    val date: String,
 
-    val dateTimeEnd: Long? = null,
+    val dayName: String,
 
-    val dayName: String? = null,
-
-    // nullable: puede ser un entreno creado sin plantilla
-    val basedOnDayPlanId: Long? = null
 )

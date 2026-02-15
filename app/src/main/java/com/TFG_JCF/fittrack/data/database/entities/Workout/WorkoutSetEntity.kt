@@ -25,7 +25,7 @@ data class WorkoutSetEntity(
     val id: Long = 0,
 
     val workoutExerciseId: Long,
-
+    // Para ordenar las series
     val setNumber: Int,
 
     val reps: Int? = null,

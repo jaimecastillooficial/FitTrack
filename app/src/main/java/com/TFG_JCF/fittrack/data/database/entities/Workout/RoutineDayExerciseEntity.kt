@@ -34,11 +34,7 @@ data class RoutineDayExerciseEntity(
     val dayPlanId: Long,
 
     val exerciseId: Long,
-
+    //Para llevar un orden y tener ordenados los ejercicios
     val orderIndex: Int,
 
-    // opcionales (el usuario puede no planificar esto)
-    val setsPlanned: Int? = null,
-    val repsPlanned: Int? = null,
-    val rirPlanned: Int? = null
 )

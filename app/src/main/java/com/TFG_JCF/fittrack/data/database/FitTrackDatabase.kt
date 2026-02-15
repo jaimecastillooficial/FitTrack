@@ -47,7 +47,8 @@ import com.TFG_JCF.fittrack.data.database.entities.Workout.WorkoutSetEntity
         WorkoutExerciseEntity::class,
         WorkoutSetEntity::class
     ],
-    version = 1,
+    // Cambiar cada vez que se cambie la base de datos
+    version = 2,
     exportSchema = false
 )
 abstract class FitTrackDatabase : RoomDatabase() {

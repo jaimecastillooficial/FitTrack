@@ -31,5 +31,5 @@ data class RoutineWeekEntity(
 
     val isActive: Boolean = false,
 
-    val createdAt: Long
+
 )

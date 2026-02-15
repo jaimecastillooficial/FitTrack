@@ -20,8 +20,6 @@ data class ExerciseEntity(
 
     val muscleGroup: String? = null,
 
-    val equipment: String? = null,
-
     // predefinidos: true, creados por usuario: false
     val isPublic: Boolean,
 
