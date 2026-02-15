@@ -10,7 +10,7 @@ import com.TFG_JCF.fittrack.data.database.entities.User_Bonus.UserProfileEntity
 interface UserProfileDao {
 
     @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
-    suspend fun upsert(profile: UserProfileEntity)
+    suspend fun insert(profile: UserProfileEntity)
 
     @Query("SELECT * FROM user_profile WHERE uid = :uid LIMIT 1")
     suspend fun getByUid(uid: String): UserProfileEntity?

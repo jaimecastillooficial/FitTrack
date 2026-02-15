@@ -11,7 +11,7 @@ interface WeightEntryDao {
 
     // Si ya existe un peso para ese día (índice único), REPLACE lo sustituye
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsert(entry: WeightEntryEntity)
+    suspend fun insert(entry: WeightEntryEntity)
 
     @Query("""
         SELECT * FROM weight_entries

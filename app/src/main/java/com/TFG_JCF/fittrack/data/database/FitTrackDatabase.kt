@@ -8,6 +8,13 @@ import com.TFG_JCF.fittrack.data.database.dao.Diet.MealDao
 import com.TFG_JCF.fittrack.data.database.dao.Diet.MealItemDao
 import com.TFG_JCF.fittrack.data.database.dao.User_Bonus.UserProfileDao
 import com.TFG_JCF.fittrack.data.database.dao.User_Bonus.WeightEntryDao
+import com.TFG_JCF.fittrack.data.database.dao.Workout.ExerciseDao
+import com.TFG_JCF.fittrack.data.database.dao.Workout.RoutineDayExerciseDao
+import com.TFG_JCF.fittrack.data.database.dao.Workout.RoutineDayPlanDao
+import com.TFG_JCF.fittrack.data.database.dao.Workout.RoutineWeekDao
+import com.TFG_JCF.fittrack.data.database.dao.Workout.WorkoutDao
+import com.TFG_JCF.fittrack.data.database.dao.Workout.WorkoutExerciseDao
+import com.TFG_JCF.fittrack.data.database.dao.Workout.WorkoutSetDao
 
 //Diet
 import com.TFG_JCF.fittrack.data.database.entities.Diet.FoodEntity
@@ -57,8 +64,16 @@ abstract class FitTrackDatabase : RoomDatabase() {
     abstract fun getFoodDao(): FoodDao
     abstract fun getMealDao(): MealDao
     abstract fun getMealItemDao(): MealItemDao
-    abstract fun userProfileDao(): UserProfileDao
-    abstract fun weightEntryDao(): WeightEntryDao
+    abstract fun getUserProfileDao(): UserProfileDao
+    abstract fun getWeightEntryDao(): WeightEntryDao
+    abstract fun getExerciseDao(): ExerciseDao
+    abstract fun getRoutineWeekDao(): RoutineWeekDao
+    abstract fun getRoutineDayPlanDao(): RoutineDayPlanDao
+    abstract fun getRoutineDayExerciseDao(): RoutineDayExerciseDao
+    abstract fun getWorkoutDao(): WorkoutDao
+    abstract fun getWorkoutExerciseDao(): WorkoutExerciseDao
+    abstract fun getWorkoutSetDao(): WorkoutSetDao
+
 
 
 

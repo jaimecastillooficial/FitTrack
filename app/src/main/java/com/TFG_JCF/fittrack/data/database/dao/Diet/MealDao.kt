@@ -1,6 +1,7 @@
 package com.TFG_JCF.fittrack.data.database.dao.Diet
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -14,6 +15,15 @@ interface MealDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(meal: MealEntity): Long
 
+    @Delete
+    suspend fun delete(meal: MealEntity)
+
+    @Query("""
+        SELECT * FROM meals
+        WHERE id = :id
+        
+    """)
+    suspend fun getMealById(id: Long): MealEntity?
     @Query("""
         SELECT * FROM meals
         WHERE userUid = :userUid AND date = :date
@@ -31,7 +41,7 @@ interface MealDao {
     @Query("""
         SELECT * FROM meals
         WHERE userUid = :userUid AND date = :date AND type = :type
-        LIMIT 1
+        
     """)
     suspend fun getMeal(userUid: String, date: String, type: String): MealEntity?
 
