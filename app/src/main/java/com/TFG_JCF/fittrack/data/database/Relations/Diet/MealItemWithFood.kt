@@ -1,4 +1,4 @@
-package com.TFG_JCF.fittrack.data.database.Relations
+package com.TFG_JCF.fittrack.data.database.Relations.Diet
 
 
 import androidx.room.Embedded

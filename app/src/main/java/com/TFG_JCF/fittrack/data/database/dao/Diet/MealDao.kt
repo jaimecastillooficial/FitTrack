@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import com.TFG_JCF.fittrack.data.database.Relations.MealWithItemsAndFoods
+import com.TFG_JCF.fittrack.data.database.Relations.Diet.MealWithItemsAndFoods
 import com.TFG_JCF.fittrack.data.database.entities.Diet.MealEntity
 
 @Dao
