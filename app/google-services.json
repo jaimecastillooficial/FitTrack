@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "290200221432",
+    "project_id": "fittrack-tfg",
+    "storage_bucket": "fittrack-tfg.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:290200221432:android:a0c55c8e9c1b3b5c762d0d",
+        "android_client_info": {
+          "package_name": "com.TFG_JCF.fittrack"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQGutynPhrycunV7wyVLnC4EJQleGadwQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

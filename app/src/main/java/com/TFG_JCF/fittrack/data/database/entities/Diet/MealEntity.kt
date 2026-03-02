@@ -30,7 +30,7 @@ data class MealEntity(
 
     val date: String,  // YYYY-MM-DD
 
-    val type: String,  // DESAYUNO / COMIDA / CENA / SNACK
+    val type: MealType,  // DESAYUNO / COMIDA / CENA / SNACK
 
     val name: String? = null
 )

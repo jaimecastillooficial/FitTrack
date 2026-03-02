@@ -9,11 +9,15 @@ data class UserProfileEntity(
     @PrimaryKey
     val uid: String,   // UID de Firebase
 
-    val name: String?,
+    val name: String,
+
+    val gender: String,
+
+    val age: Int,
 
     val heightCm: Int,
 
-    val goalType: String,   // Volumen / Deficion / Mantenimiento
+    val goalType: String,   // 1 = Volumen / 2 = Deficion / 3 = Mantenimiento
 
     val activityLevel: String,  // BAJO / MEDIO / ALTO
 

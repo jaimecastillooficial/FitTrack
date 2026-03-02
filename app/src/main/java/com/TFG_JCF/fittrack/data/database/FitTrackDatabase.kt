@@ -3,6 +3,7 @@ package com.TFG_JCF.fittrack.data.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.TFG_JCF.fittrack.data.database.dao.Diet.FoodDao
 import com.TFG_JCF.fittrack.data.database.dao.Diet.MealDao
 import com.TFG_JCF.fittrack.data.database.dao.Diet.MealItemDao
@@ -55,9 +56,10 @@ import com.TFG_JCF.fittrack.data.database.entities.Workout.WorkoutSetEntity
         WorkoutSetEntity::class
     ],
     // Cambiar cada vez que se cambie la base de datos
-    version = 2,
+    version = 3,
     exportSchema = false
 )
+@TypeConverters(Converters::class)
 abstract class FitTrackDatabase : RoomDatabase() {
 
     //TODO Poner los Dao

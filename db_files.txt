@@ -1,0 +1,863 @@
+﻿package com.TFG_JCF.fittrack.data.database.dao.Diet
+
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
+import com.TFG_JCF.fittrack.data.database.entities.Diet.FoodEntity
+
+@Dao
+interface FoodDao {
+
+    @Insert
+    suspend fun insert(food: FoodEntity)
+
+    @Query("SELECT * FROM foods")
+    suspend fun getAll(): List<FoodEntity>
+
+    @Query("SELECT * FROM foods WHERE name = :name LIMIT 1")
+    suspend fun getByName(name: String): FoodEntity?
+
+    @Query("SELECT * FROM foods WHERE id = :id")
+    suspend fun getById(id: Long): FoodEntity?
+
+}
+package com.TFG_JCF.fittrack.data.database.dao.Diet
+
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Transaction
+import com.TFG_JCF.fittrack.data.database.Relations.Diet.MealWithItemsAndFoods
+import com.TFG_JCF.fittrack.data.database.entities.Diet.MealEntity
+
+@Dao
+interface MealDao {
+
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    suspend fun insert(meal: MealEntity): Long
+
+    @Delete
+    suspend fun delete(meal: MealEntity)
+
+    @Query("""
+        SELECT * FROM meals
+        WHERE id = :id
+        
+    """)
+    suspend fun getMealById(id: Long): MealEntity?
+    @Query("""
+        SELECT * FROM meals
+        WHERE userUid = :userUid AND date = :date
+        ORDER BY 
+            CASE type
+                WHEN 'DESAYUNO' THEN 1
+                WHEN 'COMIDA' THEN 2
+                WHEN 'CENA' THEN 3
+                WHEN 'SNACK' THEN 4
+                ELSE 5
+            END
+    """)
+    suspend fun getMealsByDate(userUid: String, date: String): List<MealEntity>
+
+    @Query("""
+        SELECT * FROM meals
+        WHERE userUid = :userUid AND date = :date AND type = :type
+        
+    """)
+    suspend fun getMeal(userUid: String, date: String, type: String): MealEntity?
+
+    @Transaction
+    @Query("""
+    SELECT * FROM meals
+    WHERE userUid = :userUid AND date = :date
+    ORDER BY 
+        CASE type
+            WHEN 'DESAYUNO' THEN 1
+            WHEN 'COMIDA' THEN 2
+            WHEN 'CENA' THEN 3
+            WHEN 'SNACK' THEN 4
+            ELSE 5
+        END
+""")
+    suspend fun getMealsWithItemsAndFoodsByDate(
+        userUid: String,
+        date: String
+    ): List<MealWithItemsAndFoods>
+
+    @Transaction
+    @Query("""
+    SELECT * FROM meals
+    WHERE userUid = :userUid AND date = :date AND type = :type
+    LIMIT 1
+""")
+    suspend fun getMealWithItemsAndFoods(
+        userUid: String,
+        date: String,
+        type: String
+    ): MealWithItemsAndFoods?
+
+
+    @Query("DELETE FROM meals WHERE id = :mealId")
+    suspend fun deleteById(mealId: Long)
+
+
+}
+package com.TFG_JCF.fittrack.data.database.dao.Diet
+
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
+import com.TFG_JCF.fittrack.data.database.entities.Diet.MealItemEntity
+
+@Dao
+interface MealItemDao {
+
+    @Insert
+    suspend fun insert(item: MealItemEntity): Long
+
+    @Query("SELECT * FROM meal_items WHERE mealId = :mealId")
+    suspend fun getItemsByMeal(mealId: Long): List<MealItemEntity>
+
+    @Query("DELETE FROM meal_items WHERE id = :itemId")
+    suspend fun deleteById(itemId: Long)
+
+    @Query("DELETE FROM meal_items WHERE mealId = :mealId")
+    suspend fun deleteAllForMeal(mealId: Long)
+}
+package com.TFG_JCF.fittrack.data.database.dao.User_Bonus
+
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import com.TFG_JCF.fittrack.data.database.entities.User_Bonus.UserProfileEntity
+
+@Dao
+interface UserProfileDao {
+
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
+    suspend fun insert(profile: UserProfileEntity)
+
+    @Query("SELECT * FROM user_profile WHERE uid = :uid LIMIT 1")
+    suspend fun getByUid(uid: String): UserProfileEntity?
+
+}
+package com.TFG_JCF.fittrack.data.database.dao.User_Bonus
+
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import com.TFG_JCF.fittrack.data.database.entities.User_Bonus.WeightEntryEntity
+
+@Dao
+interface WeightEntryDao {
+
+    // Si ya existe un peso para ese dÃ­a (Ã­ndice Ãºnico), REPLACE lo sustituye
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(entry: WeightEntryEntity)
+
+    @Query("""
+        SELECT * FROM weight_entries
+        WHERE userUid = :userUid
+        ORDER BY date ASC
+    """)
+    suspend fun getAllByUser(userUid: String): List<WeightEntryEntity>
+
+    @Query("""
+        SELECT * FROM weight_entries
+        WHERE userUid = :userUid AND date = :date
+        LIMIT 1
+    """)
+    suspend fun getByDate(userUid: String, date: String): WeightEntryEntity?
+}
+package com.TFG_JCF.fittrack.data.database.dao.Workout
+
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
+import com.TFG_JCF.fittrack.data.database.entities.Workout.ExerciseEntity
+
+@Dao
+interface ExerciseDao {
+
+    @Insert
+    suspend fun insert(exercise: ExerciseEntity): Long
+
+    @Query("SELECT * FROM exercises WHERE id = :id LIMIT 1")
+    suspend fun getById(id: Long): ExerciseEntity?
+
+    @Query("SELECT * FROM exercises WHERE name = :name LIMIT 1")
+    suspend fun getByName(name: String): ExerciseEntity?
+
+    // Predefinidos (isPublic = 1) + privados del usuario (createdByUid = userUid)
+    @Query("""
+        SELECT * FROM exercises
+        WHERE isPublic = 1 OR createdByUid = :userUid
+        ORDER BY name ASC
+    """)
+    suspend fun getVisibleForUser(userUid: String): List<ExerciseEntity>
+
+    @Query("DELETE FROM exercises WHERE id = :id")
+    suspend fun deleteById(id: Long)
+}
+package com.TFG_JCF.fittrack.data.database.dao.Workout
+
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
+import com.TFG_JCF.fittrack.data.database.entities.Workout.ExerciseEntity
+import com.TFG_JCF.fittrack.data.database.entities.Workout.RoutineDayExerciseEntity
+
+@Dao
+interface RoutineDayExerciseDao {
+
+    @Insert
+    suspend fun insert(entity: RoutineDayExerciseEntity): Long
+
+    @Update
+    suspend fun update(entity: RoutineDayExerciseEntity)
+
+    @Delete
+    suspend fun delete(entity: RoutineDayExerciseEntity)
+
+    @Query("""
+        SELECT * FROM routine_day_exercises
+        WHERE dayPlanId = :dayPlanId
+        ORDER BY orderIndex ASC
+    """)
+    suspend fun getByDayPlan(dayPlanId: Long): List<RoutineDayExerciseEntity>
+
+    @Query("DELETE FROM routine_day_exercises WHERE dayPlanId = :dayPlanId")
+    suspend fun deleteAllForDayPlan(dayPlanId: Long)
+}
+package com.TFG_JCF.fittrack.data.database.dao.Workout
+
+
+
+import androidx.room.*
+import com.TFG_JCF.fittrack.data.database.entities.Workout.RoutineDayPlanEntity
+
+@Dao
+interface RoutineDayPlanDao {
+
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    suspend fun insert(entity: RoutineDayPlanEntity): Long
+
+    @Update
+    suspend fun update(entity: RoutineDayPlanEntity)
+
+    @Delete
+    suspend fun delete(entity: RoutineDayPlanEntity)
+
+    @Query("""
+        SELECT * FROM routine_day_plans
+        WHERE routineWeekId = :routineWeekId
+        ORDER BY dayOfWeek ASC
+    """)
+    suspend fun getByRoutineWeek(routineWeekId: Long): List<RoutineDayPlanEntity>
+
+    @Query("""
+        SELECT * FROM routine_day_plans
+        WHERE routineWeekId = :routineWeekId AND dayOfWeek = :dayOfWeek
+        LIMIT 1
+    """)
+    suspend fun getByRoutineWeekAndDay(routineWeekId: Long, dayOfWeek: Int): RoutineDayPlanEntity?
+}
+package com.TFG_JCF.fittrack.data.database.dao.Workout
+
+
+import androidx.room.*
+import com.TFG_JCF.fittrack.data.database.entities.Workout.RoutineWeekEntity
+
+@Dao
+interface RoutineWeekDao {
+
+    @Insert
+    suspend fun insert(entity: RoutineWeekEntity): Long
+
+    @Update
+    suspend fun update(entity: RoutineWeekEntity)
+
+    @Delete
+    suspend fun delete(entity: RoutineWeekEntity)
+
+    @Query("SELECT * FROM routine_weeks WHERE id = :id LIMIT 1")
+    suspend fun getById(id: Long): RoutineWeekEntity?
+
+    @Query("""
+        SELECT * FROM routine_weeks
+        WHERE userUid = :userUid
+        ORDER BY id DESC
+    """)
+    suspend fun getAllByUser(userUid: String): List<RoutineWeekEntity>
+
+    @Query("""
+        SELECT * FROM routine_weeks
+        WHERE userUid = :userUid AND isActive = 1
+        LIMIT 1
+    """)
+    suspend fun getActiveByUser(userUid: String): RoutineWeekEntity?
+
+    @Query("""
+        UPDATE routine_weeks
+        SET isActive = 0
+        WHERE userUid = :userUid
+    """)
+    suspend fun deactivateAll(userUid: String)
+
+    @Transaction
+    suspend fun setActive(userUid: String, routineWeekId: Long) {
+        deactivateAll(userUid)
+        val routine = getById(routineWeekId) ?: return
+        update(routine.copy(isActive = true))
+    }
+}
+package com.TFG_JCF.fittrack.data.database.dao.Workout
+
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Transaction
+import androidx.room.Update
+import com.TFG_JCF.fittrack.data.database.Relations.Workout.WorkoutFull
+import com.TFG_JCF.fittrack.data.database.entities.Workout.WorkoutEntity
+
+@Dao
+interface WorkoutDao {
+
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    suspend fun insert(workout: WorkoutEntity): Long
+
+    @Update
+    suspend fun update(workout: WorkoutEntity)
+
+    @Delete
+    suspend fun delete(workout: WorkoutEntity)
+
+    @Query("DELETE FROM workouts WHERE id = :workoutId")
+    suspend fun deleteById(workoutId: Long)
+
+    @Query("""
+        SELECT * FROM workouts
+        WHERE userUid = :userUid AND date = :date
+        LIMIT 1
+    """)
+    suspend fun getByDate(userUid: String, date: String): WorkoutEntity?
+
+    @Query("""
+        SELECT * FROM workouts
+        WHERE userUid = :userUid
+        ORDER BY date DESC
+    """)
+    suspend fun getAllByUser(userUid: String): List<WorkoutEntity>
+
+    @Transaction
+    @Query("""
+    SELECT * FROM workouts
+    WHERE userUid = :userUid AND date = :date
+""")
+    suspend fun getWorkoutFullByDate(userUid: String, date: String): WorkoutFull?
+
+    @Transaction
+    @Query("""
+    SELECT * FROM workouts
+    WHERE userUid = :userUid AND date BETWEEN :fromDate AND :toDate
+    ORDER BY date ASC
+""")
+    // El tipo de retorno es decir cuando le indicas que va a devolver es lo que hace que ROOM utilize la clase Relation
+    suspend fun getWorkoutsFullByRange(userUid: String, fromDate: String, toDate: String): List<WorkoutFull>
+
+}
+
+package com.TFG_JCF.fittrack.data.database.dao.Workout
+
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Update
+import com.TFG_JCF.fittrack.data.database.entities.Workout.WorkoutExerciseEntity
+
+@Dao
+interface WorkoutExerciseDao {
+
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    suspend fun insert(entity: WorkoutExerciseEntity): Long
+
+    @Update
+    suspend fun update(entity: WorkoutExerciseEntity)
+
+    @Delete
+    suspend fun delete(entity: WorkoutExerciseEntity)
+
+    @Query("DELETE FROM workout_exercises WHERE id = :id")
+    suspend fun deleteById(id: Long)
+
+    @Query("""
+        SELECT * FROM workout_exercises
+        WHERE workoutId = :workoutId
+        ORDER BY orderIndex ASC
+    """)
+    suspend fun getByWorkout(workoutId: Long): List<WorkoutExerciseEntity>
+
+    @Query("""
+        SELECT * FROM workout_exercises
+        WHERE workoutId = :workoutId AND exerciseId = :exerciseId
+        LIMIT 1
+    """)
+    suspend fun getByWorkoutAndExercise(workoutId: Long, exerciseId: Long): WorkoutExerciseEntity?
+}
+
+package com.TFG_JCF.fittrack.data.database.dao.Workout
+
+
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
+import com.TFG_JCF.fittrack.data.database.entities.Workout.WorkoutSetEntity
+
+@Dao
+interface WorkoutSetDao {
+
+    @Insert
+    suspend fun insert(set: WorkoutSetEntity): Long
+
+    @Update
+    suspend fun update(set: WorkoutSetEntity)
+
+    @Delete
+    suspend fun delete(set: WorkoutSetEntity)
+
+    @Query("DELETE FROM workout_sets WHERE workoutExerciseId = :workoutExerciseId")
+    suspend fun deleteAllForExercise(workoutExerciseId: Long)
+
+    @Query("""
+        SELECT * FROM workout_sets
+        WHERE workoutExerciseId = :workoutExerciseId
+        ORDER BY setNumber ASC
+    """)
+    suspend fun getByWorkoutExercise(workoutExerciseId: Long): List<WorkoutSetEntity>
+}
+
+package com.TFG_JCF.fittrack.data.database.entities.Diet
+
+import androidx.room.Entity
+import androidx.room.Index
+import androidx.room.PrimaryKey
+
+@Entity(
+    tableName = "foods",
+    indices = [
+        Index(value = ["name"])
+    ]
+)
+data class FoodEntity(
+
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
+
+    val name: String,
+
+    val kcalPer100g: Int,
+
+    val proteinPer100g: Float,
+
+    val carbsPer100g: Float,
+
+    val fatPer100g: Float,
+
+    val isPublic: Boolean,
+
+    val createdByUid: String?   // null = alimento predefinido
+)
+package com.TFG_JCF.fittrack.data.database.entities.Diet
+
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
+import com.TFG_JCF.fittrack.data.database.entities.User_Bonus.UserProfileEntity
+
+@Entity(
+    tableName = "meals",
+    foreignKeys = [
+        ForeignKey(
+            entity = UserProfileEntity::class,
+            parentColumns = ["uid"],
+            childColumns = ["userUid"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
+    indices = [
+        Index(value = ["userUid"]),
+        Index(value = ["userUid", "date", "type"], unique = true)
+    ]
+)
+data class MealEntity(
+
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
+
+    val userUid: String,
+
+    val date: String,  // YYYY-MM-DD
+
+    val type: String,  // DESAYUNO / COMIDA / CENA / SNACK
+
+    val name: String? = null
+)
+package com.TFG_JCF.fittrack.data.database.entities.Diet
+
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
+
+@Entity(
+    tableName = "meal_items",
+    foreignKeys = [
+        ForeignKey(
+            entity = MealEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["mealId"],
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = FoodEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["foodId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
+    indices = [
+        Index(value = ["mealId"]),
+        Index(value = ["foodId"])
+    ]
+)
+data class MealItemEntity(
+
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
+
+    val mealId: Long,
+
+    val foodId: Long,
+
+    val grams: Float
+)
+package com.TFG_JCF.fittrack.data.database.entities.User_Bonus
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "user_profile")
+data class UserProfileEntity(
+
+    @PrimaryKey
+    val uid: String,   // UID de Firebase
+
+    val name: String?,
+
+    val heightCm: Int,
+
+    val goalType: String,   // Volumen / Deficion / Mantenimiento
+
+    val activityLevel: String,  // BAJO / MEDIO / ALTO
+
+    val createdAt: Long
+)
+package com.TFG_JCF.fittrack.data.database.entities.User_Bonus
+
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
+
+@Entity(
+    tableName = "weight_entries",
+    foreignKeys = [
+        ForeignKey(
+            entity = UserProfileEntity::class,
+            parentColumns = ["uid"],
+            childColumns = ["userUid"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
+    indices = [
+        Index(value = ["userUid"]),
+        Index(value = ["userUid", "date"], unique = true)
+    ]
+)
+data class WeightEntryEntity(
+
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
+
+    val userUid: String,
+
+    val date: String,
+
+    val weightKg: Float
+)
+package com.TFG_JCF.fittrack.data.database.entities.Workout
+
+import androidx.room.Entity
+import androidx.room.Index
+import androidx.room.PrimaryKey
+
+@Entity(
+    tableName = "exercises",
+    indices = [
+        Index(value = ["name"]),
+        Index(value = ["createdByUid"])
+    ]
+)
+data class ExerciseEntity(
+
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
+
+    val name: String,
+
+    val muscleGroup: String? = null,
+
+    // predefinidos: true, creados por usuario: false
+    val isPublic: Boolean,
+
+    // null = ejercicio predefinido
+    val createdByUid: String? = null
+)
+package com.TFG_JCF.fittrack.data.database.entities.Workout
+
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
+
+@Entity(
+    tableName = "routine_day_exercises",
+    foreignKeys = [
+        ForeignKey(
+            entity = RoutineDayPlanEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["dayPlanId"],
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = ExerciseEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["exerciseId"],
+            onDelete = ForeignKey.RESTRICT
+        )
+    ],
+    indices = [
+        Index(value = ["dayPlanId"]),
+        Index(value = ["exerciseId"])
+    ]
+)
+data class RoutineDayExerciseEntity(
+
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
+
+    val dayPlanId: Long,
+
+    val exerciseId: Long,
+    //Para llevar un orden y tener ordenados los ejercicios
+    val orderIndex: Int,
+
+)
+package com.TFG_JCF.fittrack.data.database.entities.Workout
+
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
+
+@Entity(
+    tableName = "routine_day_plans",
+    foreignKeys = [
+        ForeignKey(
+            entity = RoutineWeekEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["routineWeekId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
+    indices = [
+        Index(value = ["routineWeekId"]),
+        Index(value = ["routineWeekId", "dayOfWeek"], unique = true)
+    ]
+)
+data class RoutineDayPlanEntity(
+
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
+
+    val routineWeekId: Long,
+
+    // 1..7 (Lunes..Domingo o lo que decidas)
+    val dayOfWeek: Int,
+
+    // "PUSH", "PULL", "LEGS", etc.
+    val dayName: String,
+
+    val orderIndex: Int? = null
+)
+package com.TFG_JCF.fittrack.data.database.entities.Workout
+
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
+import com.TFG_JCF.fittrack.data.database.entities.User_Bonus.UserProfileEntity
+
+@Entity(
+    tableName = "routine_weeks",
+    foreignKeys = [
+        ForeignKey(
+            entity = UserProfileEntity::class,
+            parentColumns = ["uid"],
+            childColumns = ["userUid"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
+    indices = [
+        Index(value = ["userUid"])
+    ]
+)
+data class RoutineWeekEntity(
+
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
+
+    val userUid: String,
+
+    val name: String,
+
+    val isActive: Boolean = false,
+
+
+)
+package com.TFG_JCF.fittrack.data.database.entities.Workout
+
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
+import com.TFG_JCF.fittrack.data.database.entities.User_Bonus.UserProfileEntity
+
+@Entity(
+    tableName = "workouts",
+    foreignKeys = [
+        ForeignKey(
+            entity = UserProfileEntity::class,
+            parentColumns = ["uid"],
+            childColumns = ["userUid"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
+    //Optimiza las consultas que haga ROOM como "SELECT * FROM workouts WHERE userUid = ?" y "SELECT * FROM workouts WHERE userUid = ? AND date = ?"
+    indices = [
+        Index(value = ["userUid", "date"], unique = true)
+    ]
+)
+data class WorkoutEntity(
+
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
+
+    val userUid: String,
+
+    val date: String,
+
+    val dayName: String,
+
+)
+package com.TFG_JCF.fittrack.data.database.entities.Workout
+
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
+
+@Entity(
+    tableName = "workout_exercises",
+    foreignKeys = [
+        ForeignKey(
+            entity = WorkoutEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["workoutId"],
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = ExerciseEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["exerciseId"],
+            onDelete = ForeignKey.RESTRICT
+        )
+    ],
+    indices = [
+        Index(value = ["workoutId"]),
+        Index(value = ["exerciseId"])
+    ]
+)
+data class WorkoutExerciseEntity(
+
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
+
+    val workoutId: Long,
+
+    val exerciseId: Long,
+    // Para llevar un orden
+    val orderIndex: Int
+)
+package com.TFG_JCF.fittrack.data.database.entities.Workout
+
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
+
+@Entity(
+    tableName = "workout_sets",
+    foreignKeys = [
+        ForeignKey(
+            entity = WorkoutExerciseEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["workoutExerciseId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
+    indices = [
+        Index(value = ["workoutExerciseId"])
+    ]
+)
+data class WorkoutSetEntity(
+
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
+
+    val workoutExerciseId: Long,
+    // Para ordenar las series
+    val setNumber: Int,
+
+    val reps: Int? = null,
+
+    val weightKg: Float? = null,
+
+    val rir: Int? = null,
+
+    val isWarmup: Boolean? = null
+)

@@ -7,6 +7,7 @@ import com.TFG_JCF.fittrack.data.database.dao.Diet.MealItemDao
 import com.TFG_JCF.fittrack.data.database.entities.Diet.FoodEntity
 import com.TFG_JCF.fittrack.data.database.entities.Diet.MealEntity
 import com.TFG_JCF.fittrack.data.database.entities.Diet.MealItemEntity
+import com.TFG_JCF.fittrack.data.database.entities.Diet.MealType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -48,7 +49,7 @@ class DietRepository @Inject constructor(
     suspend fun addFoodToMeal(
         userUid: String,
         date: String,      // YYYY-MM-DD
-        type: String,      // DESAYUNO / COMIDA / CENA / SNACK
+        type: MealType,      // DESAYUNO / COMIDA / CENA / SNACK
         foodId: Long,
         grams: Float,
         mealName: String? = null
@@ -85,7 +86,7 @@ class DietRepository @Inject constructor(
     suspend fun getOrCreateMeal(
         userUid: String,
         date: String,
-        type: String,
+        type: MealType,
         mealName: String? = null
     ): MealEntity = withContext(Dispatchers.IO) {
 

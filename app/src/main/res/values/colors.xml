@@ -2,4 +2,46 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="fittrack">#1f6ab4</color>
+
+    <!-- FITTRACK BRAND  -->
+
+    <color name="ft_primary">#2F80ED</color>
+    <color name="ft_primary_dark">#1C5BBF</color>
+    <color name="ft_primary_light">#5FA3FF</color>
+
+    <!--  BACKGROUNDS  -->
+
+    <color name="ft_background">#F6F9FC</color>
+    <color name="ft_surface">#FFFFFF</color>
+    <color name="ft_surface_alt">#F1F5FA</color>
+
+    <!--  TEXT COLORS  -->
+
+    <color name="ft_text_primary">#0F172A</color>
+    <color name="ft_text_secondary">#475569</color>
+    <color name="ft_text_disabled">#94A3B8</color>
+
+    <!--  STATES  -->
+
+
+    <color name="ft_success">#22C55E</color>
+    <color name="ft_success_light">#DCFCE7</color>
+
+    <color name="ft_error">#EF4444</color>
+    <color name="ft_error_light">#FEE2E2</color>
+
+    <color name="ft_warning">#F59E0B</color>
+
+    <!--  DIVIDERS / BORDERS  -->
+
+
+    <color name="ft_border">#E2E8F0</color>
+    <color name="ft_divider">#CBD5E1</color>
+
+    <color name="ft_topbar_background">#CFE4FA</color>
+
+
+
+
 </resources>

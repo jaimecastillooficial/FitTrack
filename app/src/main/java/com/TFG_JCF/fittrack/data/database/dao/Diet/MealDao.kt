@@ -8,6 +8,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.TFG_JCF.fittrack.data.database.Relations.Diet.MealWithItemsAndFoods
 import com.TFG_JCF.fittrack.data.database.entities.Diet.MealEntity
+import com.TFG_JCF.fittrack.data.database.entities.Diet.MealType
 
 @Dao
 interface MealDao {
@@ -43,7 +44,7 @@ interface MealDao {
         WHERE userUid = :userUid AND date = :date AND type = :type
         
     """)
-    suspend fun getMeal(userUid: String, date: String, type: String): MealEntity?
+    suspend fun getMeal(userUid: String, date: String, type: MealType): MealEntity?
 
     @Transaction
     @Query("""
