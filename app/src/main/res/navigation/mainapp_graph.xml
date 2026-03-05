@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainapp_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/dietFragment"
+        android:name="com.TFG_JCF.fittrack.ui.MainApp.Diet.DietFragment"
+        android:label="fragment_diet"
+        tools:layout="@layout/fragment_diet" />
+    <fragment
+        android:id="@+id/othersFragment"
+        android:name="com.TFG_JCF.fittrack.ui.MainApp.Others.OthersFragment"
+        android:label="fragment_others"
+        tools:layout="@layout/fragment_others" />
+    <fragment
+        android:id="@+id/progressFragment"
+        android:name="com.TFG_JCF.fittrack.ui.MainApp.Progress.ProgressFragment"
+        android:label="fragment_progress"
+        tools:layout="@layout/fragment_progress" />
+    <fragment
+        android:id="@+id/workoutFragment"
+        android:name="com.TFG_JCF.fittrack.ui.MainApp.Workout.WorkoutFragment"
+        android:label="fragment_workout"
+        tools:layout="@layout/fragment_workout" />
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.TFG_JCF.fittrack.ui.MainApp.Home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+</navigation>

@@ -12,7 +12,7 @@ import com.TFG_JCF.fittrack.R
 import com.TFG_JCF.fittrack.data.database.entities.User_Bonus.Gender
 import com.TFG_JCF.fittrack.data.database.entities.User_Bonus.UserProfileEntity
 import com.TFG_JCF.fittrack.databinding.FragmentPhysicalAspectsBinding
-import com.TFG_JCF.fittrack.ui.home.MainActivity
+import com.TFG_JCF.fittrack.ui.MainApp.Home.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kotlin.getValue

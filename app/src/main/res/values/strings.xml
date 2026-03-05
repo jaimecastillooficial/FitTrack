@@ -32,4 +32,13 @@
     <string name="gain_weight_bulk">Ganar Peso (Volumen)</string>
     <string name="How_much_do_you_weight">¿Cuanto pesas?</string>
     <string name="Weight">Peso (Kg)</string>
+    <string name="login">Inicia Sesion</string>
+    <string name="remember_where_did_you_left">Recuerda donde lo dejaste</string>
+    <string name="you_dont_hava_an_account_sign_up">¿No tienes una cuenta? Registrate</string>
+    <string name="login2">Iniciar Sesion</string>
+    <string name="Menu_Diet">Dieta</string>
+    <string name="Menu_Home">Inicio</string>
+    <string name="Menu_Workout">Entrenamiento</string>
+    <string name="Menu_Progress">Progreso</string>
+    <string name="Menu_Others">Otros</string>
 </resources>

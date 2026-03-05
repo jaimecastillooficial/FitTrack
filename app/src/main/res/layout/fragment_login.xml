@@ -11,20 +11,20 @@
     tools:context=".ui.Auth.AuthFragment">
 
     <!-- Progress 3 steps -->
-<View
-    android:id="@+id/stepProgressContainer"
-    android:layout_width="0dp"
-    android:layout_height="4dp"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toTopOf="parent"/>
+    <View
+        android:id="@+id/stepProgressContainer"
+        android:layout_width="0dp"
+        android:layout_height="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <!-- TITLE -->
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/create_your_account"
+        android:text="@string/login"
         android:textSize="22sp"
         android:textStyle="bold"
         android:textColor="@color/ft_text_primary"
@@ -37,7 +37,7 @@
         android:id="@+id/tvSubtitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/start_tracking_your_workouts_and_nutrition"
+        android:text="@string/remember_where_did_you_left"
         android:textSize="14sp"
         android:textColor="@color/ft_text_secondary"
         android:layout_marginTop="8dp"
@@ -45,27 +45,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- NAME -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/nameLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:hint="@string/name"
-        android:textColorHint="@color/hints"
-        app:boxStrokeColor="@color/ft_border"
-        app:layout_constraintTop_toBottomOf="@id/tvSubtitle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/txtName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:textColor="@color/ft_text_primary"/>
-    </com.google.android.material.textfield.TextInputLayout>
 
     <!-- EMAIL -->
     <com.google.android.material.textfield.TextInputLayout
@@ -77,7 +57,7 @@
         android:hint="@string/email"
         android:textColorHint="@color/hints"
         app:boxStrokeColor="@color/ft_border"
-        app:layout_constraintTop_toBottomOf="@id/nameLayout"
+        app:layout_constraintTop_toBottomOf="@id/tvSubtitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -99,6 +79,7 @@
         android:hint="@string/password"
         android:textColorHint="@color/hints"
         app:passwordToggleEnabled="true"
+        app:passwordToggleTint="@color/black"
         app:boxStrokeColor="@color/ft_border"
         app:layout_constraintTop_toBottomOf="@id/emailLayout"
         app:layout_constraintStart_toStartOf="parent"
@@ -114,10 +95,10 @@
 
     <!-- BUTTON -->
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnCreateAccount"
+        android:id="@+id/btnlogin"
         android:layout_width="0dp"
         android:layout_height="56dp"
-        android:text="@string/create_account"
+        android:text="@string/login2"
         android:textColor="@color/white"
         android:backgroundTint="@color/ft_primary"
         app:cornerRadius="16dp"
@@ -128,14 +109,14 @@
 
     <!-- LOGIN LINK -->
     <TextView
-        android:id="@+id/tvLogin"
+        android:id="@+id/tvSignUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/already_have_an_account_log_in"
+        android:text="@string/you_dont_hava_an_account_sign_up"
         android:textColor="@color/ft_primary"
         android:textSize="14sp"
         android:layout_marginTop="18dp"
-        app:layout_constraintTop_toBottomOf="@id/btnCreateAccount"
+        app:layout_constraintTop_toBottomOf="@id/btnlogin"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
