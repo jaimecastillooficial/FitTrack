@@ -55,23 +55,9 @@ class MainActivity : ComponentActivity() {
             insets
         }
 
-        val bundle = intent.extras
-        val email= bundle?.getString("email")
-        val uid= bundle?.getString("provider")
-        val nombre= bundle?.getString("nombre")
 
-
-        initUI(email?:"",uid?:"", nombre?:"")
 
     }
 
-    private fun initUI(email: String, uid: String, nombre:String) {
-        binding.tvemail.text = email
-        binding.tvProveedor.text = uid
+}
 
-        binding.btnLogOut.setOnClickListener {
-            FirebaseAuth.getInstance().signOut()
-            onBackPressed()
-    }
-}
-}

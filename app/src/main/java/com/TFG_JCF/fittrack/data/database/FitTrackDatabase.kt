@@ -56,7 +56,7 @@ import com.TFG_JCF.fittrack.data.database.entities.Workout.WorkoutSetEntity
         WorkoutSetEntity::class
     ],
     // Cambiar cada vez que se cambie la base de datos
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

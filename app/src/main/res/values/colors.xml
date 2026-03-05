@@ -40,8 +40,7 @@
     <color name="ft_divider">#CBD5E1</color>
 
     <color name="ft_topbar_background">#CFE4FA</color>
-
-
+    <color name="hints">#4B4B4B</color>
 
 
 </resources>

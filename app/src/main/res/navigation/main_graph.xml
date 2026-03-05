@@ -9,19 +9,37 @@
         android:id="@+id/authFragment"
         android:name="com.TFG_JCF.fittrack.ui.Auth.AuthFragment"
         android:label="Auth"
-        tools:layout="@layout/fragment_auth" />
-
-    <fragment
-        android:id="@+id/physicalAspectsFragment"
-        android:name="com.TFG_JCF.fittrack.ui.Auth.PhysicalAspectsFragment"
-        android:label="PhysicalAspectsFragment"
-        tools:layout="@layout/fragment_physical_aspects"/>
+        tools:layout="@layout/fragment_auth" >
+        <action
+            android:id="@+id/action_auth_to_goal"
+            app:destination="@id/goalFragment"/>
+    </fragment>
 
     <fragment
         android:id="@+id/goalFragment"
         android:name="com.TFG_JCF.fittrack.ui.Auth.GoalFragment"
-        android:label="goalFragment"
-        tools:layout="@layout/fragment_goal"/>
+        tools:layout="@layout/fragment_goal">
 
+        <action
+            android:id="@+id/action_goal_to_activityLevel"
+            app:destination="@id/activityLevelFragment"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/activityLevelFragment"
+        android:name="com.TFG_JCF.fittrack.ui.Auth.ActivityLevelFragment"
+        tools:layout="@layout/fragment_activity_level">
+
+        <action
+            android:id="@+id/action_activityLevel_to_physical"
+            app:destination="@id/physicalAspectsFragment"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/physicalAspectsFragment"
+        android:name="com.TFG_JCF.fittrack.ui.Auth.PhysicalAspectsFragment"
+        tools:layout="@layout/fragment_physical_aspects"/>
 
 </navigation>

@@ -11,15 +11,22 @@ data class UserProfileEntity(
 
     val name: String,
 
-    val gender: String,
+    val gender: Gender,
 
     val age: Int,
 
     val heightCm: Int,
 
-    val goalType: String,   // 1 = Volumen / 2 = Deficion / 3 = Mantenimiento
+    val currentWeight: Float,
 
-    val activityLevel: String,  // BAJO / MEDIO / ALTO
+    val targetWeight: Float? = null,
 
-    val createdAt: Long
+    val goalType: GoalType,   // Volumen / Deficion / Mantenimiento
+
+    val activityLevel: ActivityLevel,  // BAJO / MEDIO / ALTO
+
+    val dailyCaloriesGoal: Int? = null,
+
+    val createdAt: Long = System.currentTimeMillis()
+
 )

@@ -51,7 +51,7 @@
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cual es tu objetivo?"
+        android:text="@string/What_is_your_goal"
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@color/ft_text_primary"
@@ -63,7 +63,7 @@
         android:id="@+id/tvSubtitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Elige una opcion para personalizar tu plan."
+        android:text="@string/Choose_an_option_to_customize_your_plan"
         android:textSize="14sp"
         android:textColor="@color/ft_text_secondary"
         android:layout_marginTop="8dp"
@@ -87,14 +87,14 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLose"
             style="@style/GoalOptionButton"
-            android:text="Perder Peso (Definicion)"
+            android:text="@string/lose_weight_cut"
             app:strokeColor="@color/ft_primary"
             app:strokeWidth="2dp"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnMaintain"
             style="@style/GoalOptionButton"
-            android:text="Mantenimiento"
+            android:text="@string/Mantein"
             app:strokeColor="@color/ft_primary"
             app:strokeWidth="2dp"
             android:layout_marginTop="12dp"/>
@@ -102,7 +102,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnGain"
             style="@style/GoalOptionButton"
-            android:text="Ganar Peso (Volumen)"
+            android:text="@string/gain_weight_bulk"
             app:strokeColor="@color/ft_primary"
             app:strokeWidth="2dp"
             android:layout_marginTop="12dp"/>
@@ -113,7 +113,7 @@
         android:id="@+id/btnNext"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Next"
+        android:text="@string/Next"
         android:textColor="@color/white"
         android:backgroundTint="@color/ft_primary"
         android:layout_marginTop="24dp"

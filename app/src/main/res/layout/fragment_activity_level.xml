@@ -34,7 +34,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_marginEnd="6dp"
-            android:background="@color/ft_border"/>
+            android:background="@color/ft_primary"/>
 
         <View
             android:id="@+id/step3"
@@ -52,7 +52,7 @@
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cual es tu nivel de actividad diario?"
+        android:text="@string/What_is_your_daily_activity_level"
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@color/ft_text_primary"
@@ -64,7 +64,7 @@
         android:id="@+id/tvSubtitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Elige una opcion para personalizar tu plan."
+        android:text="@string/Choose_an_option_to_customize_your_plan"
         android:textSize="14sp"
         android:textColor="@color/ft_text_secondary"
         android:layout_marginTop="8dp"
@@ -74,7 +74,7 @@
 
     <!-- Grupo de botones tipo "cuadraditos" -->
     <com.google.android.material.button.MaterialButtonToggleGroup
-        android:id="@+id/goalToggleGroup"
+        android:id="@+id/activityToggleGroup"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -89,7 +89,7 @@
             android:id="@+id/btnSedentary"
             style="@style/GoalOptionButton"
             android:fontFamily="sans-serif"
-            android:text="Sedentaria"
+            android:text="@string/Sedentary"
             app:strokeColor="@color/ft_primary"
             app:strokeWidth="2dp" />
 
@@ -97,7 +97,7 @@
             android:id="@+id/btnLight"
             style="@style/GoalOptionButton"
             android:fontFamily="sans-serif"
-            android:text="Ligera"
+            android:text="@string/Light"
             app:strokeColor="@color/ft_primary"
             app:strokeWidth="2dp"
             android:layout_marginTop="12dp"/>
@@ -105,7 +105,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnModerate"
             style="@style/GoalOptionButton"
-            android:text="Moderada"
+            android:text="@string/Moderate"
             app:strokeColor="@color/ft_primary"
             android:fontFamily="sans-serif"
             app:strokeWidth="2dp"
@@ -114,14 +114,14 @@
             android:id="@+id/btnHigh"
             style="@style/GoalOptionButton"
             android:fontFamily="sans-serif"
-            android:text="Alta"
+            android:text="@string/High"
             app:strokeColor="@color/ft_primary"
             app:strokeWidth="2dp"
             android:layout_marginTop="12dp"/>
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnVeyHigh"
             style="@style/GoalOptionButton"
-            android:text="Muy alta"
+            android:text="@string/Very_HIgh"
             app:strokeColor="@color/ft_primary"
             android:fontFamily="sans-serif"
             app:strokeWidth="2dp"
@@ -132,12 +132,12 @@
         android:id="@+id/btnNext"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Next"
+        android:text="@string/Next"
         android:textColor="@color/white"
         android:backgroundTint="@color/ft_primary"
         android:layout_marginTop="24dp"
         app:cornerRadius="14dp"
-        app:layout_constraintTop_toBottomOf="@id/goalToggleGroup"
+        app:layout_constraintTop_toBottomOf="@id/activityToggleGroup"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 

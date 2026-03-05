@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.TFG_JCF.fittrack.R
 import com.TFG_JCF.fittrack.databinding.FragmentAuthBinding
 import com.TFG_JCF.fittrack.ui.home.MainActivity
@@ -19,7 +21,7 @@ class AuthFragment : Fragment() {
     private var _binding : FragmentAuthBinding? = null
     private val binding get() = _binding!!
 
-
+    private val vm: SignUpViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,7 +49,12 @@ class AuthFragment : Fragment() {
                         val user = FirebaseAuth.getInstance().currentUser
                         val uid = user?.uid
 
-                       //TODO navigateToGoal()
+                        vm.signUpData.uid = uid
+                        vm.signUpData.email = binding.txtEmail.toString()
+                        vm.signUpData.password = binding.txtPassword.toString()
+                        vm.signUpData.name = binding.txtName.toString()
+
+                        navigateToGoal()
                     }
                     else{
                         showAlert()
@@ -76,6 +83,7 @@ class AuthFragment : Fragment() {
     }
 
 private fun navigateToGoal() {
+    findNavController().navigate(R.id.action_auth_to_goal)
 }
 
     private fun showAlert() {
