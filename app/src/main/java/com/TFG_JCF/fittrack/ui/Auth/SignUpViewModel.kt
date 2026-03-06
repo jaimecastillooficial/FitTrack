@@ -37,6 +37,7 @@ class SignUpViewModel @Inject constructor(
             val user = userRepository.getUserProfile(profile.uid)
 
             Log.d("FitTrack_DB", "Usuario leído de BD: $user")
+
         }
     }
 }

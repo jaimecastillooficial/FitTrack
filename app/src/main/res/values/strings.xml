@@ -41,4 +41,12 @@
     <string name="Menu_Workout">Entrenamiento</string>
     <string name="Menu_Progress">Progreso</string>
     <string name="Menu_Others">Otros</string>
+    <string name="fittrack">Fittrack</string>
+    <string name="Calories">Calorías</string>
+    <string name="Proteins">Proteínas</string>
+    <string name="Fats">Grasas</string>
+    <string name="Carbohydrates">Carbohidratos</string>
+    <string name="Workout">Entrenamiento</string>
+    <string name="Last_Workout">Ultimo Entrenamiento</string>
+    <string name="Progress">Progreso</string>
 </resources>
