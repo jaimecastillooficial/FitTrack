@@ -19,7 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class AuthFragment : Fragment() {
 
-    private var _binding : FragmentAuthBinding? = null
+    private var _binding: FragmentAuthBinding? = null
     private val binding get() = _binding!!
 
     private val vm: SignUpViewModel by activityViewModels()
@@ -44,10 +44,28 @@ class AuthFragment : Fragment() {
 
     private fun initUI() {
         binding.btnCreateAccount.setOnClickListener {
-            if (binding.txtEmail.text!!.isNotEmpty() && binding.txtPassword.text!!.isNotEmpty()) {
+            createAccount()
+        }
+
+        binding.tvLogin.setOnClickListener {
+            navigateToLogin()
+        }
+    }
+
+    private fun createAccount() {
+
+        if (binding.txtEmail.text!!.isNotEmpty() && binding.txtPassword.text!!.isNotEmpty() && binding.txtConfirmPassword.text!!.isNotEmpty()) {
+
+            if (binding.txtPassword.text.toString() == binding.txtConfirmPassword.text.toString()) {
+
                 binding.progressBar.isVisible = true
-                FirebaseAuth.getInstance().createUserWithEmailAndPassword(binding.txtEmail.text.toString(),binding.txtPassword.text.toString()).addOnCompleteListener {
-                    if (it.isSuccessful){
+                FirebaseAuth.getInstance().createUserWithEmailAndPassword(
+                    binding.txtEmail.text.toString(),
+                    binding.txtPassword.text.toString()
+                ).addOnCompleteListener {
+
+                    if (it.isSuccessful) {
+
                         val user = FirebaseAuth.getInstance().currentUser
                         val uid = user?.uid
 
@@ -57,23 +75,23 @@ class AuthFragment : Fragment() {
                         vm.signUpData.name = binding.txtName.text.toString()
 
                         navigateToGoal()
-                    }
-                    else{
+
+                    } else {
                         binding.progressBar.isVisible = false
                         showAlert()
                     }
                 }
-            }
-        }
 
-        binding.tvLogin.setOnClickListener {
-            navigateToLogin()
+            } else {
+                showPasswordAlert()
+            }
         }
     }
 
-private fun navigateToGoal() {
-    findNavController().navigate(R.id.action_auth_to_goal)
-}
+    private fun navigateToGoal() {
+        findNavController().navigate(R.id.action_auth_to_goal)
+    }
+
     private fun navigateToLogin() {
         findNavController().navigate(R.id.action_auth_to_login)
     }
@@ -82,6 +100,15 @@ private fun navigateToGoal() {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Error")
         builder.setMessage("Se ha producido un error registrando al usuario")
+        builder.setPositiveButton("Aceptar", null)
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+    }
+
+    private fun showPasswordAlert() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Error")
+        builder.setMessage("Las contraseñas no coinciden")
         builder.setPositiveButton("Aceptar", null)
         val dialog: AlertDialog = builder.create()
         dialog.show()

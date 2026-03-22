@@ -1,4 +1,4 @@
-package com.TFG_JCF.fittrack.ui.MainApp.Diet.adapter
+package com.TFG_JCF.fittrack.ui.MainApp.Diet.DietHome.adapter
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView

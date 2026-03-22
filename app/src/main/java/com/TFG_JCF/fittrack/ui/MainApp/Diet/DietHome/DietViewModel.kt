@@ -1,4 +1,4 @@
-package com.TFG_JCF.fittrack.ui.MainApp.Diet
+package com.TFG_JCF.fittrack.ui.MainApp.Diet.DietHome
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

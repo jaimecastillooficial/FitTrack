@@ -1,17 +1,21 @@
-package com.TFG_JCF.fittrack.ui.MainApp.Diet
+package com.TFG_JCF.fittrack.ui.MainApp.Diet.DietHome
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContentProviderCompat
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.TFG_JCF.fittrack.R
 import com.TFG_JCF.fittrack.databinding.FragmentDietBinding
-import com.TFG_JCF.fittrack.ui.MainApp.Diet.adapter.DietAdapter
+import com.TFG_JCF.fittrack.ui.MainApp.Diet.AddFood.AddFoodActivity
+import com.TFG_JCF.fittrack.ui.MainApp.Diet.DietHome.adapter.DietAdapter
 import kotlinx.coroutines.launch
 
 //class DietFragment : Fragment() {
@@ -29,6 +33,7 @@ import kotlinx.coroutines.launch
 //}
 
 class DietFragment : Fragment(R.layout.fragment_diet) {
+
 
     private var _binding: FragmentDietBinding? = null
     private val binding get() = _binding!!
@@ -49,15 +54,10 @@ class DietFragment : Fragment(R.layout.fragment_diet) {
     }
 
     private fun initRecycler() {
-        adapter = DietAdapter(
-            onAddClick = { header ->
-                Toast.makeText(
-                    requireContext(),
-                    "Añadir comida a ${header.mealType}",
-                    Toast.LENGTH_SHORT
-                ).show()
+        adapter = DietAdapter{ header ->
+                navigateToAddFood(header.mealType.toString())
             }
-        )
+
 
         binding.rvMeals.layoutManager = LinearLayoutManager(requireContext())
         binding.rvMeals.adapter = adapter
@@ -87,7 +87,7 @@ class DietFragment : Fragment(R.layout.fragment_diet) {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.caloriesRemaining.collect { remaining ->
-                binding.tvResultText.text = "$remaining"
+                binding.tvResult.text = "$remaining"
             }
         }
     }
@@ -96,4 +96,12 @@ class DietFragment : Fragment(R.layout.fragment_diet) {
         super.onDestroyView()
         _binding = null
     }
+    private fun navigateToAddFood(name : String) {
+        val intent = Intent(this.requireContext(), AddFoodActivity::class.java)
+        intent.putExtra("MEAL_TYPE", name)
+        startActivity(intent)
+
+    }
 }
+
+

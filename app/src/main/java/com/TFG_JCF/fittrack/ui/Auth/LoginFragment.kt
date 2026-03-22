@@ -32,7 +32,16 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.progressBar.isVisible = false
+        checkUser()
+
         initUI()
+    }
+
+    private fun checkUser() {
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user != null) {
+            navigateToHome()
+        }
     }
 
     private fun initUI() {

@@ -14,7 +14,9 @@
         android:roundIcon="@drawable/splashscreen"
         android:supportsRtl="true"
         android:theme="@style/Theme.FitTrack">
-
+        <activity
+            android:name=".ui.MainApp.Diet.AddFood.AddFoodActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.Auth.SignUpActivity"
             android:exported="true"
