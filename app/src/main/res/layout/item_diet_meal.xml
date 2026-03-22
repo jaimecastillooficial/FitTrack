@@ -17,24 +17,27 @@
     android:orientation="vertical">
 
     <TextView
-
+        android:id="@+id/tvFoodName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="Copos De Avena"
+        android:textSize="16dp"
         android:textColor="@color/black" />
 
     <TextView
-
+        android:id="@+id/tvFoodGrams"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Copos de avena (40 gr)"
-        android:textSize="11sp" />
+        android:textSize="14sp" />
 </LinearLayout>
 
     <TextView
-        android:id="@+id/switchDarkMode"
+
+        android:id="@+id/tvKcal"
         android:layout_width="wrap_content"
         tools:text="400"
+        android:textSize="16dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp" />
 

@@ -2,122 +2,128 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/ft_background"
-    tools:context=".ui.MainApp.Diet.DietFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".ui.MainApp.Diet.DietFragment">
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <TextView
-        android:id="@+id/tvCaloriesGoal"
-        android:layout_width="wrap_content"
-        tools:text="3000"
-        android:textColor="@color/black"
-        android:textSize="15sp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/tvMinos"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        android:layout_margin="16dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:weightSum="5">
 
-    <TextView
-        android:id="@+id/tvGoal"
-        android:layout_width="wrap_content"
-        tools:text="Objetivo"
-        android:textSize="12sp"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/tvMinos"
-        app:layout_constraintTop_toBottomOf="@id/tvCaloriesGoal"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-    <TextView
-        android:id="@+id/tvMinos"
-        android:layout_width="wrap_content"
-        tools:text="-"
-        android:textSize="16sp"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/tvGoal"
-        app:layout_constraintEnd_toStartOf="@id/tvMealCalories"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-    <TextView
-        android:id="@+id/tvMealCalories"
-        android:layout_width="wrap_content"
-        tools:text="1165"
-        android:textColor="@color/black"
-        android:textSize="15sp"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/tvMinos"
-        app:layout_constraintEnd_toStartOf="@id/tvPlus"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:gravity="center"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tvMealCaloriestext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
+            <TextView
+                android:id="@+id/tvCaloriesGoal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                tools:text="3000" />
 
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/tvPlus"
-        app:layout_constraintStart_toEndOf="@id/tvMinos"
-        app:layout_constraintTop_toBottomnOf="@id/tvMealCalories"
-        tools:text="Alimentos" />
+            <TextView
+                android:id="@+id/tvGoal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Objetivo"
+                android:textColor="@color/ft_text_secondary"
+                android:textSize="14sp" />
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/tvPlus"
-        android:layout_width="wrap_content"
-        tools:text="="
-        android:textSize="16sp"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/tvMealCaloriestext"
-        app:layout_constraintEnd_toStartOf="@id/tvResult"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-    <TextView
-        android:id="@+id/tvResult"
-        android:layout_width="wrap_content"
-        tools:text="1835"
-        android:textSize="15sp"
-        android:textStyle="bold"
+        <TextView
+            android:id="@+id/tvMinus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:text="-"
+            android:textColor="@color/ft_text_secondary"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
-        android:textColor="@color/fittrack"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/tvPlus"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-    <TextView
-        android:id="@+id/tvResulttext"
-        android:layout_width="wrap_content"
-        tools:text="Restantes"
-        android:textSize="12sp"
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:gravity="center"
+            android:orientation="vertical">
 
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/tvPlus"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvResult"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+            <TextView
+                android:id="@+id/tvMealCalories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                tools:text="1165" />
 
+            <TextView
+                android:id="@+id/tvMealCaloriesText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alimentos"
+                android:textColor="@color/ft_text_secondary"
+                android:textSize="14sp" />
+        </LinearLayout>
 
+        <TextView
+            android:id="@+id/tvEqual"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:text="="
+            android:textColor="@color/ft_text_secondary"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:gravity="center"
+            android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/tvResult"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/fittrack"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                tools:text="1835" />
 
+            <TextView
+                android:id="@+id/tvResultText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Restantes"
+                android:textColor="@color/ft_text_secondary"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+    </LinearLayout>
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMeals"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clipToPadding="false"
         android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:clipToPadding="false" />
+        android:paddingEnd="16dp" />
 
 
 </LinearLayout>

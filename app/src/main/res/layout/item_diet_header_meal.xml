@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="40dp"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal">
 
     <TextView
         android:id="@+id/tvHeader"
@@ -14,6 +14,7 @@
         tools:text="Desayuno"
         android:textColor="@color/black"
         android:layout_weight="1"
+        android:textSize="20dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp" />
     <TextView
@@ -22,8 +23,20 @@
         android:textStyle="bold"
         android:layout_gravity="center_vertical"
         tools:text="1300"
+        android:textSize="20dp"
         android:textColor="@color/black"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp" />
+
+
+
+    <ImageButton
+        android:id="@+id/btnAddFood"
+        android:layout_width="37dp"
+        android:layout_height="40dp"
+        android:backgroundTint="@color/fittrack"
+        android:src="@drawable/icon_add"
+        android:tint="@color/white"/>
+
 
 </LinearLayout>
