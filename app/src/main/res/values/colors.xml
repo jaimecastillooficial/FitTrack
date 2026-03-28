@@ -42,5 +42,7 @@
     <color name="ft_topbar_background">#CFE4FA</color>
     <color name="hints">#4B4B4B</color>
 
+    <color name="textColorPrimary">#FF000000</color>
+    <color name="textColorHint">#818181</color>
 
 </resources>

@@ -19,13 +19,13 @@ class DietRepository @Inject constructor(
     private val mealItemDao: MealItemDao
 ){
     //Obtener todos los alimentos
-    suspend fun getAllFood(): List<FoodEntity> = withContext(Dispatchers.IO){
+    suspend fun getAllFoods(): List<FoodEntity> = withContext(Dispatchers.IO){
 
         return@withContext foodDao.getAll()
 
     }
     // crear un alimento
-    suspend fun insertFood(name: String, kcal: Int, protein: Float, carbs: Float, fat: Float, isPublic: Boolean, createdByUid: String?) {
+    suspend fun insertOneFood(name: String, kcal: Int, protein: Float, carbs: Float, fat: Float, isPublic: Boolean, createdByUid: String?) {
         withContext(Dispatchers.IO) {
 
             val food = FoodEntity(
@@ -40,6 +40,11 @@ class DietRepository @Inject constructor(
 
             foodDao.insert(food)
         }
+    }
+
+    // Insertar lista de alimentos (seed inicial)
+    suspend fun insertFoods(foods: List<FoodEntity>) {
+        foodDao.insertFoods(foods)
     }
     //Obtener Meals con sus items y alimentos mediante la fecha
     suspend fun getMealsFullByDate(userUid: String, date: String): List<MealWithItemsAndFoods> = withContext(Dispatchers.IO){3

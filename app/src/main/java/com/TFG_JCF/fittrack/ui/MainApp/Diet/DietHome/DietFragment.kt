@@ -58,33 +58,32 @@ class DietFragment : Fragment(R.layout.fragment_diet) {
                 navigateToAddFood(header.mealType.toString())
             }
 
-
         binding.rvMeals.layoutManager = LinearLayoutManager(requireContext())
         binding.rvMeals.adapter = adapter
     }
 
     private fun observeViewModel() {
-
+// Actualizar lista de alimentos ingeridos
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.items.collect { list ->
                 adapter.updateList(list)
             }
         }
-
+// Calorias objetivo
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.caloriesGoal.collect { goal ->
                 binding.tvCaloriesGoal.text = "$goal"
 
             }
         }
-
+        // Calorias consumidas
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.caloriesConsumed.collect { consumed ->
                 binding.tvMealCalories.text = "$consumed"
 
             }
         }
-
+    // Calorias restantes
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.caloriesRemaining.collect { remaining ->
                 binding.tvResult.text = "$remaining"

@@ -2,6 +2,7 @@ package com.TFG_JCF.fittrack.data.database.dao.Diet
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.TFG_JCF.fittrack.data.database.entities.Diet.FoodEntity
 
@@ -10,6 +11,9 @@ interface FoodDao {
 
     @Insert
     suspend fun insert(food: FoodEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertFoods(foods: List<FoodEntity>)
 
     @Query("SELECT * FROM foods")
     suspend fun getAll(): List<FoodEntity>
