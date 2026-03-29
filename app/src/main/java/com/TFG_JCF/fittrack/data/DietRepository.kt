@@ -47,7 +47,7 @@ class DietRepository @Inject constructor(
         foodDao.insertFoods(foods)
     }
     //Obtener Meals con sus items y alimentos mediante la fecha
-    suspend fun getMealsFullByDate(userUid: String, date: String): List<MealWithItemsAndFoods> = withContext(Dispatchers.IO){3
+    suspend fun getMealsFullByDate(userUid: String, date: String): List<MealWithItemsAndFoods> = withContext(Dispatchers.IO){
         return@withContext mealDao.getMealsWithItemsAndFoodsByDate(userUid= userUid, date = date)
     }
     // Insertar un alimento en una MeaL(Comida)

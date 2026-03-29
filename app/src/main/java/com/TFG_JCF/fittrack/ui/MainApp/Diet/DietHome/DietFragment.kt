@@ -1,10 +1,12 @@
 package com.TFG_JCF.fittrack.ui.MainApp.Diet.DietHome
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContentProviderCompat
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
@@ -16,6 +18,7 @@ import com.TFG_JCF.fittrack.R
 import com.TFG_JCF.fittrack.databinding.FragmentDietBinding
 import com.TFG_JCF.fittrack.ui.MainApp.Diet.AddFood.AddFoodActivity
 import com.TFG_JCF.fittrack.ui.MainApp.Diet.DietHome.adapter.DietAdapter
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 //class DietFragment : Fragment() {
@@ -32,6 +35,7 @@ import kotlinx.coroutines.launch
 //
 //}
 
+@AndroidEntryPoint
 class DietFragment : Fragment(R.layout.fragment_diet) {
 
 
@@ -42,6 +46,7 @@ class DietFragment : Fragment(R.layout.fragment_diet) {
 
     private lateinit var adapter: DietAdapter
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -50,10 +55,13 @@ class DietFragment : Fragment(R.layout.fragment_diet) {
         initRecycler()
         observeViewModel()
 
-        viewModel.loadFakeData()
+
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun initRecycler() {
+        viewModel.loadDietForToday()
+
         adapter = DietAdapter{ header ->
                 navigateToAddFood(header.mealType.toString())
             }

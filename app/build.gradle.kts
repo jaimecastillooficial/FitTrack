@@ -91,4 +91,7 @@ dependencies {
     //Firebase
     implementation(platform("com.google.firebase:firebase-bom:34.9.0"))
     implementation("com.firebaseui:firebase-ui-auth:9.1.1")
+
+    //MPAndroidchart
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 }

@@ -74,6 +74,38 @@
         android:textSize="14sp"
         app:layout_constraintTop_toBottomOf="@id/goBack" />
 
+    <TextView
+        android:layout_marginTop="35dp"
+        android:id="@+id/tvMealType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:text="Comida"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvPesoRacion" />
+
+    <TextView
+        android:id="@+id/inputMealType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="35dp"
+
+        tools:text="Desayuno"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/tvPesoRacion" />
+
+
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/chartCalories"
+        android:layout_width="320dp"
+        android:layout_height="320dp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/inputMealType"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 
 

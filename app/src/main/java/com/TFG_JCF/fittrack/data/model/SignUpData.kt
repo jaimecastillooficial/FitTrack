@@ -17,5 +17,8 @@ data class SignUpData(
     var gender: Gender? = null,
     var height: Int? = null,
     var age: Int? = null,
-    var weight: Float? = null
+    var weight: Float? = null,
+
+    var dailyCaloriesGoal: Int? = null,
+    var targetWeight: Float? = null
 )

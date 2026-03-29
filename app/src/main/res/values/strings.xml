@@ -51,4 +51,13 @@
     <string name="Progress">Progreso</string>
     <string name="Confirm_your_Password">Confirma tu contraseña</string>
     <string name="a_adir_alimento">Añadir alimento</string>
+    <string name="Text_RecomendedTargets">En base a tus objetivos, datos físicos y estilo de vida estos son tus valores recomendados. Puedes mantenerlos o cambiarlos</string>
+    <string name="Your_plan">Tu plan recomendado</string>
+    <string name="finish">Terminar</string>
+    <string name="target_calories">Calorias Objetivo</string>
+    <string name="recomended_calories">Calorias diarias recomendadas</string>
+    <string name="recommended_target_weight">Peso objetivo recomendado</string>
+    <string name="calories_per_day">Calorias diarias</string>
+    <string name="target_weight_en_kg">Peso objetivo en kg</string>
+    <string name="peso_objetivo">Peso objetivo</string>
 </resources>

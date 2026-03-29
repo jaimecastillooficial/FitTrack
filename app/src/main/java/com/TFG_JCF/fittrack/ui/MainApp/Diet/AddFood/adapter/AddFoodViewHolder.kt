@@ -7,7 +7,7 @@ import com.TFG_JCF.fittrack.R
 import com.TFG_JCF.fittrack.data.database.entities.Diet.FoodEntity
 
 class AddFoodViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-//TODO arreglar binding
+
     private val tvFoodName: TextView = itemView.findViewById(R.id.tvFoodName)
     private val tvFoodCalories: TextView = itemView.findViewById(R.id.tvKcal)
     fun bind(food: FoodEntity, onFoodClick: (FoodEntity) -> Unit) {

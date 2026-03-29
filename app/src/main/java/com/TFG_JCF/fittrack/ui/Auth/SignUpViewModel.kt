@@ -29,7 +29,10 @@ class SignUpViewModel @Inject constructor(
             age = data.age!!,
             goalType = data.goalType!!,
             activityLevel = data.activityLevel!!,
-            currentWeight = data.weight!!
+            currentWeight = data.weight!!,
+            targetWeight = data.targetWeight,
+            dailyCaloriesGoal = data.dailyCaloriesGoal
+
         )
 
         viewModelScope.launch {

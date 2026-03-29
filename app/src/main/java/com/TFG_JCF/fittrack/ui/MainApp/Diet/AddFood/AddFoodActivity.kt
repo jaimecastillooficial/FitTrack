@@ -1,5 +1,6 @@
 package com.TFG_JCF.fittrack.ui.MainApp.Diet.AddFood
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -11,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.TFG_JCF.fittrack.R
 import com.TFG_JCF.fittrack.databinding.ActivityAddFoodBinding
+import com.TFG_JCF.fittrack.ui.MainApp.Diet.AddFood.FoodMenu.FoodMenuActivity
 import com.TFG_JCF.fittrack.ui.MainApp.Diet.AddFood.adapter.AddFoodAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.collections.emptyList
@@ -66,7 +68,9 @@ class AddFoodActivity : AppCompatActivity() {
     }
 
     private fun navigateToFoodMenu() {
-        TODO("Not yet implemented")
+        val intent = Intent(this, FoodMenuActivity::class.java)
+        //intent.putExtra("MEAL_TYPE", name)
+        startActivity(intent)
     }
 
     private fun suscribeViewModel() {

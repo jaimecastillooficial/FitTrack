@@ -11,6 +11,7 @@
     tools:context=".ui.Auth.AuthFragment">
 
     <!-- Progress 3 steps -->
+
 <View
     android:id="@+id/stepProgressContainer"
     android:layout_width="0dp"
@@ -18,6 +19,7 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintTop_toTopOf="parent"/>
+
 
     <!-- TITLE -->
     <TextView
