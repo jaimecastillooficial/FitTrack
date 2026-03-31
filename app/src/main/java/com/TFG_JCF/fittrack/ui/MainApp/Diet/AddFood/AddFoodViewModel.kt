@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.TFG_JCF.fittrack.data.DietRepository
+import com.TFG_JCF.fittrack.data.Repositories.DietRepository
 import com.TFG_JCF.fittrack.data.database.entities.Diet.FoodEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

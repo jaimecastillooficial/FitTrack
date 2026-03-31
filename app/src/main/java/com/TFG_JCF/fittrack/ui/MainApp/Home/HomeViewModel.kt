@@ -1,4 +1,4 @@
-package com.TFG_JCF.fittrack.ui.MainApp.Diet.DietHome
+package com.TFG_JCF.fittrack.ui.MainApp.Home
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -6,9 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.TFG_JCF.fittrack.data.Repositories.DietRepository
 import com.TFG_JCF.fittrack.data.Repositories.UserRepository
-import com.TFG_JCF.fittrack.data.database.Relations.Diet.MealWithItemsAndFoods
-import com.TFG_JCF.fittrack.data.database.entities.Diet.MealType
-import com.TFG_JCF.fittrack.data.model.MealListItem
 import com.TFG_JCF.fittrack.data.utils.NutritionCalculator
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,16 +14,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
-import kotlin.math.roundToInt
 
 @HiltViewModel
-class DietViewModel @Inject constructor(
+class HomeViewModel @Inject constructor(
     private val dietRepository: DietRepository,
     private val userRepository: UserRepository
 ) : ViewModel() {
-
-    private val _items = MutableStateFlow<List<MealListItem>>(emptyList())
-    val items: StateFlow<List<MealListItem>> = _items
 
     private val _caloriesGoal = MutableStateFlow(0)
     val caloriesGoal: StateFlow<Int> = _caloriesGoal
@@ -55,26 +48,26 @@ class DietViewModel @Inject constructor(
     private val _fatsGoal = MutableStateFlow(0)
     val fatsGoal: StateFlow<Int> = _fatsGoal
 
+    private val _progressCalories = MutableStateFlow(0)
+    val progressCalories: StateFlow<Int> = _progressCalories
+
     @RequiresApi(Build.VERSION_CODES.O)
-    fun loadDietForToday() {
+    fun loadHomeData() {
         viewModelScope.launch {
             val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return@launch
             val today = LocalDate.now().toString()
 
             val userProfile = userRepository.getUserProfile(uid)
-            val caloriesGoal = userProfile?.dailyCaloriesGoal ?: 0
+            val goal = userProfile?.dailyCaloriesGoal ?: 0
 
             val meals = dietRepository.getMealsFullByDate(uid, today)
 
-            val mealList = buildMealList(meals)
             val summary = NutritionCalculator.calculateDailySummary(meals)
-            val macroTargets = NutritionCalculator.calculateMacroTargets(caloriesGoal)
+            val macroTargets = NutritionCalculator.calculateMacroTargets(goal)
 
-            _items.value = mealList
-
-            _caloriesGoal.value = caloriesGoal
+            _caloriesGoal.value = goal
             _caloriesConsumed.value = summary.caloriesConsumed
-            _caloriesRemaining.value = caloriesGoal - summary.caloriesConsumed
+            _caloriesRemaining.value = (goal - summary.caloriesConsumed).coerceAtLeast(0)
 
             _proteinConsumed.value = summary.proteinConsumed
             _carbsConsumed.value = summary.carbsConsumed
@@ -83,40 +76,12 @@ class DietViewModel @Inject constructor(
             _proteinGoal.value = macroTargets.proteinGoal
             _carbsGoal.value = macroTargets.carbsGoal
             _fatsGoal.value = macroTargets.fatsGoal
-        }
-    }
 
-    private fun buildMealList(meals: List<MealWithItemsAndFoods>): List<MealListItem> {
-        val finalList = mutableListOf<MealListItem>()
-
-        val orderedMealTypes = listOf(
-            MealType.DESAYUNO,
-            MealType.COMIDA,
-            MealType.CENA,
-            MealType.SNACK
-        )
-
-        for (mealType in orderedMealTypes) {
-            finalList.add(MealListItem.Header(mealType))
-
-            val meal = meals.find { it.meal.type == mealType }
-
-            meal?.items?.forEach { mealItemWithFood ->
-                val food = mealItemWithFood.food
-                val grams = mealItemWithFood.item.grams
-                val calories = ((food.kcalPer100g * grams) / 100f).roundToInt()
-
-                finalList.add(
-                    MealListItem.FoodItem(
-                        name = food.name,
-                        calories = calories,
-                        grams = grams.roundToInt()
-                    )
-                )
+            _progressCalories.value = if (goal > 0) {
+                ((summary.caloriesConsumed.toFloat() / goal.toFloat()) * 100).toInt().coerceIn(0, 100)
+            } else {
+                0
             }
         }
-
-        return finalList
     }
-
 }

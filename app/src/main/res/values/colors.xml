@@ -44,5 +44,6 @@
 
     <color name="textColorPrimary">#FF000000</color>
     <color name="textColorHint">#818181</color>
+    <color name="ft_primary_disabled">#A0A0A0</color>
 
 </resources>

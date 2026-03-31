@@ -1,4 +1,4 @@
-package com.TFG_JCF.fittrack.data
+package com.TFG_JCF.fittrack.data.Repositories
 
 import com.TFG_JCF.fittrack.data.database.dao.User_Bonus.UserProfileDao
 import com.TFG_JCF.fittrack.data.database.entities.User_Bonus.UserProfileEntity

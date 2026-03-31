@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.TFG_JCF.fittrack.R
 import com.TFG_JCF.fittrack.data.database.entities.User_Bonus.Gender
 import com.TFG_JCF.fittrack.data.database.entities.User_Bonus.UserProfileEntity
@@ -58,14 +59,11 @@ class PhysicalAspectsFragment : Fragment() {
             vm.signUpData.weight = binding.txtWeight.text.toString().toFloat()
 
 
-            vm.createUserProfile()
-            navigateToHome()
+            navigateToRecomend()
         }
     }
 
-    private fun navigateToHome() {
-        val intent = Intent(requireContext(), MainActivity::class.java)
-        startActivity(intent)
-        requireActivity().finish()
+    private fun navigateToRecomend() {
+        findNavController().navigate(R.id.action_physicalaspects_to_recomend)
     }
 }

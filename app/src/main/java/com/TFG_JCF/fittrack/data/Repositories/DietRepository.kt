@@ -1,4 +1,4 @@
-package com.TFG_JCF.fittrack.data
+package com.TFG_JCF.fittrack.data.Repositories
 
 import com.TFG_JCF.fittrack.data.database.Relations.Diet.MealWithItemsAndFoods
 import com.TFG_JCF.fittrack.data.database.dao.Diet.FoodDao

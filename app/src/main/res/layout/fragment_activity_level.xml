@@ -41,13 +41,14 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:layout_marginEnd="6dp"
             android:background="@color/ft_border"/>
+
         <View
             android:id="@+id/step4"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_marginEnd="6dp"
             android:background="@color/ft_border"/>
 
     </LinearLayout>

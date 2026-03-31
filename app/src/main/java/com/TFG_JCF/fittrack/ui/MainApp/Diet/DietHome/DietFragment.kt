@@ -62,22 +62,22 @@ class DietFragment : Fragment(R.layout.fragment_diet) {
     private fun initRecycler() {
         viewModel.loadDietForToday()
 
-        adapter = DietAdapter{ header ->
-                navigateToAddFood(header.mealType.toString())
-            }
+        adapter = DietAdapter { header ->
+            navigateToAddFood(header.mealType.toString())
+        }
 
         binding.rvMeals.layoutManager = LinearLayoutManager(requireContext())
         binding.rvMeals.adapter = adapter
     }
 
     private fun observeViewModel() {
-// Actualizar lista de alimentos ingeridos
+        // Actualizar lista de alimentos ingeridos
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.items.collect { list ->
                 adapter.updateList(list)
             }
         }
-// Calorias objetivo
+        // Calorias objetivo
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.caloriesGoal.collect { goal ->
                 binding.tvCaloriesGoal.text = "$goal"
@@ -91,7 +91,7 @@ class DietFragment : Fragment(R.layout.fragment_diet) {
 
             }
         }
-    // Calorias restantes
+        // Calorias restantes
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.caloriesRemaining.collect { remaining ->
                 binding.tvResult.text = "$remaining"
@@ -103,7 +103,12 @@ class DietFragment : Fragment(R.layout.fragment_diet) {
         super.onDestroyView()
         _binding = null
     }
-    private fun navigateToAddFood(name : String) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadDietForToday()
+    }
+    private fun navigateToAddFood(name: String) {
         val intent = Intent(this.requireContext(), AddFoodActivity::class.java)
         intent.putExtra("MEAL_TYPE", name)
         startActivity(intent)

@@ -54,7 +54,7 @@
         android:name="com.TFG_JCF.fittrack.ui.Auth.PhysicalAspectsFragment"
         tools:layout="@layout/fragment_physical_aspects">
         <action
-            android:id="@+id/action_activityLevel_to_physical"
+            android:id="@+id/action_physicalaspects_to_recomend"
             app:destination="@id/recomendFragment"/>
     </fragment>
 
