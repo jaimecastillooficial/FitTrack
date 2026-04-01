@@ -27,8 +27,8 @@ class HomeViewModel @Inject constructor(
     private val _caloriesConsumed = MutableStateFlow(0)
     val caloriesConsumed: StateFlow<Int> = _caloriesConsumed
 
-    private val _caloriesRemaining = MutableStateFlow(0)
-    val caloriesRemaining: StateFlow<Int> = _caloriesRemaining
+    private val _caloriesRemaining = MutableStateFlow("")
+    val caloriesRemaining: StateFlow<String> = _caloriesRemaining
 
     private val _proteinConsumed = MutableStateFlow(0f)
     val proteinConsumed: StateFlow<Float> = _proteinConsumed
@@ -67,7 +67,11 @@ class HomeViewModel @Inject constructor(
 
             _caloriesGoal.value = goal
             _caloriesConsumed.value = summary.caloriesConsumed
-            _caloriesRemaining.value = (goal - summary.caloriesConsumed).coerceAtLeast(0)
+            if(goal - summary.caloriesConsumed < 0){
+                _caloriesRemaining.value = "+${summary.caloriesConsumed - goal}"
+            }else{
+                _caloriesRemaining.value = "${goal - summary.caloriesConsumed}"
+            }
 
             _proteinConsumed.value = summary.proteinConsumed
             _carbsConsumed.value = summary.carbsConsumed

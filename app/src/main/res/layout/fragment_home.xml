@@ -1,27 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.MainApp.Home.HomeFragment"
     android:padding="8dp"
-    >
+    tools:context=".ui.MainApp.Home.HomeFragment">
 
-<FrameLayout
-    android:id="@+id/framelayout"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent">
-
-    <TextView
+    <FrameLayout
+        android:id="@+id/framelayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/fittrack"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-</FrameLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fittrack" />
+
+    </FrameLayout>
 
 
     <androidx.cardview.widget.CardView
@@ -32,8 +31,8 @@
         app:cardCornerRadius="16dp"
         app:cardElevation="4dp"
         app:cardUseCompatPadding="true"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/framelayout">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -65,7 +64,7 @@
                 app:layout_constraintTop_toBottomOf="@id/tvCalories" />
 
             <TextView
-                android:id="@+id/tvCaloriesUnit"
+                android:id="@+id/tvCaloriesRemaining"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
@@ -77,16 +76,40 @@
                 app:layout_constraintStart_toEndOf="@id/tvCaloriesValue" />
 
             <TextView
-                android:id="@+id/tvCaloriesRemaining"
+                android:id="@+id/tvHaveLeft"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:fontFamily="sans-serif"
-                android:text="0 restantes"
+                android:text="Consumidas:"
                 android:textColor="@color/ft_text_secondary"
                 android:textSize="11sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvCaloriesValue" />
+
+            <TextView
+                android:id="@+id/tvCaloriesLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:fontFamily="sans-serif"
+                android:text="0"
+                android:textColor="@color/ft_text_secondary"
+                android:textSize="11sp"
+                app:layout_constraintBaseline_toBaselineOf="@id/tvHaveLeft"
+                app:layout_constraintStart_toEndOf="@id/tvHaveLeft" />
+
+            <TextView
+                android:id="@+id/tvkcalConsumed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:fontFamily="sans-serif"
+                android:text="kcal "
+                android:textColor="@color/ft_text_secondary"
+                android:textSize="11sp"
+                app:layout_constraintBaseline_toBaselineOf="@id/tvHaveLeft"
+                app:layout_constraintStart_toEndOf="@id/tvCaloriesLeft" />
 
             <com.google.android.material.progressindicator.LinearProgressIndicator
                 android:id="@+id/progressCalories"
@@ -97,7 +120,7 @@
                 app:indicatorColor="@color/ft_primary"
                 app:layout_constraintEnd_toStartOf="@id/lyData"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvCaloriesRemaining"
+                app:layout_constraintTop_toBottomOf="@+id/tvHaveLeft"
                 app:trackColor="@color/ft_surface_alt"
                 app:trackCornerRadius="4dp"
                 app:trackThickness="8dp" />
@@ -204,8 +227,8 @@
         app:cardCornerRadius="16dp"
         app:cardElevation="4dp"
         app:cardUseCompatPadding="true"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/cardLastWorkout"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cardNutritionSummary">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -217,10 +240,10 @@
                 android:id="@+id/tvWorkout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
                 android:text="@string/Workout"
                 android:textColor="@color/ft_text_secondary"
                 android:textSize="14sp"
-                android:fontFamily="sans-serif-medium"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -229,22 +252,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
+                android:fontFamily="sans-serif-black"
                 android:text="Push"
                 android:textAllCaps="true"
                 android:textColor="@color/ft_text_primary"
                 android:textSize="20sp"
-                android:fontFamily="sans-serif-black"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvWorkout" />
+
             <TextView
                 android:id="@+id/tvExercises"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
+                android:fontFamily="sans-serif"
                 android:text="5 ejercicios"
                 android:textColor="@color/ft_text_secondary"
                 android:textSize="12sp"
-                android:fontFamily="sans-serif"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvWorkoutDay" />
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -259,8 +283,8 @@
         app:cardCornerRadius="16dp"
         app:cardElevation="4dp"
         app:cardUseCompatPadding="true"
-        app:layout_constraintStart_toEndOf="@id/cardWorkoutSummary"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/cardWorkoutSummary"
         app:layout_constraintTop_toBottomOf="@id/cardNutritionSummary">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -272,10 +296,10 @@
                 android:id="@+id/tvLastWorkout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
                 android:text="@string/Last_Workout"
                 android:textColor="@color/ft_text_secondary"
                 android:textSize="14sp"
-                android:fontFamily="sans-serif-medium"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -284,22 +308,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
+                android:fontFamily="sans-serif-black"
                 android:text="Legs"
                 android:textAllCaps="true"
                 android:textColor="@color/ft_text_primary"
                 android:textSize="20sp"
-                android:fontFamily="sans-serif-black"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvLastWorkout" />
+
             <TextView
                 android:id="@+id/tvWhen"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
+                android:fontFamily="sans-serif"
                 android:text="Ayer"
                 android:textColor="@color/ft_text_secondary"
                 android:textSize="12sp"
-                android:fontFamily="sans-serif"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvLastWorkoutDay" />
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -314,8 +339,8 @@
         app:cardCornerRadius="16dp"
         app:cardElevation="4dp"
         app:cardUseCompatPadding="true"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cardWorkoutSummary">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -327,10 +352,10 @@
                 android:id="@+id/tvProgress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
                 android:text="@string/Progress"
                 android:textColor="@color/ft_text_secondary"
                 android:textSize="14sp"
-                android:fontFamily="sans-serif-medium"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 

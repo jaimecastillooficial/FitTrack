@@ -39,59 +39,63 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     @SuppressLint("SetTextI18n")
     private fun observeViewModel() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.caloriesConsumed.collect { consumed ->
-                binding.tvCaloriesValue.text = consumed.toString()
-            }
-        }
 
+        // Calorias restantes
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.caloriesRemaining.collect { remaining ->
-                binding.tvCaloriesRemaining.text = "$remaining restantes"
+                binding.tvCaloriesValue.text = remaining
             }
         }
+        // Calorias consumidas
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.caloriesConsumed.collect { consumed ->
+                binding.tvCaloriesLeft.text = "$consumed"
+            }
+        }
+        // Calorias objetivo
 
+        //Barra de progreso
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.progressCalories.collect { progress ->
                 binding.progressCalories.progress = progress
             }
         }
-
+        //Proteinas consumidas
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.proteinConsumed.collect {
                 binding.tvProteinsValue.text =
                     "${viewModel.proteinConsumed.value} / ${viewModel.proteinGoal.value}g"
             }
         }
-
+        //Proteinas Objetivo
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.proteinGoal.collect {
                 binding.tvProteinsValue.text =
                     "${viewModel.proteinConsumed.value} / ${viewModel.proteinGoal.value}g"
             }
         }
-
+        //Carbs consumidas
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.carbsConsumed.collect {
                 binding.tvCarbsValue.text =
                     "${viewModel.carbsConsumed.value} / ${viewModel.carbsGoal.value}g"
             }
         }
-
+        //Carbs Objetivo
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.carbsGoal.collect {
                 binding.tvCarbsValue.text =
                     "${viewModel.carbsConsumed.value} / ${viewModel.carbsGoal.value}g"
             }
         }
-
+        //Grasas consumidas
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.fatsConsumed.collect {
                 binding.tvFatsValue.text =
                     "${viewModel.fatsConsumed.value} / ${viewModel.fatsGoal.value}g"
             }
         }
-
+        //Grasas Objetivo
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.fatsGoal.collect {
                 binding.tvFatsValue.text =

@@ -17,9 +17,9 @@ class WorkoutRepository @Inject constructor(
     private val routineDayExerciseDao: RoutineDayExerciseDao
 ) {
 
-    // =========================
+
     // GET WORKOUT COMPLETO
-    // =========================
+
 
     suspend fun getWorkoutFullByDate(userUid: String, date: String): WorkoutFull? {
         return withContext(Dispatchers.IO) {
@@ -27,9 +27,9 @@ class WorkoutRepository @Inject constructor(
         }
     }
 
-    // =========================
+
     // CREAR WORKOUT DESDE PLAN
-    // =========================
+
 
     suspend fun createWorkoutFromPlan(
         userUid: String,
@@ -68,9 +68,9 @@ class WorkoutRepository @Inject constructor(
         }
     }
 
-    // =========================
+
     // GUARDAR ENTRENAMIENTO COMPLETO (BOTÓN FINAL)
-    // =========================
+
 
     suspend fun saveFullWorkout(
         userUid: String,
@@ -128,9 +128,8 @@ class WorkoutRepository @Inject constructor(
         }
     }
 
-    // =========================
-    // GUARDAR SOLO UN EJERCICIO (opcional pero útil)
-    // =========================
+
+    // GUARDAR SOLO UN EJERCICIO
 
     suspend fun saveSetsForExercise(
         workoutId: Long,
@@ -166,9 +165,9 @@ class WorkoutRepository @Inject constructor(
         }
     }
 
-    // =========================
+
     // BORRAR WORKOUT
-    // =========================
+
 
     suspend fun deleteWorkoutByDate(userUid: String, date: String) {
         withContext(Dispatchers.IO) {

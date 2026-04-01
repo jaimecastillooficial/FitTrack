@@ -2,15 +2,14 @@ package com.TFG_JCF.fittrack.ui.MainApp.Diet.AddFood
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.TFG_JCF.fittrack.R
+import com.TFG_JCF.fittrack.data.database.entities.Diet.FoodEntity
 import com.TFG_JCF.fittrack.databinding.ActivityAddFoodBinding
 import com.TFG_JCF.fittrack.ui.MainApp.Diet.AddFood.FoodMenu.FoodMenuActivity
 import com.TFG_JCF.fittrack.ui.MainApp.Diet.AddFood.adapter.AddFoodAdapter
@@ -48,28 +47,31 @@ class AddFoodActivity : AppCompatActivity() {
     private fun initUI() {
         initSearchView()
 
-        viewModel.insertDefaultFoodsIfNeeded()
-        viewModel.loadFoods()
         binding.tvMealType.text = mealType
         binding.goBack.setOnClickListener {
             onBackPressed()
         }
         initRecyclerView()
         suscribeViewModel()
+
+        // Importante: primero asegura seed y luego carga
+        viewModel.prepareFoods()
     }
 
 
     private fun initRecyclerView() {
         adapter = AddFoodAdapter(emptyList()){
-            selectedFood -> navigateToFoodMenu()
+            selectedFood -> navigateToFoodMenu(selectedFood)
         }
         binding.rvFoods.layoutManager = LinearLayoutManager(this)
         binding.rvFoods.adapter = adapter
     }
 
-    private fun navigateToFoodMenu() {
-        val intent = Intent(this, FoodMenuActivity::class.java)
-        //intent.putExtra("MEAL_TYPE", name)
+    private fun navigateToFoodMenu(food: FoodEntity) {
+        val intent = Intent(this, FoodMenuActivity::class.java).apply {
+            putExtra("FOOD_ID", food.id)
+            putExtra("MEAL_TYPE", mealType)
+        }
         startActivity(intent)
     }
 

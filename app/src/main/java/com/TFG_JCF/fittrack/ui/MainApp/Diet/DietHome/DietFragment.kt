@@ -1,5 +1,6 @@
 package com.TFG_JCF.fittrack.ui.MainApp.Diet.DietHome
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -15,6 +16,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.TFG_JCF.fittrack.R
+import com.TFG_JCF.fittrack.data.model.MealListItem
+import com.TFG_JCF.fittrack.databinding.DialogEditMealItemBinding
 import com.TFG_JCF.fittrack.databinding.FragmentDietBinding
 import com.TFG_JCF.fittrack.ui.MainApp.Diet.AddFood.AddFoodActivity
 import com.TFG_JCF.fittrack.ui.MainApp.Diet.DietHome.adapter.DietAdapter
@@ -62,9 +65,14 @@ class DietFragment : Fragment(R.layout.fragment_diet) {
     private fun initRecycler() {
         viewModel.loadDietForToday()
 
-        adapter = DietAdapter { header ->
-            navigateToAddFood(header.mealType.toString())
-        }
+        adapter = DietAdapter(
+            onAddClick = { header ->
+                navigateToAddFood(header.mealType.toString())
+            },
+            onFoodClick = { foodItem ->
+                showFoodOptionsDialog(foodItem)
+            }
+        )
 
         binding.rvMeals.layoutManager = LinearLayoutManager(requireContext())
         binding.rvMeals.adapter = adapter
@@ -94,6 +102,9 @@ class DietFragment : Fragment(R.layout.fragment_diet) {
         // Calorias restantes
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.caloriesRemaining.collect { remaining ->
+                if ( remaining < 0){
+                    binding.tvResult.setTextColor(ContextCompat.getColor(requireContext(), R.color.ft_error))
+                }
                 binding.tvResult.text = "$remaining"
             }
         }
@@ -113,6 +124,45 @@ class DietFragment : Fragment(R.layout.fragment_diet) {
         intent.putExtra("MEAL_TYPE", name)
         startActivity(intent)
 
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun showFoodOptionsDialog(item: MealListItem.FoodItem) {
+        val dialogBinding = DialogEditMealItemBinding.inflate(layoutInflater)
+
+        dialogBinding.tvDialogFoodName.text = item.name
+        dialogBinding.etDialogGrams.setText(item.grams.toString())
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogBinding.root)
+            .setCancelable(true)
+            .create()
+
+        dialog.show()
+
+
+        // GUARDAR CAMBIOS
+        dialogBinding.btnSave.setOnClickListener {
+            val newGrams = dialogBinding.etDialogGrams.text.toString().toFloatOrNull()
+
+            if (newGrams == null || newGrams <= 0f) {
+                Toast.makeText(requireContext(), "Introduce unos gramos válidos", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            viewModel.updateMealItemGrams(item.mealItemId, newGrams) {
+                Toast.makeText(requireContext(), "Gramos actualizados", Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+            }
+        }
+
+        // ELIMINAR
+        dialogBinding.btnDelete.setOnClickListener {
+            viewModel.deleteMealItem(item.mealItemId) {
+                Toast.makeText(requireContext(), "Alimento eliminado", Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+            }
+        }
     }
 }
 

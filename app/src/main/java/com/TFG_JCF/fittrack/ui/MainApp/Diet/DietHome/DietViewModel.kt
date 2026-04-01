@@ -103,11 +103,13 @@ class DietViewModel @Inject constructor(
 
             meal?.items?.forEach { mealItemWithFood ->
                 val food = mealItemWithFood.food
+                val item = mealItemWithFood.item
                 val grams = mealItemWithFood.item.grams
                 val calories = ((food.kcalPer100g * grams) / 100f).roundToInt()
 
                 finalList.add(
                     MealListItem.FoodItem(
+                        mealItemId = item.id,
                         name = food.name,
                         calories = calories,
                         grams = grams.roundToInt()
@@ -117,6 +119,24 @@ class DietViewModel @Inject constructor(
         }
 
         return finalList
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun deleteMealItem(mealItemId: Long, onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            dietRepository.deleteMealItem(mealItemId)
+            loadDietForToday()
+            onSuccess()
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun updateMealItemGrams(mealItemId: Long, grams: Float, onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            if (grams <= 0f) return@launch
+            dietRepository.updateMealItemGrams(mealItemId, grams)
+            loadDietForToday()
+            onSuccess()
+        }
     }
 
 }

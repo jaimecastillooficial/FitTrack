@@ -24,6 +24,9 @@ class DietRepository @Inject constructor(
         return@withContext foodDao.getAll()
 
     }
+    suspend fun getFoodById(foodId: Long): FoodEntity? {
+        return foodDao.getFoodById(foodId)
+    }
     // crear un alimento
     suspend fun insertOneFood(name: String, kcal: Int, protein: Float, carbs: Float, fat: Float, isPublic: Boolean, createdByUid: String?) {
         withContext(Dispatchers.IO) {
@@ -134,7 +137,12 @@ class DietRepository @Inject constructor(
         mealDao.getMealWithItemsAndFoods(userUid, date, type)
     }
 
-
-    //Funcion que coja los alimentos de una meal y calcule el total de calorias, proteinas, grasas y carbohidratos
+    suspend fun updateMealItemGrams(
+        mealItemId: Long,
+        grams: Float
+    ) = withContext(Dispatchers.IO) {
+        require(grams > 0f) { "grams debe ser > 0" }
+        mealItemDao.updateGrams(mealItemId, grams)
+    }
 
 }

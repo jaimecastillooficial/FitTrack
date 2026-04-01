@@ -76,22 +76,19 @@ class AddFoodViewModel @Inject constructor(
         FoodEntity(name = "Nueces", kcalPer100g = 654, proteinPer100g = 15f, carbsPer100g = 14f, fatPer100g = 65f, isPublic = true, createdByUid = null)
     )
 
-    fun insertDefaultFoodsIfNeeded() {
+    fun prepareFoods() {
         viewModelScope.launch {
             val current = repository.getAllFoods()
-
             if (current.isEmpty()) {
                 repository.insertFoods(defaultFoods)
             }
-        }
-    }
-
-    fun loadFoods() {
-        viewModelScope.launch {
             fullFoodList = repository.getAllFoods()
             _filteredFoods.postValue(fullFoodList)
         }
     }
+
+
+
 
     fun filterFoods(query: String) {
         if (query.isBlank()) {

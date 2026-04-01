@@ -60,4 +60,5 @@
     <string name="calories_per_day">Calorias diarias</string>
     <string name="target_weight_en_kg">Peso objetivo en kg</string>
     <string name="peso_objetivo">Peso objetivo</string>
+    <string name="you_have_left">Te quedan</string>
 </resources>

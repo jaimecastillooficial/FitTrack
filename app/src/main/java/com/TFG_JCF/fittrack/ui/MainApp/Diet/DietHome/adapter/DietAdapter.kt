@@ -7,9 +7,11 @@ import com.TFG_JCF.fittrack.data.model.MealListItem
 import com.TFG_JCF.fittrack.databinding.ItemDietHeaderMealBinding
 import com.TFG_JCF.fittrack.databinding.ItemDietMealBinding
 
-class DietAdapter (    private var meals: List<MealListItem> = emptyList(),
-                       private val onAddClick: (MealListItem.Header) -> Unit
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>()  {
+class DietAdapter(
+    private var meals: List<MealListItem> = emptyList(),
+    private val onAddClick: (MealListItem.Header) -> Unit,
+    private val onFoodClick: (MealListItem.FoodItem) -> Unit
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
         const val TYPE_HEADER = 0
         const val TYPE_FOOD = 1
@@ -41,7 +43,7 @@ class DietAdapter (    private var meals: List<MealListItem> = emptyList(),
         }
 
         if (holder is FoodViewHolder && item is MealListItem.FoodItem) {
-            holder.bind(item)
+            holder.bind(item, onFoodClick)
         }
     }
 

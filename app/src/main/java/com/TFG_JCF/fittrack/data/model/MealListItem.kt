@@ -9,6 +9,7 @@ sealed class MealListItem {
     ) : MealListItem()
 
     data class FoodItem(
+        val mealItemId: Long,
         val name: String,
         val calories: Int,
         val grams: Int

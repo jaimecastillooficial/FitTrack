@@ -19,4 +19,7 @@ interface MealItemDao {
 
     @Query("DELETE FROM meal_items WHERE mealId = :mealId")
     suspend fun deleteAllForMeal(mealId: Long)
+
+    @Query("UPDATE meal_items SET grams = :grams WHERE id = :itemId")
+    suspend fun updateGrams(itemId: Long, grams: Float)
 }
