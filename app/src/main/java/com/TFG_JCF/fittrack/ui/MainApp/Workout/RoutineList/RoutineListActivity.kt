@@ -55,9 +55,12 @@ class RoutineListActivity : AppCompatActivity() {
                 ).show()
             },
             onRoutineClick = { routine ->
-                val intent = Intent(this, RoutineDetailActivity::class.java)
-                intent.putExtra("routineId", routine.id)
-                startActivity(intent)
+                startActivity(
+                    RoutineDetailActivity.createIntent(
+                        activity = this,
+                        routineId = routine.id
+                    )
+                )
             },
             onDeleteClick = { routine ->
                 showDeleteRoutineDialog(routine.id, routine.name)

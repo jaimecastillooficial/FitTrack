@@ -32,7 +32,6 @@ import com.TFG_JCF.fittrack.data.database.entities.Workout.ExerciseEntity
 import com.TFG_JCF.fittrack.data.database.entities.Workout.RoutineWeekEntity
 import com.TFG_JCF.fittrack.data.database.entities.Workout.RoutineDayPlanEntity
 import com.TFG_JCF.fittrack.data.database.entities.Workout.RoutineDayExerciseEntity
-import com.TFG_JCF.fittrack.data.database.entities.Workout.RoutinePlanDayEntity
 import com.TFG_JCF.fittrack.data.database.entities.Workout.WorkoutEntity
 import com.TFG_JCF.fittrack.data.database.entities.Workout.WorkoutExerciseEntity
 import com.TFG_JCF.fittrack.data.database.entities.Workout.WorkoutSetEntity
@@ -52,14 +51,13 @@ import com.TFG_JCF.fittrack.data.database.entities.Workout.WorkoutSetEntity
         ExerciseEntity::class,
         RoutineWeekEntity::class,
         RoutineDayPlanEntity::class,
-        RoutinePlanDayEntity::class,
         RoutineDayExerciseEntity::class,
         WorkoutEntity::class,
         WorkoutExerciseEntity::class,
         WorkoutSetEntity::class
     ],
     // Cambiar cada vez que se cambie la base de datos
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
