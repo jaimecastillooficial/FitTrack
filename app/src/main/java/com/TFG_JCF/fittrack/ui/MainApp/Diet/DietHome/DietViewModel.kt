@@ -8,7 +8,7 @@ import com.TFG_JCF.fittrack.data.Repositories.DietRepository
 import com.TFG_JCF.fittrack.data.Repositories.UserRepository
 import com.TFG_JCF.fittrack.data.database.Relations.Diet.MealWithItemsAndFoods
 import com.TFG_JCF.fittrack.data.database.entities.Diet.MealType
-import com.TFG_JCF.fittrack.data.model.MealListItem
+import com.TFG_JCF.fittrack.data.model.Diet.MealListItem
 import com.TFG_JCF.fittrack.data.utils.NutritionCalculator
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel

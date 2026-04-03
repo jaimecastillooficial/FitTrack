@@ -4,7 +4,7 @@ package com.TFG_JCF.fittrack.data.utils
 import com.TFG_JCF.fittrack.data.database.entities.User_Bonus.ActivityLevel
 import com.TFG_JCF.fittrack.data.database.entities.User_Bonus.Gender
 import com.TFG_JCF.fittrack.data.database.entities.User_Bonus.GoalType
-import com.TFG_JCF.fittrack.data.model.CalorieRecomendation
+import com.TFG_JCF.fittrack.data.model.Diet.CalorieRecomendation
 import kotlin.math.roundToInt
 
 object RecommendationCalculator {

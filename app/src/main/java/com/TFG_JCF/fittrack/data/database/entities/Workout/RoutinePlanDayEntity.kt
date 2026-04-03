@@ -6,30 +6,27 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "routine_day_plans",
+    tableName = "routine_plan_days",
     foreignKeys = [
         ForeignKey(
-            entity = RoutineWeekEntity::class,
+            entity = RoutineDayPlanEntity::class,
             parentColumns = ["id"],
-            childColumns = ["routineWeekId"],
+            childColumns = ["dayPlanId"],
             onDelete = ForeignKey.CASCADE
         )
     ],
     indices = [
-        Index(value = ["routineWeekId"]),
-        Index(value = ["routineWeekId", "dayOfWeek"], unique = true)
+        Index(value = ["dayPlanId"]),
+        Index(value = ["dayPlanId", "dayOfWeek"], unique = true)
     ]
 )
-data class RoutineDayPlanEntity(
+data class RoutinePlanDayEntity(
 
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
 
-    val routineWeekId: Long,
+    val dayPlanId: Long,
 
-    val dayOfWeek: Int,
-
-    val dayName: String,
-
-    val orderIndex: Int? = null
+    // 1..7 -> lunes..domingo
+    val dayOfWeek: Int
 )

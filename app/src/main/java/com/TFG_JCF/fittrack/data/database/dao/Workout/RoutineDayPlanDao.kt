@@ -1,7 +1,5 @@
 package com.TFG_JCF.fittrack.data.database.dao.Workout
 
-
-
 import androidx.room.*
 import com.TFG_JCF.fittrack.data.database.entities.Workout.RoutineDayPlanEntity
 
@@ -29,5 +27,8 @@ interface RoutineDayPlanDao {
         WHERE routineWeekId = :routineWeekId AND dayOfWeek = :dayOfWeek
         LIMIT 1
     """)
-    suspend fun getByRoutineWeekAndDay(routineWeekId: Long, dayOfWeek: Int): RoutineDayPlanEntity?
+    suspend fun getByRoutineWeekAndDay(
+        routineWeekId: Long,
+        dayOfWeek: Int
+    ): RoutineDayPlanEntity?
 }

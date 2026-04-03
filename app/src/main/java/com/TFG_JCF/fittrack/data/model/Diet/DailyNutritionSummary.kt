@@ -1,4 +1,4 @@
-package com.TFG_JCF.fittrack.data.model
+package com.TFG_JCF.fittrack.data.model.Diet
 
 data class DailyNutritionSummary(
     val caloriesConsumed: Int,

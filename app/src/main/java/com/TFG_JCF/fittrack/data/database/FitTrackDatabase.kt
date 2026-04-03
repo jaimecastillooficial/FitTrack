@@ -12,6 +12,7 @@ import com.TFG_JCF.fittrack.data.database.dao.User_Bonus.WeightEntryDao
 import com.TFG_JCF.fittrack.data.database.dao.Workout.ExerciseDao
 import com.TFG_JCF.fittrack.data.database.dao.Workout.RoutineDayExerciseDao
 import com.TFG_JCF.fittrack.data.database.dao.Workout.RoutineDayPlanDao
+
 import com.TFG_JCF.fittrack.data.database.dao.Workout.RoutineWeekDao
 import com.TFG_JCF.fittrack.data.database.dao.Workout.WorkoutDao
 import com.TFG_JCF.fittrack.data.database.dao.Workout.WorkoutExerciseDao
@@ -31,6 +32,7 @@ import com.TFG_JCF.fittrack.data.database.entities.Workout.ExerciseEntity
 import com.TFG_JCF.fittrack.data.database.entities.Workout.RoutineWeekEntity
 import com.TFG_JCF.fittrack.data.database.entities.Workout.RoutineDayPlanEntity
 import com.TFG_JCF.fittrack.data.database.entities.Workout.RoutineDayExerciseEntity
+import com.TFG_JCF.fittrack.data.database.entities.Workout.RoutinePlanDayEntity
 import com.TFG_JCF.fittrack.data.database.entities.Workout.WorkoutEntity
 import com.TFG_JCF.fittrack.data.database.entities.Workout.WorkoutExerciseEntity
 import com.TFG_JCF.fittrack.data.database.entities.Workout.WorkoutSetEntity
@@ -50,6 +52,7 @@ import com.TFG_JCF.fittrack.data.database.entities.Workout.WorkoutSetEntity
         ExerciseEntity::class,
         RoutineWeekEntity::class,
         RoutineDayPlanEntity::class,
+        RoutinePlanDayEntity::class,
         RoutineDayExerciseEntity::class,
         WorkoutEntity::class,
         WorkoutExerciseEntity::class,
@@ -62,7 +65,7 @@ import com.TFG_JCF.fittrack.data.database.entities.Workout.WorkoutSetEntity
 @TypeConverters(Converters::class)
 abstract class FitTrackDatabase : RoomDatabase() {
 
-    //TODO Poner los Dao
+
     abstract fun getFoodDao(): FoodDao
     abstract fun getMealDao(): MealDao
     abstract fun getMealItemDao(): MealItemDao

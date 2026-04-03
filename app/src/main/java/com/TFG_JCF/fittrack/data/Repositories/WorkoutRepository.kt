@@ -31,42 +31,42 @@ class WorkoutRepository @Inject constructor(
     // CREAR WORKOUT DESDE PLAN
 
 
-    suspend fun createWorkoutFromPlan(
-        userUid: String,
-        date: String,
-        routineWeekId: Long,
-        dayOfWeek: Int
-    ): Long {
-
-        return withContext(Dispatchers.IO) {
-
-            val dayPlan =
-                routineDayPlanDao.getByRoutineWeekAndDay(routineWeekId, dayOfWeek)
-                    ?: return@withContext -1L
-
-            val workoutId = workoutDao.insert(
-                WorkoutEntity(
-                    userUid = userUid,
-                    date = date,
-                    dayName = dayPlan.dayName
-                )
-            )
-
-            val exercises = routineDayExerciseDao.getByDayPlan(dayPlan.id)
-
-            for (e in exercises) {
-                workoutExerciseDao.insert(
-                    WorkoutExerciseEntity(
-                        workoutId = workoutId,
-                        exerciseId = e.exerciseId,
-                        orderIndex = e.orderIndex
-                    )
-                )
-            }
-
-            workoutId
-        }
-    }
+//    suspend fun createWorkoutFromPlan(
+//        userUid: String,
+//        date: String,
+//        routineWeekId: Long,
+//        dayOfWeek: Int
+//    ): Long {
+//
+//        return withContext(Dispatchers.IO) {
+//
+//            val dayPlan =
+//                routineDayPlanDao.getByRoutineWeekAndDay(routineWeekId, dayOfWeek)
+//                    ?: return@withContext -1L
+//
+//            val workoutId = workoutDao.insert(
+//                WorkoutEntity(
+//                    userUid = userUid,
+//                    date = date,
+//                    dayName = dayPlan.dayName
+//                )
+//            )
+//
+//            val exercises = routineDayExerciseDao.getByDayPlan(dayPlan.id)
+//
+//            for (e in exercises) {
+//                workoutExerciseDao.insert(
+//                    WorkoutExerciseEntity(
+//                        workoutId = workoutId,
+//                        exerciseId = e.exerciseId,
+//                        orderIndex = e.orderIndex
+//                    )
+//                )
+//            }
+//
+//            workoutId
+//        }
+//    }
 
 
     // GUARDAR ENTRENAMIENTO COMPLETO (BOTÓN FINAL)

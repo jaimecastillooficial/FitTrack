@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.TFG_JCF.fittrack.data.Repositories.UserRepository
 import com.TFG_JCF.fittrack.data.database.entities.User_Bonus.UserProfileEntity
-import com.TFG_JCF.fittrack.data.model.CalorieRecomendation
+import com.TFG_JCF.fittrack.data.model.Diet.CalorieRecomendation
 import com.TFG_JCF.fittrack.data.model.SignUpData
 import com.TFG_JCF.fittrack.data.utils.RecommendationCalculator
 import dagger.hilt.android.lifecycle.HiltViewModel

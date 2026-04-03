@@ -7,6 +7,7 @@ import com.TFG_JCF.fittrack.data.database.dao.User_Bonus.WeightEntryDao
 import com.TFG_JCF.fittrack.data.database.dao.Workout.ExerciseDao
 import com.TFG_JCF.fittrack.data.database.dao.Workout.RoutineDayExerciseDao
 import com.TFG_JCF.fittrack.data.database.dao.Workout.RoutineDayPlanDao
+
 import com.TFG_JCF.fittrack.data.database.dao.Workout.RoutineWeekDao
 import com.TFG_JCF.fittrack.data.database.dao.Workout.WorkoutDao
 import com.TFG_JCF.fittrack.data.database.dao.Workout.WorkoutExerciseDao
@@ -67,6 +68,8 @@ object RoomModule {
     @Singleton
     @Provides
     fun provideRoutineDayPlanDao(db: FitTrackDatabase): RoutineDayPlanDao = db.getRoutineDayPlanDao()
+
+
 
     @Singleton
     @Provides

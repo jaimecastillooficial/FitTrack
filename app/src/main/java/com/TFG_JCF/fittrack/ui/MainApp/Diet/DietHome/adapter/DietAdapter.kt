@@ -3,7 +3,7 @@ package com.TFG_JCF.fittrack.ui.MainApp.Diet.DietHome.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.TFG_JCF.fittrack.data.model.MealListItem
+import com.TFG_JCF.fittrack.data.model.Diet.MealListItem
 import com.TFG_JCF.fittrack.databinding.ItemDietHeaderMealBinding
 import com.TFG_JCF.fittrack.databinding.ItemDietMealBinding
 

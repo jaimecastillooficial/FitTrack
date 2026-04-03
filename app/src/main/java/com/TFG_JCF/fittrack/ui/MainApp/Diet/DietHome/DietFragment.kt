@@ -8,15 +8,12 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContentProviderCompat
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.TFG_JCF.fittrack.R
-import com.TFG_JCF.fittrack.data.model.MealListItem
+import com.TFG_JCF.fittrack.data.model.Diet.MealListItem
 import com.TFG_JCF.fittrack.databinding.DialogEditMealItemBinding
 import com.TFG_JCF.fittrack.databinding.FragmentDietBinding
 import com.TFG_JCF.fittrack.ui.MainApp.Diet.AddFood.AddFoodActivity
@@ -64,7 +61,7 @@ class DietFragment : Fragment(R.layout.fragment_diet) {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun initRecycler() {
         viewModel.loadDietForToday()
-
+        //Le paso las 2 lambdas
         adapter = DietAdapter(
             onAddClick = { header ->
                 navigateToAddFood(header.mealType.toString())
@@ -102,8 +99,13 @@ class DietFragment : Fragment(R.layout.fragment_diet) {
         // Calorias restantes
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.caloriesRemaining.collect { remaining ->
-                if ( remaining < 0){
-                    binding.tvResult.setTextColor(ContextCompat.getColor(requireContext(), R.color.ft_error))
+                if (remaining < 0) {
+                    binding.tvResult.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.ft_error
+                        )
+                    )
                 }
                 binding.tvResult.text = "$remaining"
             }
@@ -114,11 +116,13 @@ class DietFragment : Fragment(R.layout.fragment_diet) {
         super.onDestroyView()
         _binding = null
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onResume() {
         super.onResume()
         viewModel.loadDietForToday()
     }
+
     private fun navigateToAddFood(name: String) {
         val intent = Intent(this.requireContext(), AddFoodActivity::class.java)
         intent.putExtra("MEAL_TYPE", name)
@@ -146,7 +150,12 @@ class DietFragment : Fragment(R.layout.fragment_diet) {
             val newGrams = dialogBinding.etDialogGrams.text.toString().toFloatOrNull()
 
             if (newGrams == null || newGrams <= 0f) {
-                Toast.makeText(requireContext(), "Introduce unos gramos válidos", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Introduce unos gramos válidos",
+                    Toast.LENGTH_SHORT
+                ).show()
+                //Indico que pare aqui y salga del OnClick pero al no haber un .dismiss el dialog sigue abierto
                 return@setOnClickListener
             }
 

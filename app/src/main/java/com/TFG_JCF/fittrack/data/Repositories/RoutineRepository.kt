@@ -16,10 +16,6 @@ class RoutineRepository @Inject constructor(
     private val routineDayExerciseDao: RoutineDayExerciseDao
 ) {
 
-    // =============================
-    // WEEK
-    // =============================
-
     suspend fun createRoutineWeek(userUid: String, name: String): Long {
         return withContext(Dispatchers.IO) {
             routineWeekDao.insert(
@@ -61,10 +57,6 @@ class RoutineRepository @Inject constructor(
         }
     }
 
-    // =============================
-    // DAY PLAN
-    // =============================
-
     suspend fun createRoutineDay(
         routineWeekId: Long,
         dayOfWeek: Int,
@@ -99,6 +91,12 @@ class RoutineRepository @Inject constructor(
         }
     }
 
+    suspend fun getRoutineWeekById(id: Long): RoutineWeekEntity? {
+        return withContext(Dispatchers.IO) {
+            routineWeekDao.getById(id)
+        }
+    }
+
     suspend fun getDayByWeekAndNumber(
         routineWeekId: Long,
         dayOfWeek: Int
@@ -107,10 +105,6 @@ class RoutineRepository @Inject constructor(
             routineDayPlanDao.getByRoutineWeekAndDay(routineWeekId, dayOfWeek)
         }
     }
-
-    // =============================
-    // DAY EXERCISES
-    // =============================
 
     suspend fun addExerciseToDay(
         dayPlanId: Long,

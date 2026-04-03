@@ -1,8 +1,8 @@
 package com.TFG_JCF.fittrack.data.utils
 
 import com.TFG_JCF.fittrack.data.database.Relations.Diet.MealWithItemsAndFoods
-import com.TFG_JCF.fittrack.data.model.DailyNutritionSummary
-import com.TFG_JCF.fittrack.data.model.MacroTargets
+import com.TFG_JCF.fittrack.data.model.Diet.DailyNutritionSummary
+import com.TFG_JCF.fittrack.data.model.Diet.MacroTargets
 import kotlin.math.roundToInt
 
 object NutritionCalculator {

@@ -1,7 +1,7 @@
 package com.TFG_JCF.fittrack.ui.MainApp.Diet.DietHome.adapter
 
 import androidx.recyclerview.widget.RecyclerView
-import com.TFG_JCF.fittrack.data.model.MealListItem
+import com.TFG_JCF.fittrack.data.model.Diet.MealListItem
 import com.TFG_JCF.fittrack.databinding.ItemDietMealBinding
 
 class FoodViewHolder(

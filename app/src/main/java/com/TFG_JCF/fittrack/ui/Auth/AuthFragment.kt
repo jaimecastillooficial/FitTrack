@@ -33,7 +33,7 @@ class AuthFragment : Fragment() {
         return binding.root
 
     }
-
+//TODO meter requisitos de complejidad y poder volver atras en el onboarding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

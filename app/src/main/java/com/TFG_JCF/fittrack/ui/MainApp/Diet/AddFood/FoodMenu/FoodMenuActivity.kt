@@ -88,6 +88,7 @@ class FoodMenuActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
 
             override fun afterTextChanged(s: Editable?) {
+
                 viewModel.updateGrams(s?.toString().orEmpty())
             }
         })
@@ -123,10 +124,10 @@ class FoodMenuActivity : AppCompatActivity() {
                 binding.tvfoodName.text = state.foodName
                 binding.inputMealType.text = mealTypeToText(state.mealType)
                 updateChart(
-                    calories = state.calories,
-                    protein = state.protein,
-                    carbs = state.carbs,
-                    fat = state.fat
+                     state.calories,
+                     state.protein,
+                    state.carbs,
+                    state.fat
                 )
             }
         }

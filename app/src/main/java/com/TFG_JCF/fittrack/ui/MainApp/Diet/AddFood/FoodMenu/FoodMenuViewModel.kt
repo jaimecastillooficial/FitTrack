@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.TFG_JCF.fittrack.data.Repositories.DietRepository
 import com.TFG_JCF.fittrack.data.database.entities.Diet.MealType
-import com.TFG_JCF.fittrack.data.model.FoodMenuUiState
+import com.TFG_JCF.fittrack.data.model.Diet.FoodMenuUiState
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -63,7 +63,7 @@ class FoodMenuViewModel @Inject constructor(
     private fun recalculate() {
         val state = _uiState.value
         val factor = state.grams / 100f
-
+//Copia el objeto y lo modifica con los nuevos valores procesados
         _uiState.value = state.copy(
             calories = (state.kcalPer100g * factor).roundToInt(),
             protein = state.proteinPer100g * factor,
@@ -71,7 +71,7 @@ class FoodMenuViewModel @Inject constructor(
             fat = state.fatPer100g * factor
         )
     }
-
+//Funcion que recibe 2 lambdas como parametros y las ejecuta cuando se cumpla la condicion x
     @RequiresApi(Build.VERSION_CODES.O)
     fun saveFood(onSuccess: () -> Unit, onError: (String) -> Unit) {
         viewModelScope.launch {

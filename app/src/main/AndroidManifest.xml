@@ -15,6 +15,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FitTrack">
         <activity
+            android:name=".ui.MainApp.Workout.RoutineDetail.RoutineDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.MainApp.Workout.RoutineList.RoutineListActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.MainApp.Diet.AddFood.FoodMenu.FoodMenuActivity"
             android:exported="false" />
         <activity
