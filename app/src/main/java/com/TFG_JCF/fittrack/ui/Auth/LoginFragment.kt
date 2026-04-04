@@ -9,17 +9,26 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.isVisible
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.TFG_JCF.fittrack.R
 import com.TFG_JCF.fittrack.databinding.FragmentLoginBinding
 import com.TFG_JCF.fittrack.ui.MainApp.Home.MainActivity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
+import kotlin.jvm.java
 
 
 class LoginFragment : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
+
+    private val vm: SignUpViewModel by activityViewModels()
+    private val GOOGLE_SIGN_IN = 100
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,7 +49,8 @@ class LoginFragment : Fragment() {
     private fun checkUser() {
         val user = FirebaseAuth.getInstance().currentUser
         if (user != null) {
-            navigateToHome()
+            binding.progressBar.isVisible = true
+            resolveNavigationAfterAuth()
         }
     }
 
@@ -59,7 +69,7 @@ class LoginFragment : Fragment() {
 
                             val uid = FirebaseAuth.getInstance().currentUser!!.uid
 
-                            navigateToHome()
+                            resolveNavigationAfterAuth()
 
                         } else {
                             binding.progressBar.isVisible = false
@@ -74,6 +84,19 @@ class LoginFragment : Fragment() {
         }
         binding.tvSignUp.setOnClickListener {
             navigateToSignUp()
+        }
+        binding.btnloginGoogle.setOnClickListener {
+
+            val googleConf = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build()
+
+            val googleClient = GoogleSignIn.getClient(this.requireContext(), googleConf)
+            googleClient.signOut()
+            startActivityForResult(googleClient.signInIntent, GOOGLE_SIGN_IN)
+
+
         }
     }
 
@@ -110,5 +133,76 @@ class LoginFragment : Fragment() {
             binding.passwordLayout.error = "Introduce una contraseña"
         }
 
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        binding.progressBar.isVisible = true
+
+        if (requestCode == GOOGLE_SIGN_IN){
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+
+            val account = task.getResult(ApiException::class.java)
+
+            if (account != null) {
+                val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+                FirebaseAuth.getInstance().signInWithCredential(credential).addOnCompleteListener {
+
+                    if (it.isSuccessful) {
+
+                        val user = FirebaseAuth.getInstance().currentUser
+                        if (user != null) {
+                            vm.signUpData.uid = user.uid
+                            vm.signUpData.email = user.email
+                            vm.signUpData.name = user.displayName ?: ""
+                        }
+                        resolveNavigationAfterAuth()
+
+                    } else {
+                        binding.progressBar.isVisible = false
+                        showAlert()
+                    }
+
+                }
+            }
+            }catch (e: ApiException){
+                binding.progressBar.isVisible = false
+                showAlert()
+            }
+        }
+    }
+    private fun resolveNavigationAfterAuth() {
+
+        val user = FirebaseAuth.getInstance().currentUser
+
+        if (user == null) {
+            binding.progressBar.isVisible = false
+            showAlert()
+            return
+        }
+
+        val uid = user.uid
+
+        vm.checkIfUserProfileExists(uid) { exists ->
+            binding.progressBar.isVisible = false
+            requireActivity().runOnUiThread {
+                binding.progressBar.isVisible = false
+
+                if (exists) {
+                    navigateToHome()
+                } else {
+                    vm.signUpData.uid = user.uid
+                    vm.signUpData.email = user.email
+                    vm.signUpData.name = user.displayName ?: ""
+
+                    navigateToGoal()
+                }
+            }
+        }
+    }
+    private fun navigateToGoal() {
+        findNavController().navigate(R.id.action_login_to_goal)
     }
 }

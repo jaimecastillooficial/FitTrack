@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_login_to_auth"
             app:destination="@id/authFragment"/>
+        <action
+            android:id="@+id/action_login_to_goal"
+            app:destination="@id/goalFragment"/>
     </fragment>
 
     <fragment

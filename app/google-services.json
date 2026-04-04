@@ -12,7 +12,12 @@
           "package_name": "com.TFG_JCF.fittrack"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "290200221432-2k11l52sh0sc6nrgbarlc907gp79su7q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDQGutynPhrycunV7wyVLnC4EJQleGadwQ"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "290200221432-1377gevt6k4scgq0r5s5c4b2gbec1r6n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

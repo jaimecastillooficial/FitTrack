@@ -3,6 +3,8 @@ package com.TFG_JCF.fittrack.ui.Auth
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.fragment.findNavController
+import com.TFG_JCF.fittrack.R
 import com.TFG_JCF.fittrack.data.Repositories.UserRepository
 import com.TFG_JCF.fittrack.data.database.entities.User_Bonus.UserProfileEntity
 import com.TFG_JCF.fittrack.data.model.Diet.CalorieRecomendation
@@ -10,6 +12,7 @@ import com.TFG_JCF.fittrack.data.model.SignUpData
 import com.TFG_JCF.fittrack.data.utils.RecommendationCalculator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -81,6 +84,15 @@ class SignUpViewModel @Inject constructor(
     fun resetProfileCreatedFlag() {
         _profileCreated.value = false
     }
-
+//Verificar si tengo su UID en la base de datos
+    fun checkIfUserProfileExists(
+        uid: String,
+        onResult: (Boolean) -> Unit
+    ) {
+        viewModelScope.launch {
+            val userProfile = userRepository.getUserProfile(uid)
+            onResult(userProfile != null)
+        }
+    }
 
 }

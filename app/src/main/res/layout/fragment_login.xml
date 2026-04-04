@@ -107,6 +107,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnloginGoogle"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="36dp"
+        android:text="Continuar con Google"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:backgroundTint="@color/ft_primary"
+        app:cornerRadius="16dp"
+        app:icon="@drawable/ic_google2"
+        app:iconGravity="textStart"
+        app:iconTint="@null"
+        app:layout_constraintTop_toBottomOf="@id/btnlogin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <!-- LOGIN LINK -->
     <TextView
         android:id="@+id/tvSignUp"
@@ -117,7 +135,7 @@
         android:textColor="@color/ft_primary"
         android:textSize="14sp"
         android:layout_marginTop="18dp"
-        app:layout_constraintTop_toBottomOf="@id/btnlogin"
+        app:layout_constraintTop_toBottomOf="@id/btnloginGoogle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
