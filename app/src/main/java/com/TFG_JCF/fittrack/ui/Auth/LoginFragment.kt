@@ -50,7 +50,7 @@ class LoginFragment : Fragment() {
             val email = binding.txtEmail.text.toString()
             val password = binding.txtPassword.text.toString()
 
-            if (email.isNotEmpty() || password.isNotEmpty()) {
+            if (email.isNotEmpty() && password.isNotEmpty()) {
                 FirebaseAuth.getInstance()
                     .signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener {
@@ -67,9 +67,10 @@ class LoginFragment : Fragment() {
                         }
 
                     }
+            }else{
+                binding.progressBar.isVisible = false
+                showEmptyFieldsErrors(email, password)
             }
-
-
         }
         binding.tvSignUp.setOnClickListener {
             navigateToSignUp()
@@ -80,17 +81,34 @@ class LoginFragment : Fragment() {
 
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Error")
-        builder.setMessage("Se ha producido un error iniciando sesion")
+        builder.setMessage("No se ha encontrado un usuario con estos datos")
         builder.setPositiveButton("Aceptar", null)
         val dialog: AlertDialog = builder.create()
         dialog.show()
     }
+
     private fun navigateToHome() {
         val intent = Intent(requireContext(), MainActivity::class.java)
         startActivity(intent)
         requireActivity().finish()
     }
+
     private fun navigateToSignUp() {
         findNavController().navigate(R.id.action_login_to_auth)
+    }
+
+    private fun showEmptyFieldsErrors(
+        email: String,
+        password: String,
+    ) {
+
+        if (email.isEmpty()) {
+            binding.emailLayout.error = "Introduce tu email"
+        }
+
+        if (password.isEmpty()) {
+            binding.passwordLayout.error = "Introduce una contraseña"
+        }
+
     }
 }

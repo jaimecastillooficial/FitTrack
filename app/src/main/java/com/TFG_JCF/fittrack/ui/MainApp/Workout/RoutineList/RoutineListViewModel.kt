@@ -41,8 +41,14 @@ class RoutineListViewModel @Inject constructor(
     fun createRoutine(name: String) {
         viewModelScope.launch {
             val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return@launch
+            val exists = routineRepository.existsRoutineWithName(uid, name)
 
             if (name.isBlank()) return@launch
+            if (exists) {
+
+                return@launch
+            }
+
 
             routineRepository.createRoutineWeek(
                  uid,
@@ -68,6 +74,14 @@ class RoutineListViewModel @Inject constructor(
             routineRepository.deleteRoutineWeek(routine)
 
             loadRoutines()
-        }
+                    }
     }
+
+    //suspend para que sea accedida por corrutina y acceder al repositorio en segundo plano y no bloquear la UI que es el hilo principal y primer plano
+    suspend fun verifyExistsRoutineName(name: String): Boolean {
+
+        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return false
+        return routineRepository.existsRoutineWithName(uid, name)
+    }
+
 }

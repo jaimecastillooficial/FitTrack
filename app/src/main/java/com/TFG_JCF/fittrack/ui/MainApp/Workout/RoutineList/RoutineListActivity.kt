@@ -115,9 +115,20 @@ class RoutineListActivity : AppCompatActivity() {
             if (name.isBlank()) {
                 binding.tilRoutineName.error = "Introduce un nombre válido"
             } else {
-                binding.tilRoutineName.error = null
-                viewModel.createRoutine(name)
-                dialog.dismiss()
+                //Se ha decidido hacer una corrutina ligada al ciclo de vida de la activity ya que es mas sencillo y eficaz que abrir mas lambdas  o otro StateFlow mas
+                //Se ha optado por una lifecycleScope para evitar fugas de memoria pues esta corrutina se destruye si la activity lo hace
+                lifecycleScope.launch {
+                    val exists = viewModel.verifyExistsRoutineName(name)
+
+                    if (exists) {
+                        binding.tilRoutineName.error = "Ya existe una rutina con ese nombre"
+                    } else {
+
+                        binding.tilRoutineName.error = null
+                        viewModel.createRoutine(name)
+                        dialog.dismiss()
+                    }
+                }
             }
         }
     }

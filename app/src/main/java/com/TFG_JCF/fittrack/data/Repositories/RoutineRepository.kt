@@ -145,4 +145,14 @@ class RoutineRepository @Inject constructor(
             routineDayExerciseDao.deleteAllForDayPlan(dayPlanId)
         }
     }
+    //Metodo para saber si existe una rutina con el mismo nombre
+    suspend fun existsRoutineWithName(userUid: String, name: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            val routines = routineWeekDao.getAllByUser(userUid)
+
+            routines.any {
+                it.name.trim().equals(name.trim(), ignoreCase = true)
+            }
+        }
+    }
 }

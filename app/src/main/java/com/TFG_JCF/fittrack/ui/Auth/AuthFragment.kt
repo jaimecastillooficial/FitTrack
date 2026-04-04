@@ -11,6 +11,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.TFG_JCF.fittrack.R
+import com.TFG_JCF.fittrack.data.utils.PasswordValidator
 import com.TFG_JCF.fittrack.databinding.FragmentAuthBinding
 import com.TFG_JCF.fittrack.ui.MainApp.Home.MainActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -53,39 +54,56 @@ class AuthFragment : Fragment() {
     }
 
     private fun createAccount() {
+        val name = binding.txtName.text.toString().trim()
+        val email = binding.txtEmail.text.toString().trim()
+        val password = binding.txtPassword.text.toString()
+        val confirmPassword = binding.txtConfirmPassword.text.toString()
 
-        if (binding.txtEmail.text!!.isNotEmpty() && binding.txtPassword.text!!.isNotEmpty() && binding.txtConfirmPassword.text!!.isNotEmpty()) {
+        clearErrors()
 
-            if (binding.txtPassword.text.toString() == binding.txtConfirmPassword.text.toString()) {
-
-                binding.progressBar.isVisible = true
-                FirebaseAuth.getInstance().createUserWithEmailAndPassword(
-                    binding.txtEmail.text.toString(),
-                    binding.txtPassword.text.toString()
-                ).addOnCompleteListener {
-
-                    if (it.isSuccessful) {
-
-                        val user = FirebaseAuth.getInstance().currentUser
-                        val uid = user?.uid
-
-                        vm.signUpData.uid = uid
-                        vm.signUpData.email = binding.txtEmail.toString()
-                        vm.signUpData.password = binding.txtPassword.toString()
-                        vm.signUpData.name = binding.txtName.text.toString()
-
-                        navigateToGoal()
-
-                    } else {
-                        binding.progressBar.isVisible = false
-                        showAlert()
-                    }
-                }
-
-            } else {
-                showPasswordAlert()
-            }
+        if (name.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+            showEmptyFieldsErrors(name, email, password, confirmPassword)
+            return
         }
+
+        if (!isValidEmail(email)) {
+            binding.emailLayout.error = "Introduce un correo válido"
+            binding.txtEmail.requestFocus()
+            return
+        }
+
+        val passwordError = PasswordValidator.validate(password)
+        if (passwordError != null) {
+            binding.passwordLayout.error = passwordError
+            return
+        }
+
+        if (password != confirmPassword) {
+            binding.confirmPasswordLayout.error = "Las contraseñas no coinciden"
+            return
+        }
+
+        binding.progressBar.isVisible = true
+
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener {
+
+                binding.progressBar.isVisible = false
+
+                if (it.isSuccessful) {
+                    val user = FirebaseAuth.getInstance().currentUser
+                    val uid = user?.uid
+
+                    vm.signUpData.uid = uid
+                    vm.signUpData.email = email
+                    vm.signUpData.password = password
+                    vm.signUpData.name = name
+
+                    navigateToGoal()
+                } else {
+                    showAlert()
+                }
+            }
     }
 
     private fun navigateToGoal() {
@@ -112,6 +130,40 @@ class AuthFragment : Fragment() {
         builder.setPositiveButton("Aceptar", null)
         val dialog: AlertDialog = builder.create()
         dialog.show()
+    }
+
+    private fun clearErrors() {
+        binding.nameLayout.error = null
+        binding.emailLayout.error = null
+        binding.passwordLayout.error = null
+        binding.confirmPasswordLayout.error = null
+    }
+
+    private fun showEmptyFieldsErrors(
+        name: String,
+        email: String,
+        password: String,
+        confirmPassword: String
+    ) {
+        if (name.isEmpty()) {
+            binding.nameLayout.error = "Introduce tu nombre"
+        }
+
+        if (email.isEmpty()) {
+            binding.emailLayout.error = "Introduce tu email"
+        }
+
+        if (password.isEmpty()) {
+            binding.passwordLayout.error = "Introduce una contraseña"
+        }
+
+        if (confirmPassword.isEmpty()) {
+            binding.confirmPasswordLayout.error = "Confirma tu contraseña"
+        }
+    }
+
+    private fun isValidEmail(email: String): Boolean {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
 }

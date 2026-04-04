@@ -81,4 +81,6 @@ class SignUpViewModel @Inject constructor(
     fun resetProfileCreatedFlag() {
         _profileCreated.value = false
     }
+
+
 }
