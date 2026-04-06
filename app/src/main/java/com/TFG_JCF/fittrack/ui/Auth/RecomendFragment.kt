@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.TFG_JCF.fittrack.R
 import com.TFG_JCF.fittrack.databinding.FragmentRecomendBinding
 import com.TFG_JCF.fittrack.ui.MainApp.Home.MainActivity
@@ -62,6 +63,9 @@ class RecomendFragment : Fragment() {
 
             vm.saveRecommendationData(calories, targetWeight)
             vm.createUserProfile()
+        }
+        binding.goBack.setOnClickListener {
+           navigateTophysicalAspects()
         }
     }
 
@@ -119,9 +123,13 @@ class RecomendFragment : Fragment() {
         startActivity(intent)
         requireActivity().finish()
     }
+    private fun navigateTophysicalAspects(){
+        findNavController().navigate(R.id.action_recommend_to_physical)
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
 }

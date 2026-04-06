@@ -76,8 +76,20 @@
             android:textStyle="bold"
             android:textColor="@color/ft_text_primary"
             app:layout_constraintTop_toBottomOf="@id/stepProgressContainer"
+            app:layout_constraintStart_toEndOf="@id/goBack"
+            android:layout_marginTop="14dp"
+            android:layout_marginStart="12dp"/>
+
+        <ImageView
+            android:id="@+id/goBack"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/back"
+            app:layout_constraintEnd_toStartOf="@id/tvTitle"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="12dp"/>
+            app:layout_constraintTop_toBottomOf="@id/stepProgressContainer"
+            android:layout_marginTop="10dp"
+            />
 
         <!-- SUBTITULO -->
         <TextView
@@ -89,7 +101,7 @@
             android:textSize="14sp"
             android:textColor="@color/ft_text_secondary"
             app:layout_constraintTop_toBottomOf="@id/tvTitle"
-            app:layout_constraintStart_toStartOf="parent"
+
             app:layout_constraintEnd_toEndOf="parent" />
 
         <!-- CARD CALORIAS -->
@@ -185,7 +197,7 @@
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@color/ft_text_primary"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="24dp"
             app:layout_constraintTop_toBottomOf="@id/cardWeight"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -219,7 +231,7 @@
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@color/ft_text_primary"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintTop_toBottomOf="@id/caloriesGoalLayout"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -253,7 +265,7 @@
             android:textColor="@color/white"
             android:backgroundTint="@color/btn_signupmodule_background_validations"
             app:cornerRadius="16dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="26dp"
             app:layout_constraintTop_toBottomOf="@id/targetWeightLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />

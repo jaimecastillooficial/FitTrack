@@ -63,6 +63,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvAssignedDays" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnEditDays"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:text="Editar días"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            app:backgroundTint="@color/ft_primary"
+            app:cornerRadius="12dp"
+            app:layout_constraintStart_toEndOf="@id/btnViewExercises"
+            app:layout_constraintTop_toTopOf="@id/btnViewExercises" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

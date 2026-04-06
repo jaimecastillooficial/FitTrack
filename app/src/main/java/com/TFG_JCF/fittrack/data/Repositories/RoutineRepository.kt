@@ -155,4 +155,23 @@ class RoutineRepository @Inject constructor(
             }
         }
     }
+    suspend fun copyExercisesToDay(
+        fromDayPlanId: Long,
+        toDayPlanId: Long
+    ) {
+        withContext(Dispatchers.IO) {
+            //Obtiene los ejercicios del dia original
+            val sourceExercises = routineDayExerciseDao.getByDayPlan(fromDayPlanId)
+        //Los inserta
+            sourceExercises.forEach { exercise ->
+                routineDayExerciseDao.insert(
+                    RoutineDayExerciseEntity(
+                        dayPlanId = toDayPlanId,
+                        exerciseId = exercise.exerciseId,
+                        orderIndex = exercise.orderIndex,
+                    )
+                )
+            }
+        }
+    }
 }

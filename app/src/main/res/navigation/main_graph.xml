@@ -38,6 +38,9 @@
         <action
             android:id="@+id/action_goal_to_activityLevel"
             app:destination="@id/activityLevelFragment"/>
+        <action
+            android:id="@+id/action_goal_to_login"
+            app:destination="@id/loginFragment"/>
 
     </fragment>
 
@@ -49,6 +52,9 @@
         <action
             android:id="@+id/action_activityLevel_to_physical"
             app:destination="@id/physicalAspectsFragment"/>
+        <action
+            android:id="@+id/action_activityLevel_to_goal"
+            app:destination="@id/goalFragment"/>
 
     </fragment>
 
@@ -59,12 +65,20 @@
         <action
             android:id="@+id/action_physicalaspects_to_recomend"
             app:destination="@id/recomendFragment"/>
+        <action
+            android:id="@+id/action_physicalaspects_to_activityLevel"
+            app:destination="@id/activityLevelFragment"/>
     </fragment>
 
     <fragment
         android:id="@+id/recomendFragment"
         android:name="com.TFG_JCF.fittrack.ui.Auth.RecomendFragment"
         android:label="fragment_recomend"
-        tools:layout="@layout/fragment_recomend" />
+        tools:layout="@layout/fragment_recomend"
+        >
+        <action
+            android:id="@+id/action_recommend_to_physical"
+            app:destination="@id/physicalAspectsFragment"/>
+    </fragment>
 
 </navigation>

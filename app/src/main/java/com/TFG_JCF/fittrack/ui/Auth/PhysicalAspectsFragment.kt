@@ -32,18 +32,21 @@ class PhysicalAspectsFragment : Fragment() {
 
         _binding = FragmentPhysicalAspectsBinding.inflate(inflater, container, false)
         return binding.root
+
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initUI()
+
     }
 
     private fun initUI() {
         binding.btnNext.setOnClickListener {
 
             // gender
+            if (validateFields()){
             when (binding.genderToggle.checkedButtonId) {
 
                 R.id.btnMale ->
@@ -60,10 +63,58 @@ class PhysicalAspectsFragment : Fragment() {
 
 
             navigateToRecomend()
+
+            }
+            else{
+                return@setOnClickListener
+            }
+
+        }
+        binding.goBack.setOnClickListener {
+            navigateToActivityLevel()
         }
     }
 
     private fun navigateToRecomend() {
         findNavController().navigate(R.id.action_physicalaspects_to_recomend)
+    }
+
+    private fun navigateToActivityLevel(){
+        findNavController().navigate(R.id.action_physicalaspects_to_activityLevel)
+
+    }
+
+    private fun validateFields(): Boolean {
+
+        val ageText = binding.txtAge.text.toString().trim()
+        val heightText = binding.txtHeight.text.toString().trim()
+        val weightText = binding.txtWeight.text.toString().trim()
+
+        binding.tvGenderError.visibility = View.GONE
+        binding.ageLayout.error = null
+        binding.heightLayout.error = null
+        binding.weightLayout.error = null
+
+        if (binding.genderToggle.checkedButtonId == View.NO_ID) {
+            binding.tvGenderError.visibility = View.VISIBLE
+            return false
+        }
+
+        if (ageText.isEmpty()) {
+            binding.ageLayout.error = "Introduce tu edad"
+            return false
+        }
+
+        if (heightText.isEmpty()) {
+            binding.heightLayout.error = "Introduce tu altura"
+            return false
+        }
+
+        if (weightText.isEmpty()) {
+            binding.weightLayout.error = "Introduce tu peso"
+            return false
+        }
+
+        return true
     }
 }

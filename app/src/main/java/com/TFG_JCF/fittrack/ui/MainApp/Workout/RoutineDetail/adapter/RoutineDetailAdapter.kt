@@ -7,7 +7,8 @@ import com.TFG_JCF.fittrack.data.model.Workout.RoutineDetailItemUi
 import com.TFG_JCF.fittrack.databinding.ItemRoutineBlockBinding
 
 class RoutineDetailAdapter(
-    private val onViewExercisesClick: (RoutineDetailItemUi) -> Unit
+    private val onViewExercisesClick: (RoutineDetailItemUi) -> Unit,
+    private val onEditDaysClick: (RoutineDetailItemUi) -> Unit
 ) : RecyclerView.Adapter<RoutineDetailViewHolder>() {
 
     private val items = mutableListOf<RoutineDetailItemUi>()
@@ -24,7 +25,7 @@ class RoutineDetailAdapter(
             parent,
             false
         )
-        return RoutineDetailViewHolder(binding, onViewExercisesClick)
+        return RoutineDetailViewHolder(binding, onViewExercisesClick, onEditDaysClick)
     }
 
     override fun onBindViewHolder(holder: RoutineDetailViewHolder, position: Int) {

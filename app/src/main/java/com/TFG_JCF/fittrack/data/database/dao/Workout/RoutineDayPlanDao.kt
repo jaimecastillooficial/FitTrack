@@ -22,6 +22,7 @@ interface RoutineDayPlanDao {
     """)
     suspend fun getByRoutineWeek(routineWeekId: Long): List<RoutineDayPlanEntity>
 
+    // Metodo para obtener un plan de rutina de un dia en concreto
     @Query("""
         SELECT * FROM routine_day_plans
         WHERE routineWeekId = :routineWeekId AND dayOfWeek = :dayOfWeek

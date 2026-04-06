@@ -6,7 +6,8 @@ import com.TFG_JCF.fittrack.databinding.ItemRoutineBlockBinding
 
 class RoutineDetailViewHolder(
     private val binding: ItemRoutineBlockBinding,
-    private val onViewExercisesClick: (RoutineDetailItemUi) -> Unit
+    private val onViewExercisesClick: (RoutineDetailItemUi) -> Unit,
+    private val onEditDaysClick: (RoutineDetailItemUi) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(item: RoutineDetailItemUi) {
@@ -17,6 +18,10 @@ class RoutineDetailViewHolder(
 
         binding.btnViewExercises.setOnClickListener {
             onViewExercisesClick(item)
+        }
+
+        binding.btnEditDays.setOnClickListener {
+            onEditDaysClick(item)
         }
     }
 

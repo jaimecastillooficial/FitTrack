@@ -53,10 +53,25 @@ class ActivityLevelFragment : Fragment() {
 
                 R.id.btnVeyHigh ->
                     vm.signUpData.activityLevel = ActivityLevel.VERY_HIGH
+                else -> {
+                    binding.tvActivityError.visibility = View.VISIBLE
+                    return@setOnClickListener
+                }
             }
 
-            findNavController().navigate(R.id.action_activityLevel_to_physical)
+            navigateToPhysicalAspects()
         }
+        binding.goBack.setOnClickListener {
+            navigateToGoal()
+        }
+    }
+    private fun navigateToGoal() {
+        findNavController().navigate(R.id.action_activityLevel_to_goal)
+
+    }
+    private fun navigateToPhysicalAspects() {
+        findNavController().navigate(R.id.action_activityLevel_to_physical)
+
     }
 
 }

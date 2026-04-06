@@ -5,22 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="8dp"
+    android:background="@color/ft_background"
     tools:context=".ui.MainApp.Home.HomeFragment">
 
-    <FrameLayout
-        android:id="@+id/framelayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/fittrack" />
-
-    </FrameLayout>
 
 
     <androidx.cardview.widget.CardView
@@ -33,7 +21,7 @@
         app:cardUseCompatPadding="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/framelayout">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -334,7 +322,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cardProgress"
         android:layout_width="match_parent"
-        android:layout_height="260dp"
+        android:layout_height="320dp"
         app:cardBackgroundColor="@color/ft_surface"
         app:cardCornerRadius="16dp"
         app:cardElevation="4dp"

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -11,7 +12,9 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.TFG_JCF.fittrack.R
+import com.TFG_JCF.fittrack.data.model.Workout.RoutineDetailItemUi
 import com.TFG_JCF.fittrack.databinding.ActivityRoutineDetailBinding
+import com.TFG_JCF.fittrack.databinding.DialogAddRoutineBlockBinding
 import com.TFG_JCF.fittrack.ui.MainApp.Workout.RoutineDetail.adapter.RoutineDetailAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -21,7 +24,7 @@ class RoutineDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRoutineDetailBinding
     private val viewModel: RoutineDetailViewModel by viewModels()
-
+    private var routineId: Long = -1L
     private lateinit var detailAdapter: RoutineDetailAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +32,7 @@ class RoutineDetailActivity : AppCompatActivity() {
         binding = ActivityRoutineDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val routineId = intent.getLongExtra(EXTRA_ROUTINE_ID, -1L)
+         routineId = intent.getLongExtra(EXTRA_ROUTINE_ID, -1L)
 
         if (routineId == -1L) {
             finish()
@@ -51,12 +54,18 @@ class RoutineDetailActivity : AppCompatActivity() {
                     "Luego abrimos ejercicios de ${item.title}",
                     Toast.LENGTH_SHORT
                 ).show()
+            },
+            onEditDaysClick = { item ->
+                showEditDaysDialog(item)
             }
         )
 
         binding.rvRoutineBlocks.apply {
             layoutManager = LinearLayoutManager(this@RoutineDetailActivity)
             adapter = detailAdapter
+        }
+        binding.btnAddBlock.setOnClickListener {
+            showAddBlockDialog()
         }
     }
 
@@ -80,7 +89,119 @@ class RoutineDetailActivity : AppCompatActivity() {
             }
         }
     }
+    private fun showAddBlockDialog() {
+        val dialogBinding = DialogAddRoutineBlockBinding.inflate(layoutInflater)
 
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogBinding.root) // 👈 MUY IMPORTANTE
+            .setNegativeButton("Cancelar", null)
+            .setPositiveButton("Guardar", null)
+            .create()
+
+        dialog.setOnShowListener {
+
+            val btnSave = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+
+            btnSave.setOnClickListener {
+
+                val blockName = dialogBinding.etBlockName.text
+                    ?.toString()
+                    ?.trim()
+                    .orEmpty()
+
+                val selectedDays = mutableListOf<Int>()
+
+                if (dialogBinding.cbMonday.isChecked) selectedDays.add(1)
+                if (dialogBinding.cbTuesday.isChecked) selectedDays.add(2)
+                if (dialogBinding.cbWednesday.isChecked) selectedDays.add(3)
+                if (dialogBinding.cbThursday.isChecked) selectedDays.add(4)
+                if (dialogBinding.cbFriday.isChecked) selectedDays.add(5)
+                if (dialogBinding.cbSaturday.isChecked) selectedDays.add(6)
+                if (dialogBinding.cbSunday.isChecked) selectedDays.add(7)
+
+                // limpiar error anterior
+                dialogBinding.tilBlockName.error = null
+
+                viewModel.addBlockToRoutine(
+                    routineWeekId = routineId,
+                    blockName = blockName,
+                    selectedDays = selectedDays,
+
+                    onError = { message ->
+                        runOnUiThread {
+                            when {
+                                message.equals("Introduce un nombre para el bloque", true) || message.equals("Ya existe un bloque con ese nombre", true) -> {
+                                    dialogBinding.tilBlockName.error = message
+                                }
+
+                                else -> {
+                                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+                    },
+
+                    onSuccess = {
+                        runOnUiThread {
+                            Toast.makeText(this, "Bloque añadido", Toast.LENGTH_SHORT).show()
+                            dialog.dismiss()
+                        }
+                    }
+                )
+            }
+        }
+
+        dialog.show()
+    }
+    private fun showEditDaysDialog(item: RoutineDetailItemUi) {
+        val dayLabels = arrayOf(
+            "Lunes",
+            "Martes",
+            "Miércoles",
+            "Jueves",
+            "Viernes",
+            "Sábado",
+            "Domingo"
+        )
+
+        val checkedItems = BooleanArray(7) { index ->
+            val dayNumber = index + 1
+            item.selectedDays.contains(dayNumber)
+        }
+
+        AlertDialog.Builder(this)
+            .setTitle("Selecciona los días para ${item.title}")
+            .setMultiChoiceItems(dayLabels, checkedItems) { _, which, isChecked ->
+                checkedItems[which] = isChecked
+            }
+            .setNegativeButton("Cancelar", null)
+            .setPositiveButton("Guardar") { _, _ ->
+                val selectedDays = mutableListOf<Int>()
+
+                checkedItems.forEachIndexed { index, checked ->
+                    if (checked) {
+                        selectedDays.add(index + 1)
+                    }
+                }
+
+                viewModel.updateBlockDays(
+                    routineWeekId = routineId,
+                    blockTitle = item.title,
+                    newSelectedDays = selectedDays,
+                    onError = { message ->
+                        runOnUiThread {
+                            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                        }
+                    },
+                    onSuccess = {
+                        runOnUiThread {
+                            Toast.makeText(this, "Días actualizados", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                )
+            }
+            .show()
+    }
     companion object {
         const val EXTRA_ROUTINE_ID = "routine_id"
 

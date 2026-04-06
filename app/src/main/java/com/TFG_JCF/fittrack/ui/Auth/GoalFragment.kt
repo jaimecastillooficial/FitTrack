@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.TFG_JCF.fittrack.R
 import com.TFG_JCF.fittrack.data.database.entities.User_Bonus.GoalType
 import com.TFG_JCF.fittrack.databinding.FragmentGoalBinding
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
 
@@ -36,6 +37,9 @@ class GoalFragment : Fragment() {
 
     private fun initUI() {
         binding.btnNext.setOnClickListener {
+
+            binding.tvGoalError.visibility = View.GONE
+
             when (binding.goalToggleGroup.checkedButtonId) {
 
                 R.id.btnLose ->
@@ -46,9 +50,28 @@ class GoalFragment : Fragment() {
 
                 R.id.btnGain ->
                     vm.signUpData.goalType = GoalType.GAIN_WEIGHT
+
+                else ->{
+                    binding.tvGoalError.visibility = View.VISIBLE
+                    return@setOnClickListener
             }
-            findNavController().navigate(R.id.action_goal_to_activityLevel)
+            }
+            navigateToActivityLevel()
+        }
+        binding.goBack.setOnClickListener {
+            navigateToSignIn()
         }
     }
+
+    private fun navigateToSignIn(){
+        FirebaseAuth.getInstance().signOut()
+        findNavController().navigate(R.id.action_goal_to_login)
+
+    }
+    private fun navigateToActivityLevel(){
+        findNavController().navigate(R.id.action_goal_to_activityLevel)
+
+    }
+
 
 }
