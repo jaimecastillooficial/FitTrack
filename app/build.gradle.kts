@@ -98,4 +98,7 @@ dependencies {
 
     //MPAndroidchart
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
+    //Splash Screen moderna Android 12+
+    implementation("androidx.core:core-splashscreen:1.0.1")
 }

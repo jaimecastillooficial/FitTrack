@@ -1,6 +1,7 @@
 package com.TFG_JCF.fittrack.ui.MainApp.Diet.DietHome
 
 import android.app.AlertDialog
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -15,25 +16,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.TFG_JCF.fittrack.R
 import com.TFG_JCF.fittrack.data.model.Diet.MealListItem
 import com.TFG_JCF.fittrack.databinding.DialogEditMealItemBinding
+import com.TFG_JCF.fittrack.databinding.DialogSelectDateBinding
 import com.TFG_JCF.fittrack.databinding.FragmentDietBinding
 import com.TFG_JCF.fittrack.ui.MainApp.Diet.AddFood.AddFoodActivity
 import com.TFG_JCF.fittrack.ui.MainApp.Diet.DietHome.adapter.DietAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
-//class DietFragment : Fragment() {
-//
-//
-//    override fun onCreateView(
-//        inflater: LayoutInflater, container: ViewGroup?,
-//        savedInstanceState: Bundle?
-//    ): View {
-//        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_diet, container, false)
-//    }
-//
-//
-//}
 
 @AndroidEntryPoint
 class DietFragment : Fragment(R.layout.fragment_diet) {
@@ -53,14 +43,16 @@ class DietFragment : Fragment(R.layout.fragment_diet) {
         _binding = FragmentDietBinding.bind(view)
 
         initRecycler()
+        initDateListeners()
         observeViewModel()
+
 
 
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun initRecycler() {
-        viewModel.loadDietForToday()
+        viewModel.loadDietForSelectedDate()
         //Le paso las 2 lambdas
         adapter = DietAdapter(
             onAddClick = { header ->
@@ -74,7 +66,68 @@ class DietFragment : Fragment(R.layout.fragment_diet) {
         binding.rvMeals.layoutManager = LinearLayoutManager(requireContext())
         binding.rvMeals.adapter = adapter
     }
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun initDateListeners() {
+        binding.btnPreviousDay.setOnClickListener {
+            viewModel.goToPreviousDay()
+        }
 
+        binding.btnNextDay.setOnClickListener {
+            viewModel.goToNextDay()
+        }
+
+        binding.tvSelectedDate.setOnClickListener {
+            showDatePicker()
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun showDatePicker() {
+        val dialogBinding = DialogSelectDateBinding.inflate(layoutInflater)
+        val currentDate = viewModel.selectedDate.value
+
+        dialogBinding.datePicker.init(
+            currentDate.year,
+            currentDate.monthValue - 1,
+            currentDate.dayOfMonth,
+            null
+        )
+
+        dialogBinding.datePicker.maxDate = System.currentTimeMillis()
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogBinding.root)
+            .setCancelable(true)
+            .create()
+
+        dialogBinding.btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialogBinding.btnAccept.setOnClickListener {
+            val year = dialogBinding.datePicker.year
+            val month = dialogBinding.datePicker.month
+            val day = dialogBinding.datePicker.dayOfMonth
+
+            val selectedDate = LocalDate.of(year, month + 1, day)
+
+            if (selectedDate.isAfter(LocalDate.now())) {
+                Toast.makeText(
+                    requireContext(),
+                    "No puedes registrar comidas en fechas futuras",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
+
+            viewModel.setSelectedDate(selectedDate)
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun observeViewModel() {
         // Actualizar lista de alimentos ingeridos
         viewLifecycleOwner.lifecycleScope.launch {
@@ -110,6 +163,16 @@ class DietFragment : Fragment(R.layout.fragment_diet) {
                 binding.tvResult.text = "$remaining"
             }
         }
+        //Fecha seleccionada
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.selectedDate.collect { date ->
+                binding.tvSelectedDate.text = date.toString()
+
+                val isToday = date == LocalDate.now()
+                binding.btnNextDay.isEnabled = !isToday
+                binding.btnNextDay.alpha = if (isToday) 0.4f else 1f
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -120,12 +183,14 @@ class DietFragment : Fragment(R.layout.fragment_diet) {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onResume() {
         super.onResume()
-        viewModel.loadDietForToday()
+        viewModel.loadDietForSelectedDate()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun navigateToAddFood(name: String) {
         val intent = Intent(this.requireContext(), AddFoodActivity::class.java)
         intent.putExtra("MEAL_TYPE", name)
+        intent.putExtra("SELECTED_DATE", viewModel.selectedDate.value.toString())
         startActivity(intent)
 
     }

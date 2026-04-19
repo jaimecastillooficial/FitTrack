@@ -11,6 +11,7 @@ data class FoodMenuUiState(
     val fatPer100g: Float = 0f,
     val grams: Float = 100f,
     val mealType: MealType = MealType.DESAYUNO,
+    val selectedDate: String = "",
     val calories: Int = 0,
     val protein: Float = 0f,
     val carbs: Float = 0f,

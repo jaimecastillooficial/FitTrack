@@ -24,7 +24,7 @@ class FoodMenuViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(FoodMenuUiState())
     val uiState: StateFlow<FoodMenuUiState> = _uiState
 
-    fun loadFood(foodId: Long, mealType: String) {
+    fun loadFood(foodId: Long, mealType: String, selectedDate: String) {
         viewModelScope.launch {
             val food = dietRepository.getFoodById(foodId)
 
@@ -43,7 +43,8 @@ class FoodMenuViewModel @Inject constructor(
                 carbsPer100g = food.carbsPer100g,
                 fatPer100g = food.fatPer100g,
                 grams = 100f,
-                mealType = parsedMealType
+                mealType = parsedMealType,
+                selectedDate = selectedDate
             )
 
             recalculate()
@@ -94,9 +95,14 @@ class FoodMenuViewModel @Inject constructor(
                     return@launch
                 }
 
+                if (state.selectedDate.isBlank()) {
+                    onError("Fecha no válida")
+                    return@launch
+                }
+
                 dietRepository.addFoodToMeal(
                     userUid = uid,
-                    date = LocalDate.now().toString(),
+                    date = state.selectedDate,
                     type = state.mealType,
                     foodId = state.foodId,
                     grams = state.grams

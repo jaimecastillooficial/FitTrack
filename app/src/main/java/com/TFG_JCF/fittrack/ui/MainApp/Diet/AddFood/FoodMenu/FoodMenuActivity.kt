@@ -1,7 +1,7 @@
 package com.TFG_JCF.fittrack.ui.MainApp.Diet.AddFood.FoodMenu
 
 
-
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -48,12 +48,15 @@ class FoodMenuActivity : AppCompatActivity() {
         initUI()
         observeState()
     }
-//Preguntar
+
+    //Preguntar
+    @SuppressLint("SuspiciousIndentation")
     private fun initData() {
         val foodId = intent.getLongExtra("FOOD_ID", 0L)
         val mealType = intent.getStringExtra("MEAL_TYPE") ?: "DESAYUNO"
+        val selectedDate = intent.getStringExtra("SELECTED_DATE").orEmpty()
 
-        viewModel.loadFood(foodId, mealType)
+        viewModel.loadFood(foodId, mealType, selectedDate)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -84,7 +87,9 @@ class FoodMenuActivity : AppCompatActivity() {
         }
 
         binding.InputPesoRacion.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) =
+                Unit
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
 
             override fun afterTextChanged(s: Editable?) {
@@ -124,8 +129,8 @@ class FoodMenuActivity : AppCompatActivity() {
                 binding.tvfoodName.text = state.foodName
                 binding.inputMealType.text = mealTypeToText(state.mealType)
                 updateChart(
-                     state.calories,
-                     state.protein,
+                    state.calories,
+                    state.protein,
                     state.carbs,
                     state.fat
                 )

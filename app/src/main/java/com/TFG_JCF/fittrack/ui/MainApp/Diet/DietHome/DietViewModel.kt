@@ -56,15 +56,21 @@ class DietViewModel @Inject constructor(
     val fatsGoal: StateFlow<Int> = _fatsGoal
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun loadDietForToday() {
+    private val _selectedDate = MutableStateFlow(LocalDate.now())
+    @RequiresApi(Build.VERSION_CODES.O)
+    val selectedDate: StateFlow<LocalDate> = _selectedDate
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun loadDietForSelectedDate() {
         viewModelScope.launch {
             val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return@launch
-            val today = LocalDate.now().toString()
+            val selectedDateString = _selectedDate.value.toString()
 
             val userProfile = userRepository.getUserProfile(uid)
             val caloriesGoal = userProfile?.dailyCaloriesGoal ?: 0
 
-            val meals = dietRepository.getMealsFullByDate(uid, today)
+            val meals = dietRepository.getMealsFullByDate(uid, selectedDateString)
 
             val mealList = buildMealList(meals)
             val summary = NutritionCalculator.calculateDailySummary(meals)
@@ -124,7 +130,7 @@ class DietViewModel @Inject constructor(
     fun deleteMealItem(mealItemId: Long, onSuccess: () -> Unit) {
         viewModelScope.launch {
             dietRepository.deleteMealItem(mealItemId)
-            loadDietForToday()
+            loadDietForSelectedDate()
             onSuccess()
         }
     }
@@ -134,9 +140,32 @@ class DietViewModel @Inject constructor(
         viewModelScope.launch {
             if (grams <= 0f) return@launch
             dietRepository.updateMealItemGrams(mealItemId, grams)
-            loadDietForToday()
+            loadDietForSelectedDate()
             onSuccess()
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun setSelectedDate(newDate: LocalDate) {
+        _selectedDate.value = newDate
+        loadDietForSelectedDate()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun goToPreviousDay() {
+        _selectedDate.value = _selectedDate.value.minusDays(1)
+        loadDietForSelectedDate()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun goToNextDay() {
+        val tomorrow = _selectedDate.value.plusDays(1)
+        val today = LocalDate.now()
+
+        if (tomorrow.isAfter(today)) return
+
+        _selectedDate.value = tomorrow
+        loadDietForSelectedDate()
     }
 
 }

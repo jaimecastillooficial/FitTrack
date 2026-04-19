@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.TFG_JCF.fittrack.databinding.ActivitySessionCheckBinding
 import com.TFG_JCF.fittrack.ui.Auth.SignUpActivity
 import com.TFG_JCF.fittrack.ui.MainApp.Home.MainActivity
@@ -16,6 +17,7 @@ class SessionCheckActivity : AppCompatActivity() {
     private val vm: SessionCheckViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         binding = ActivitySessionCheckBinding.inflate(layoutInflater)
         setContentView(binding.root)

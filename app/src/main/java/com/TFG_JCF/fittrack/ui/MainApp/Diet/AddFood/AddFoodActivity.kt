@@ -23,6 +23,7 @@ class AddFoodActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddFoodBinding
     private lateinit var adapter: AddFoodAdapter
     private lateinit var mealType :String
+    private lateinit var selectedDate: String
 
     private val viewModel: AddFoodViewModel by viewModels()
 
@@ -39,6 +40,7 @@ class AddFoodActivity : AppCompatActivity() {
         }
 
         mealType = intent.getStringExtra("MEAL_TYPE").toString()
+        selectedDate = intent.getStringExtra("SELECTED_DATE").orEmpty()
         initUI()
 
 
@@ -54,7 +56,7 @@ class AddFoodActivity : AppCompatActivity() {
         initRecyclerView()
         suscribeViewModel()
 
-        // Importante: primero asegura seed y luego carga
+        // primero cargo seedData y luego carga
         viewModel.prepareFoods()
     }
 
@@ -71,6 +73,7 @@ class AddFoodActivity : AppCompatActivity() {
         val intent = Intent(this, FoodMenuActivity::class.java).apply {
             putExtra("FOOD_ID", food.id)
             putExtra("MEAL_TYPE", mealType)
+            putExtra("SELECTED_DATE", selectedDate)
         }
         startActivity(intent)
     }
