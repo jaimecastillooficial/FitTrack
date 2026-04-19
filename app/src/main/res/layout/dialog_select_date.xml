@@ -20,7 +20,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:calendarViewShown="false"
-        android:datePickerMode="spinner" />
+        android:datePickerMode="spinner"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,14 +34,16 @@
             android:id="@+id/btnCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancelar" />
+            android:text="Cancelar"
+            android:backgroundTint="@color/fittrack"/>
 
         <Button
             android:id="@+id/btnAccept"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:text="Aceptar" />
+            android:text="Aceptar"
+            android:backgroundTint="@color/fittrack"/>
     </LinearLayout>
 
 </LinearLayout>
