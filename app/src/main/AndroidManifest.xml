@@ -15,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FitTrack">
         <activity
+            android:name=".ui.MainApp.Workout.AddRoutineExercise.AddRoutineExerciseActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.MainApp.Workout.RoutineExercise.RoutineExerciseActivity"
             android:exported="false" />
         <activity
@@ -41,7 +44,7 @@
             android:exported="false" />
         <activity
             android:name=".ui.Auth.SignUpActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".ui.MainApp.Home.MainActivity"
             android:exported="false" />

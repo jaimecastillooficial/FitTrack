@@ -16,6 +16,7 @@ import com.TFG_JCF.fittrack.data.model.Workout.RoutineDetailItemUi
 import com.TFG_JCF.fittrack.databinding.ActivityRoutineDetailBinding
 import com.TFG_JCF.fittrack.databinding.DialogAddRoutineBlockBinding
 import com.TFG_JCF.fittrack.ui.MainApp.Workout.RoutineDetail.adapter.RoutineDetailAdapter
+import com.TFG_JCF.fittrack.ui.MainApp.Workout.RoutineExercise.RoutineExerciseActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -32,7 +33,7 @@ class RoutineDetailActivity : AppCompatActivity() {
         binding = ActivityRoutineDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-         routineId = intent.getLongExtra(EXTRA_ROUTINE_ID, -1L)
+        routineId = intent.getLongExtra(EXTRA_ROUTINE_ID, -1L)
 
         if (routineId == -1L) {
             finish()
@@ -49,11 +50,13 @@ class RoutineDetailActivity : AppCompatActivity() {
     private fun setupRecycler() {
         detailAdapter = RoutineDetailAdapter(
             onViewExercisesClick = { item ->
-                Toast.makeText(
-                    this,
-                    "Luego abrimos ejercicios de ${item.title}",
-                    Toast.LENGTH_SHORT
-                ).show()
+                startActivity(
+                    RoutineExerciseActivity.createIntent(
+                        activity = this,
+                        blockTitle = item.title,
+                        dayPlanIds = item.sourceDayPlanIds
+                    )
+                )
             },
             onEditDaysClick = { item ->
                 showEditDaysDialog(item)
@@ -89,6 +92,7 @@ class RoutineDetailActivity : AppCompatActivity() {
             }
         }
     }
+
     private fun showAddBlockDialog() {
         val dialogBinding = DialogAddRoutineBlockBinding.inflate(layoutInflater)
 
@@ -130,7 +134,10 @@ class RoutineDetailActivity : AppCompatActivity() {
                     onError = { message ->
                         runOnUiThread {
                             when {
-                                message.equals("Introduce un nombre para el bloque", true) || message.equals("Ya existe un bloque con ese nombre", true) -> {
+                                message.equals(
+                                    "Introduce un nombre para el bloque",
+                                    true
+                                ) || message.equals("Ya existe un bloque con ese nombre", true) -> {
                                     dialogBinding.tilBlockName.error = message
                                 }
 
@@ -153,6 +160,7 @@ class RoutineDetailActivity : AppCompatActivity() {
 
         dialog.show()
     }
+
     private fun showEditDaysDialog(item: RoutineDetailItemUi) {
         val dayLabels = arrayOf(
             "Lunes",
@@ -202,6 +210,7 @@ class RoutineDetailActivity : AppCompatActivity() {
             }
             .show()
     }
+
     companion object {
         const val EXTRA_ROUTINE_ID = "routine_id"
 

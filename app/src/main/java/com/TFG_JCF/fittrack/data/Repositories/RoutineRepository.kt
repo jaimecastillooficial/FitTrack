@@ -174,4 +174,45 @@ class RoutineRepository @Inject constructor(
             }
         }
     }
+    suspend fun addExerciseToBlock(
+        dayPlanIds: List<Long>,
+        exerciseId: Long
+    ) {
+        withContext(Dispatchers.IO) {
+            if (dayPlanIds.isEmpty()) return@withContext
+
+            val referenceExercises = routineDayExerciseDao.getByDayPlan(dayPlanIds.first())
+
+            val alreadyExists = referenceExercises.any { it.exerciseId == exerciseId }
+            if (alreadyExists) return@withContext
+
+            val nextOrderIndex = (referenceExercises.maxOfOrNull { it.orderIndex } ?: -1) + 1
+
+            dayPlanIds.forEach { dayPlanId ->
+                routineDayExerciseDao.insert(
+                    RoutineDayExerciseEntity(
+                        dayPlanId = dayPlanId,
+                        exerciseId = exerciseId,
+                        orderIndex = nextOrderIndex
+                    )
+                )
+            }
+        }
+    }
+
+    suspend fun removeExerciseFromBlock(
+        dayPlanIds: List<Long>,
+        exerciseId: Long
+    ) {
+        withContext(Dispatchers.IO) {
+            dayPlanIds.forEach { dayPlanId ->
+                val relations = routineDayExerciseDao.getByDayPlan(dayPlanId)
+                val relationToDelete = relations.firstOrNull { it.exerciseId == exerciseId }
+
+                if (relationToDelete != null) {
+                    routineDayExerciseDao.delete(relationToDelete)
+                }
+            }
+        }
+    }
 }

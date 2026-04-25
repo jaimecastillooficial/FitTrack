@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/ft_background"
-    android:padding="16dp"
-    tools:context=".ui.MainApp.Workout.RoutineExercises.RoutineExercisesActivity">
+    android:padding="16dp">
 
     <ImageView
         android:id="@+id/btnBack"
@@ -20,15 +19,15 @@
         android:id="@+id/tvBlockTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:text="PUSH"
+        android:layout_marginStart="12dp"
+        android:text="Push"
         android:textColor="@color/ft_text_primary"
-        android:textSize="28sp"
+        android:textSize="26sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@id/btnBack"
         app:layout_constraintEnd_toStartOf="@id/btnAddExercise"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/btnBack"
+        app:layout_constraintBottom_toBottomOf="@id/btnBack" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnAddExercise"
@@ -36,34 +35,23 @@
         android:layout_height="wrap_content"
         android:text="Añadir"
         android:textAllCaps="false"
-        android:textStyle="bold"
-        app:backgroundTint="@color/ft_primary"
         app:cornerRadius="14dp"
-        app:layout_constraintTop_toTopOf="@id/tvBlockTitle"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <TextView
-        android:id="@+id/tvSubtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="Ejercicios del bloque"
-        android:textColor="@color/ft_text_secondary"
-        android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnBack" />
+        app:backgroundTint="@color/ft_primary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btnBack"
+        app:layout_constraintBottom_toBottomOf="@id/btnBack" />
 
     <TextView
         android:id="@+id/tvEmptyExercises"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="32dp"
         android:gravity="center"
         android:text="Este bloque todavía no tiene ejercicios"
         android:textColor="@color/ft_text_secondary"
         android:textSize="15sp"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/tvSubtitle"
+        app:layout_constraintTop_toBottomOf="@id/btnBack"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -72,12 +60,9 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="20dp"
-        android:clipToPadding="false"
-        android:paddingBottom="12dp"
-        app:layout_constraintTop_toBottomOf="@id/tvSubtitle"
+        app:layout_constraintTop_toBottomOf="@id/btnBack"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:listitem="@layout/item_routine_exercise" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
