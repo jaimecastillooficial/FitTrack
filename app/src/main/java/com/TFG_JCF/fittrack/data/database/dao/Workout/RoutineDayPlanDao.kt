@@ -9,6 +9,9 @@ interface RoutineDayPlanDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(entity: RoutineDayPlanEntity): Long
 
+    @Query("SELECT * FROM routine_day_plans WHERE id = :id LIMIT 1")
+    suspend fun getById(id: Long): RoutineDayPlanEntity?
+
     @Update
     suspend fun update(entity: RoutineDayPlanEntity)
 

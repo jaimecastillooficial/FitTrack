@@ -2,6 +2,7 @@ package com.TFG_JCF.fittrack.ui.MainApp.Workout.RoutineDetail
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -49,7 +50,7 @@ class RoutineDetailActivity : AppCompatActivity() {
 
     private fun setupRecycler() {
         detailAdapter = RoutineDetailAdapter(
-            onViewExercisesClick = { item ->
+            onBlockClick = { item ->
                 startActivity(
                     RoutineExerciseActivity.createIntent(
                         activity = this,
@@ -58,8 +59,17 @@ class RoutineDetailActivity : AppCompatActivity() {
                     )
                 )
             },
+
             onEditDaysClick = { item ->
                 showEditDaysDialog(item)
+            },
+
+            onEditNameClick = { item ->
+                showRenameBlockDialog(item)
+            },
+
+            onDeleteBlockClick = { item ->
+                showDeleteBlockDialog(item)
             }
         )
 
@@ -67,6 +77,7 @@ class RoutineDetailActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@RoutineDetailActivity)
             adapter = detailAdapter
         }
+
         binding.btnAddBlock.setOnClickListener {
             showAddBlockDialog()
         }
@@ -97,7 +108,7 @@ class RoutineDetailActivity : AppCompatActivity() {
         val dialogBinding = DialogAddRoutineBlockBinding.inflate(layoutInflater)
 
         val dialog = AlertDialog.Builder(this)
-            .setView(dialogBinding.root) // 👈 MUY IMPORTANTE
+            .setView(dialogBinding.root)
             .setNegativeButton("Cancelar", null)
             .setPositiveButton("Guardar", null)
             .create()
@@ -211,6 +222,62 @@ class RoutineDetailActivity : AppCompatActivity() {
             .show()
     }
 
+    private fun showRenameBlockDialog(item: RoutineDetailItemUi) {
+        val input = EditText(this).apply {
+            setText(item.title)
+            setSelection(text.length)
+            hint = "Nombre del bloque"
+        }
+
+        AlertDialog.Builder(this)
+            .setTitle("Editar bloque")
+            .setView(input)
+            .setNegativeButton("Cancelar", null)
+            .setPositiveButton("Guardar") { _, _ ->
+                val newName = input.text.toString()
+
+                viewModel.renameBlock(
+                    routineWeekId = routineId,
+                    currentBlockTitle = item.title,
+                    newBlockName = newName,
+                    onError = { message ->
+                        runOnUiThread {
+                            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                        }
+                    },
+                    onSuccess = {
+                        runOnUiThread {
+                            Toast.makeText(this, "Bloque actualizado", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                )
+            }
+            .show()
+    }
+
+    private fun showDeleteBlockDialog(item: RoutineDetailItemUi) {
+        AlertDialog.Builder(this)
+            .setTitle("Eliminar bloque")
+            .setMessage("¿Quieres eliminar el bloque ${item.title}? Se eliminará de todos sus días asignados.")
+            .setNegativeButton("Cancelar", null)
+            .setPositiveButton("Eliminar") { _, _ ->
+                viewModel.deleteBlock(
+                    routineWeekId = routineId,
+                    blockTitle = item.title,
+                    onError = { message ->
+                        runOnUiThread {
+                            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                        }
+                    },
+                    onSuccess = {
+                        runOnUiThread {
+                            Toast.makeText(this, "Bloque eliminado", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                )
+            }
+            .show()
+    }
     companion object {
         const val EXTRA_ROUTINE_ID = "routine_id"
 

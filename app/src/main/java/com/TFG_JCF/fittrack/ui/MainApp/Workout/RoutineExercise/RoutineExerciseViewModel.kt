@@ -69,31 +69,6 @@ class RoutineExerciseViewModel @Inject constructor(
             reloadExercises()
         }
     }
-    fun addExerciseToBlock(
-        exerciseId: Long,
-        onSuccess: () -> Unit,
-        onError: (String) -> Unit
-    ) {
-        viewModelScope.launch {
-            try {
-                if (currentDayPlanIds.isEmpty()) {
-                    onError("No se ha encontrado el bloque")
-                    return@launch
-                }
-
-                routineRepository.addExerciseToBlock(
-                    dayPlanIds = currentDayPlanIds,
-                    exerciseId = exerciseId
-                )
-
-                reloadExercises()
-                onSuccess()
-
-            } catch (e: Exception) {
-                onError(e.message ?: "Error al añadir ejercicio")
-            }
-        }
-    }
 
     fun removeExerciseFromBlock(
         exerciseId: Long,
@@ -121,12 +96,4 @@ class RoutineExerciseViewModel @Inject constructor(
         }
     }
 
-    suspend fun getAvailableExercisesForDialog(): List<ExerciseEntity> {
-        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return emptyList()
-
-        val allVisibleExercises = exerciseRepository.getVisibleExercisesForUser(uid)
-        val alreadyAddedIds = _items.value.map { it.exerciseId }.toSet()
-
-        return allVisibleExercises.filter { it.id !in alreadyAddedIds }
-    }
 }

@@ -26,7 +26,11 @@ class RoutineRepository @Inject constructor(
             )
         }
     }
-
+    suspend fun getDayPlanById(id: Long): RoutineDayPlanEntity? {
+        return withContext(Dispatchers.IO) {
+            routineDayPlanDao.getById(id)
+        }
+    }
     suspend fun updateRoutineWeek(entity: RoutineWeekEntity) {
         withContext(Dispatchers.IO) {
             routineWeekDao.update(entity)
@@ -215,4 +219,5 @@ class RoutineRepository @Inject constructor(
             }
         }
     }
+
 }

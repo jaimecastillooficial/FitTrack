@@ -38,7 +38,7 @@ class AddRoutineExerciseActivity : AppCompatActivity() {
         }
 
         initUI()
-        viewModel.prepareExercises(dayPlanIds)
+        viewModel.prepareExercises()
     }
 
     private fun initUI() {
