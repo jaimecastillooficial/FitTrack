@@ -28,7 +28,7 @@
         android:id="@+id/tvFoodGrams"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Copos de avena (40 gr)"
+        android:text="100 gramos"
         android:textSize="14sp" />
 </LinearLayout>
 

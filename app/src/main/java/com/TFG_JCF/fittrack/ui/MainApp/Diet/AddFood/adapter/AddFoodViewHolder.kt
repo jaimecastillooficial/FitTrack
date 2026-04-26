@@ -13,7 +13,6 @@ class AddFoodViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(food: FoodEntity, onFoodClick: (FoodEntity) -> Unit) {
         tvFoodName.text = food.name
         tvFoodCalories.text = "${food.kcalPer100g} kcal"
-
         itemView.setOnClickListener {
             onFoodClick(food)
         }

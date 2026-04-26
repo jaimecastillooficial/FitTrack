@@ -162,7 +162,7 @@ class DietFragment : Fragment(R.layout.fragment_diet) {
             .create()
 
         dialog.show()
-
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         // GUARDAR CAMBIOS
         dialogBinding.btnSave.setOnClickListener {
@@ -236,6 +236,7 @@ class DietFragment : Fragment(R.layout.fragment_diet) {
         }
 
         dialog.show()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
     }
 }
 

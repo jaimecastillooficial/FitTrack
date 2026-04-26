@@ -2,8 +2,10 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardBackgroundColor="@color/white"
 
-  >
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -51,11 +53,15 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCancelRoutineDialog"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Cancelar"
-                android:textColor="@color/ft_error"/>
+                android:textAllCaps="false"
+                android:textColor="@color/fittrack"
+                app:backgroundTint="@color/ft_surface"
+                app:cornerRadius="20dp"
+                app:strokeColor="@color/fittrack"
+                app:strokeWidth="1dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCreateRoutineDialog"
