@@ -12,6 +12,7 @@ import com.TFG_JCF.fittrack.data.database.dao.Workout.RoutineWeekDao
 import com.TFG_JCF.fittrack.data.database.dao.Workout.WorkoutDao
 import com.TFG_JCF.fittrack.data.database.dao.Workout.WorkoutExerciseDao
 import com.TFG_JCF.fittrack.data.database.dao.Workout.WorkoutSetDao
+import com.TFG_JCF.fittrack.data.utils.ExercisePreloader
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,12 +32,27 @@ object RoomModule {
 
     //Singleton para que solo se ejecute una vez y no todas las veces que se provea
     @Singleton
-    //Indicamos que la funcion proveera algo
     @Provides
-    fun provideRoom(@ApplicationContext context: Context)=
-        Room.databaseBuilder(context, FitTrackDatabase::class.java, DATABASE_NAME)
+    fun provideRoom(@ApplicationContext context: Context): FitTrackDatabase {
+
+        lateinit var database: FitTrackDatabase
+
+        database = Room.databaseBuilder(context, FitTrackDatabase::class.java, DATABASE_NAME)
             .fallbackToDestructiveMigration()
+            .addCallback(object : androidx.room.RoomDatabase.Callback() {
+                override fun onCreate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                    super.onCreate(db)
+
+                    ExercisePreloader.preloadExercises(
+                        exerciseDao = database.getExerciseDao(),
+                        scope = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO)
+                    )
+                }
+            })
             .build()
+
+        return database
+    }
 
     @Singleton
     @Provides

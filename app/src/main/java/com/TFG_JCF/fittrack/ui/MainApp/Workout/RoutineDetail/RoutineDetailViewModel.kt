@@ -170,6 +170,79 @@ class RoutineDetailViewModel @Inject constructor(
             onSuccess()
         }
     }
+    fun renameBlock(
+        routineWeekId: Long,
+        currentBlockTitle: String,
+        newBlockName: String,
+        onError: (String) -> Unit,
+        onSuccess: () -> Unit
+    ) {
+        viewModelScope.launch {
+            val cleanName = newBlockName.trim()
+
+            if (cleanName.isEmpty()) {
+                onError("Introduce un nombre para el bloque")
+                return@launch
+            }
+
+            val allPlans = routineRepository.getDaysForWeek(routineWeekId)
+
+            val currentBlockPlans = allPlans.filter {
+                it.dayName.trim().equals(currentBlockTitle.trim(), ignoreCase = true)
+            }
+
+            if (currentBlockPlans.isEmpty()) {
+                onError("No se ha encontrado el bloque")
+                return@launch
+            }
+
+            val nameAlreadyExists = allPlans.any {
+                it.dayName.trim().equals(cleanName, ignoreCase = true) &&
+                        !it.dayName.trim().equals(currentBlockTitle.trim(), ignoreCase = true)
+            }
+
+            if (nameAlreadyExists) {
+                onError("Ya existe un bloque con ese nombre")
+                return@launch
+            }
+
+            currentBlockPlans.forEach { plan ->
+                routineRepository.updateRoutineDay(
+                    plan.copy(dayName = cleanName.uppercase())
+                )
+            }
+
+            loadRoutineDetail(routineWeekId)
+            onSuccess()
+        }
+    }
+
+    fun deleteBlock(
+        routineWeekId: Long,
+        blockTitle: String,
+        onError: (String) -> Unit,
+        onSuccess: () -> Unit
+    ) {
+        viewModelScope.launch {
+            val allPlans = routineRepository.getDaysForWeek(routineWeekId)
+
+            val blockPlans = allPlans.filter {
+                it.dayName.trim().equals(blockTitle.trim(), ignoreCase = true)
+            }
+
+            if (blockPlans.isEmpty()) {
+                onError("No se ha encontrado el bloque")
+                return@launch
+            }
+
+            blockPlans.forEach { plan ->
+                routineRepository.deleteRoutineDay(plan)
+            }
+
+            loadRoutineDetail(routineWeekId)
+            onSuccess()
+        }
+    }
 
     private fun dayNumberToText(day: Int): String {
         return when (day) {

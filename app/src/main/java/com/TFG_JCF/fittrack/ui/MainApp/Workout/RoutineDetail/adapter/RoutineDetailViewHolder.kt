@@ -6,22 +6,33 @@ import com.TFG_JCF.fittrack.databinding.ItemRoutineBlockBinding
 
 class RoutineDetailViewHolder(
     private val binding: ItemRoutineBlockBinding,
-    private val onViewExercisesClick: (RoutineDetailItemUi) -> Unit,
-    private val onEditDaysClick: (RoutineDetailItemUi) -> Unit
+    private val onBlockClick: (RoutineDetailItemUi) -> Unit,
+    private val onEditDaysClick: (RoutineDetailItemUi) -> Unit,
+    private val onEditNameClick: (RoutineDetailItemUi) -> Unit,
+    private val onDeleteBlockClick: (RoutineDetailItemUi) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(item: RoutineDetailItemUi) {
         binding.tvBlockName.text = item.title
+
         binding.tvAssignedDays.text = item.selectedDays
             .sorted()
             .joinToString(", ") { dayNumberToText(it) }
 
-        binding.btnViewExercises.setOnClickListener {
-            onViewExercisesClick(item)
+        binding.cardRoutineBlock.setOnClickListener {
+            onBlockClick(item)
         }
 
         binding.btnEditDays.setOnClickListener {
             onEditDaysClick(item)
+        }
+
+        binding.btnEditName.setOnClickListener {
+            onEditNameClick(item)
+        }
+
+        binding.btnDeleteBlock.setOnClickListener {
+            onDeleteBlockClick(item)
         }
     }
 

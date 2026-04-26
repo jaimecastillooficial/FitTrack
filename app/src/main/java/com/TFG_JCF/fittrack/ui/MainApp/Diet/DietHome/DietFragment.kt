@@ -1,7 +1,6 @@
 package com.TFG_JCF.fittrack.ui.MainApp.Diet.DietHome
 
 import android.app.AlertDialog
-import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -77,55 +76,10 @@ class DietFragment : Fragment(R.layout.fragment_diet) {
         }
 
         binding.tvSelectedDate.setOnClickListener {
-            showDatePicker()
+            showDatePickerDialog()
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun showDatePicker() {
-        val dialogBinding = DialogSelectDateBinding.inflate(layoutInflater)
-        val currentDate = viewModel.selectedDate.value
-
-        dialogBinding.datePicker.init(
-            currentDate.year,
-            currentDate.monthValue - 1,
-            currentDate.dayOfMonth,
-            null
-        )
-
-        dialogBinding.datePicker.maxDate = System.currentTimeMillis()
-
-        val dialog = AlertDialog.Builder(requireContext())
-            .setView(dialogBinding.root)
-            .setCancelable(true)
-            .create()
-
-        dialogBinding.btnCancel.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        dialogBinding.btnAccept.setOnClickListener {
-            val year = dialogBinding.datePicker.year
-            val month = dialogBinding.datePicker.month
-            val day = dialogBinding.datePicker.dayOfMonth
-
-            val selectedDate = LocalDate.of(year, month + 1, day)
-
-            if (selectedDate.isAfter(LocalDate.now())) {
-                Toast.makeText(
-                    requireContext(),
-                    "No puedes registrar comidas en fechas futuras",
-                    Toast.LENGTH_SHORT
-                ).show()
-                return@setOnClickListener
-            }
-
-            viewModel.setSelectedDate(selectedDate)
-            dialog.dismiss()
-        }
-
-        dialog.show()
-    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun observeViewModel() {
@@ -237,6 +191,51 @@ class DietFragment : Fragment(R.layout.fragment_diet) {
                 dialog.dismiss()
             }
         }
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun showDatePickerDialog() {
+        val dialogBinding = DialogSelectDateBinding.inflate(layoutInflater)
+        val currentDate = viewModel.selectedDate.value
+
+        dialogBinding.datePicker.init(
+            currentDate.year,
+            currentDate.monthValue - 1,
+            currentDate.dayOfMonth,
+            null
+        )
+
+        dialogBinding.datePicker.maxDate = System.currentTimeMillis()
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogBinding.root)
+            .setCancelable(true)
+            .create()
+
+        dialogBinding.btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialogBinding.btnAccept.setOnClickListener {
+            val year = dialogBinding.datePicker.year
+            val month = dialogBinding.datePicker.month
+            val day = dialogBinding.datePicker.dayOfMonth
+
+            val selectedDate = LocalDate.of(year, month + 1, day)
+
+            if (selectedDate.isAfter(LocalDate.now())) {
+                Toast.makeText(
+                    requireContext(),
+                    "No puedes registrar comidas en fechas futuras",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
+
+            viewModel.setSelectedDate(selectedDate)
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 }
 

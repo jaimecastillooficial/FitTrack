@@ -2,6 +2,7 @@ package com.TFG_JCF.fittrack.ui.MainApp.Workout.RoutineDetail
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -16,6 +17,7 @@ import com.TFG_JCF.fittrack.data.model.Workout.RoutineDetailItemUi
 import com.TFG_JCF.fittrack.databinding.ActivityRoutineDetailBinding
 import com.TFG_JCF.fittrack.databinding.DialogAddRoutineBlockBinding
 import com.TFG_JCF.fittrack.ui.MainApp.Workout.RoutineDetail.adapter.RoutineDetailAdapter
+import com.TFG_JCF.fittrack.ui.MainApp.Workout.RoutineExercise.RoutineExerciseActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -32,7 +34,7 @@ class RoutineDetailActivity : AppCompatActivity() {
         binding = ActivityRoutineDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-         routineId = intent.getLongExtra(EXTRA_ROUTINE_ID, -1L)
+        routineId = intent.getLongExtra(EXTRA_ROUTINE_ID, -1L)
 
         if (routineId == -1L) {
             finish()
@@ -48,15 +50,26 @@ class RoutineDetailActivity : AppCompatActivity() {
 
     private fun setupRecycler() {
         detailAdapter = RoutineDetailAdapter(
-            onViewExercisesClick = { item ->
-                Toast.makeText(
-                    this,
-                    "Luego abrimos ejercicios de ${item.title}",
-                    Toast.LENGTH_SHORT
-                ).show()
+            onBlockClick = { item ->
+                startActivity(
+                    RoutineExerciseActivity.createIntent(
+                        activity = this,
+                        blockTitle = item.title,
+                        dayPlanIds = item.sourceDayPlanIds
+                    )
+                )
             },
+
             onEditDaysClick = { item ->
                 showEditDaysDialog(item)
+            },
+
+            onEditNameClick = { item ->
+                showRenameBlockDialog(item)
+            },
+
+            onDeleteBlockClick = { item ->
+                showDeleteBlockDialog(item)
             }
         )
 
@@ -64,6 +77,7 @@ class RoutineDetailActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@RoutineDetailActivity)
             adapter = detailAdapter
         }
+
         binding.btnAddBlock.setOnClickListener {
             showAddBlockDialog()
         }
@@ -89,11 +103,12 @@ class RoutineDetailActivity : AppCompatActivity() {
             }
         }
     }
+
     private fun showAddBlockDialog() {
         val dialogBinding = DialogAddRoutineBlockBinding.inflate(layoutInflater)
 
         val dialog = AlertDialog.Builder(this)
-            .setView(dialogBinding.root) // 👈 MUY IMPORTANTE
+            .setView(dialogBinding.root)
             .setNegativeButton("Cancelar", null)
             .setPositiveButton("Guardar", null)
             .create()
@@ -130,7 +145,10 @@ class RoutineDetailActivity : AppCompatActivity() {
                     onError = { message ->
                         runOnUiThread {
                             when {
-                                message.equals("Introduce un nombre para el bloque", true) || message.equals("Ya existe un bloque con ese nombre", true) -> {
+                                message.equals(
+                                    "Introduce un nombre para el bloque",
+                                    true
+                                ) || message.equals("Ya existe un bloque con ese nombre", true) -> {
                                     dialogBinding.tilBlockName.error = message
                                 }
 
@@ -153,6 +171,7 @@ class RoutineDetailActivity : AppCompatActivity() {
 
         dialog.show()
     }
+
     private fun showEditDaysDialog(item: RoutineDetailItemUi) {
         val dayLabels = arrayOf(
             "Lunes",
@@ -196,6 +215,63 @@ class RoutineDetailActivity : AppCompatActivity() {
                     onSuccess = {
                         runOnUiThread {
                             Toast.makeText(this, "Días actualizados", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                )
+            }
+            .show()
+    }
+
+    private fun showRenameBlockDialog(item: RoutineDetailItemUi) {
+        val input = EditText(this).apply {
+            setText(item.title)
+            setSelection(text.length)
+            hint = "Nombre del bloque"
+        }
+
+        AlertDialog.Builder(this)
+            .setTitle("Editar bloque")
+            .setView(input)
+            .setNegativeButton("Cancelar", null)
+            .setPositiveButton("Guardar") { _, _ ->
+                val newName = input.text.toString()
+
+                viewModel.renameBlock(
+                    routineWeekId = routineId,
+                    currentBlockTitle = item.title,
+                    newBlockName = newName,
+                    onError = { message ->
+                        runOnUiThread {
+                            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                        }
+                    },
+                    onSuccess = {
+                        runOnUiThread {
+                            Toast.makeText(this, "Bloque actualizado", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                )
+            }
+            .show()
+    }
+
+    private fun showDeleteBlockDialog(item: RoutineDetailItemUi) {
+        AlertDialog.Builder(this)
+            .setTitle("Eliminar bloque")
+            .setMessage("¿Quieres eliminar el bloque ${item.title}? Se eliminará de todos sus días asignados.")
+            .setNegativeButton("Cancelar", null)
+            .setPositiveButton("Eliminar") { _, _ ->
+                viewModel.deleteBlock(
+                    routineWeekId = routineId,
+                    blockTitle = item.title,
+                    onError = { message ->
+                        runOnUiThread {
+                            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                        }
+                    },
+                    onSuccess = {
+                        runOnUiThread {
+                            Toast.makeText(this, "Bloque eliminado", Toast.LENGTH_SHORT).show()
                         }
                     }
                 )

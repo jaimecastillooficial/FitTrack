@@ -20,6 +20,8 @@ data class ExerciseEntity(
 
     val muscleGroup: String? = null,
 
+    val movementPattern: MovementPattern? = null,
+
     // predefinidos: true, creados por usuario: false
     val isPublic: Boolean,
 
