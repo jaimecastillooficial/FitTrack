@@ -29,4 +29,14 @@ interface RoutineDayExerciseDao {
 
     @Query("DELETE FROM routine_day_exercises WHERE dayPlanId = :dayPlanId")
     suspend fun deleteAllForDayPlan(dayPlanId: Long)
+
+    @Query("""
+        SELECT * FROM routine_day_exercises
+        WHERE dayPlanId = :dayPlanId AND exerciseId = :exerciseId
+        LIMIT 1
+    """)
+    suspend fun getByDayPlanAndExercise(
+        dayPlanId: Long,
+        exerciseId: Long
+    ): RoutineDayExerciseEntity?
 }

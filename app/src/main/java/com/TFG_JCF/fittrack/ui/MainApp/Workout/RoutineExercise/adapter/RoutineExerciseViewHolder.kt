@@ -16,14 +16,19 @@ class RoutineExerciseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVi
 
     fun bind(
         item: RoutineExerciseItemUi,
-        onDeleteClick: (RoutineExerciseItemUi) -> Unit
+        onDeleteClick: (RoutineExerciseItemUi) -> Unit,
+        onItemClick: (RoutineExerciseItemUi) -> Unit
     ) {
         tvExerciseName.text = item.name
 
         val patternText = item.movementPattern?.toDisplayName() ?: "Sin patrón"
         val muscleText = item.muscleGroup ?: "Sin grupo muscular"
 
-        tvExerciseInfo.text = "$muscleText · $patternText"
+        tvExerciseInfo.text = "$muscleText · $patternText · ${item.setSummary}"
+
+        itemView.setOnClickListener {
+            onItemClick(item)
+        }
 
         btnDeleteExercise.setOnClickListener {
             onDeleteClick(item)

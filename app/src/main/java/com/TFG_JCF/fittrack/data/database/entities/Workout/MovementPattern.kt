@@ -1,10 +1,7 @@
 package com.TFG_JCF.fittrack.data.database.entities.Workout
 
 enum class MovementPattern {
-    PUSH,
-    PULL,
-    LEGS,
-    CORE
+    PUSH, PULL, LEGS, CORE
 }
 
 fun MovementPattern.toDisplayName(): String {

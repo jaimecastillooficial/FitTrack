@@ -106,7 +106,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="35dp"
-            android:text="Empezar entreno"
+            android:text="Registrar entreno"
             android:textAllCaps="false"
             android:textStyle="bold"
             app:backgroundTint="@color/ft_primary"

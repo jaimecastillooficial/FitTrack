@@ -2,9 +2,11 @@ package com.TFG_JCF.fittrack.data.Repositories
 
 import com.TFG_JCF.fittrack.data.database.dao.Workout.RoutineDayExerciseDao
 import com.TFG_JCF.fittrack.data.database.dao.Workout.RoutineDayPlanDao
+import com.TFG_JCF.fittrack.data.database.dao.Workout.RoutineExerciseSetPlanDao
 import com.TFG_JCF.fittrack.data.database.dao.Workout.RoutineWeekDao
 import com.TFG_JCF.fittrack.data.database.entities.Workout.RoutineDayExerciseEntity
 import com.TFG_JCF.fittrack.data.database.entities.Workout.RoutineDayPlanEntity
+import com.TFG_JCF.fittrack.data.database.entities.Workout.RoutineExerciseSetPlanEntity
 import com.TFG_JCF.fittrack.data.database.entities.Workout.RoutineWeekEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -13,7 +15,8 @@ import javax.inject.Inject
 class RoutineRepository @Inject constructor(
     private val routineWeekDao: RoutineWeekDao,
     private val routineDayPlanDao: RoutineDayPlanDao,
-    private val routineDayExerciseDao: RoutineDayExerciseDao
+    private val routineDayExerciseDao: RoutineDayExerciseDao,
+    private val routineExerciseSetPlanDao: RoutineExerciseSetPlanDao
 ) {
 
     suspend fun createRoutineWeek(userUid: String, name: String): Long {
@@ -31,6 +34,61 @@ class RoutineRepository @Inject constructor(
             routineDayPlanDao.getById(id)
         }
     }
+    suspend fun getSetPlansForRoutineExercise(
+        routineDayExerciseId: Long
+    ): List<RoutineExerciseSetPlanEntity> {
+        return withContext(Dispatchers.IO) {
+            routineExerciseSetPlanDao.getByRoutineDayExercise(routineDayExerciseId)
+        }
+    }
+
+    suspend fun getSetPlansForExerciseInBlock(
+        dayPlanIds: List<Long>,
+        exerciseId: Long
+    ): List<RoutineExerciseSetPlanEntity> {
+        return withContext(Dispatchers.IO) {
+            for (dayPlanId in dayPlanIds) {
+                val relation = routineDayExerciseDao.getByDayPlanAndExercise(dayPlanId, exerciseId)
+
+                if (relation != null) {
+                    val plans = routineExerciseSetPlanDao.getByRoutineDayExercise(relation.id)
+
+                    if (plans.isNotEmpty()) {
+                        return@withContext plans
+                    }
+                }
+            }
+
+            emptyList()
+        }
+    }
+
+    suspend fun saveSetPlansForExerciseInBlock(
+        dayPlanIds: List<Long>,
+        exerciseId: Long,
+        setPlans: List<RoutineExerciseSetPlanEntity>
+    ) {
+        withContext(Dispatchers.IO) {
+            dayPlanIds.forEach { dayPlanId ->
+                val relation = routineDayExerciseDao.getByDayPlanAndExercise(dayPlanId, exerciseId)
+                    ?: return@forEach
+
+                val plansForRelation = setPlans.mapIndexed { index, plan ->
+                    plan.copy(
+                        id = 0,
+                        routineDayExerciseId = relation.id,
+                        setNumber = index + 1
+                    )
+                }
+
+                routineExerciseSetPlanDao.replaceForRoutineDayExercise(
+                    routineDayExerciseId = relation.id,
+                    plans = plansForRelation
+                )
+            }
+        }
+    }
+
     suspend fun updateRoutineWeek(entity: RoutineWeekEntity) {
         withContext(Dispatchers.IO) {
             routineWeekDao.update(entity)
@@ -168,12 +226,26 @@ class RoutineRepository @Inject constructor(
             val sourceExercises = routineDayExerciseDao.getByDayPlan(fromDayPlanId)
         //Los inserta
             sourceExercises.forEach { exercise ->
-                routineDayExerciseDao.insert(
+                val newRelationId = routineDayExerciseDao.insert(
                     RoutineDayExerciseEntity(
                         dayPlanId = toDayPlanId,
                         exerciseId = exercise.exerciseId,
-                        orderIndex = exercise.orderIndex,
+                        orderIndex = exercise.orderIndex
                     )
+                )
+
+                val sourceSetPlans = routineExerciseSetPlanDao.getByRoutineDayExercise(exercise.id)
+
+                val copiedSetPlans = sourceSetPlans.map { plan ->
+                    plan.copy(
+                        id = 0,
+                        routineDayExerciseId = newRelationId
+                    )
+                }
+
+                routineExerciseSetPlanDao.replaceForRoutineDayExercise(
+                    routineDayExerciseId = newRelationId,
+                    plans = copiedSetPlans
                 )
             }
         }

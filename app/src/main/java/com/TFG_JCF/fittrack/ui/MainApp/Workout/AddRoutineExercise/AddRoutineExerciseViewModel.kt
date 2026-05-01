@@ -8,6 +8,7 @@ import com.TFG_JCF.fittrack.data.Repositories.ExerciseRepository
 import com.TFG_JCF.fittrack.data.Repositories.RoutineRepository
 import com.TFG_JCF.fittrack.data.database.entities.Workout.ExerciseEntity
 import com.TFG_JCF.fittrack.data.database.entities.Workout.MovementPattern
+import com.TFG_JCF.fittrack.data.utils.ExercisePreloader
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -22,12 +23,22 @@ class AddRoutineExerciseViewModel @Inject constructor(
     private var fullExerciseList: List<ExerciseEntity> = emptyList()
     private var currentQuery: String = ""
     private var currentPattern: MovementPattern? = null
+
     private val _filteredExercises = MutableLiveData<List<ExerciseEntity>>()
     val filteredExercises: LiveData<List<ExerciseEntity>> = _filteredExercises
 
     fun prepareExercises() {
         viewModelScope.launch {
-            val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return@launch
+            val uid = FirebaseAuth.getInstance().currentUser?.uid
+
+            if (uid.isNullOrEmpty()) {
+                _filteredExercises.value = emptyList()
+                return@launch
+            }
+
+            exerciseRepository.prepareDefaultExercises(
+                ExercisePreloader.defaultExercises()
+            )
 
             fullExerciseList = exerciseRepository.getVisibleExercisesForUser(uid)
 

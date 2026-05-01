@@ -14,7 +14,8 @@ class WorkoutRepository @Inject constructor(
     private val workoutExerciseDao: WorkoutExerciseDao,
     private val workoutSetDao: WorkoutSetDao,
     private val routineDayPlanDao: RoutineDayPlanDao,
-    private val routineDayExerciseDao: RoutineDayExerciseDao
+    private val routineDayExerciseDao: RoutineDayExerciseDao,
+    private val routineExerciseSetPlanDao: RoutineExerciseSetPlanDao
 ) {
 
 
@@ -31,42 +32,42 @@ class WorkoutRepository @Inject constructor(
     // CREAR WORKOUT DESDE PLAN
 
 
-//    suspend fun createWorkoutFromPlan(
-//        userUid: String,
-//        date: String,
-//        routineWeekId: Long,
-//        dayOfWeek: Int
-//    ): Long {
-//
-//        return withContext(Dispatchers.IO) {
-//
-//            val dayPlan =
-//                routineDayPlanDao.getByRoutineWeekAndDay(routineWeekId, dayOfWeek)
-//                    ?: return@withContext -1L
-//
-//            val workoutId = workoutDao.insert(
-//                WorkoutEntity(
-//                    userUid = userUid,
-//                    date = date,
-//                    dayName = dayPlan.dayName
-//                )
-//            )
-//
-//            val exercises = routineDayExerciseDao.getByDayPlan(dayPlan.id)
-//
-//            for (e in exercises) {
-//                workoutExerciseDao.insert(
-//                    WorkoutExerciseEntity(
-//                        workoutId = workoutId,
-//                        exerciseId = e.exerciseId,
-//                        orderIndex = e.orderIndex
-//                    )
-//                )
-//            }
-//
-//            workoutId
-//        }
-//    }
+    suspend fun createWorkoutFromPlan(
+        userUid: String,
+        date: String,
+        routineWeekId: Long,
+        dayOfWeek: Int
+    ): Long {
+
+        return withContext(Dispatchers.IO) {
+
+            val dayPlan =
+                routineDayPlanDao.getByRoutineWeekAndDay(routineWeekId, dayOfWeek)
+                    ?: return@withContext -1L
+
+            val workoutId = workoutDao.insert(
+                WorkoutEntity(
+                    userUid = userUid,
+                    date = date,
+                    dayName = dayPlan.dayName
+                )
+            )
+
+            val exercises = routineDayExerciseDao.getByDayPlan(dayPlan.id)
+
+            for (e in exercises) {
+                workoutExerciseDao.insert(
+                    WorkoutExerciseEntity(
+                        workoutId = workoutId,
+                        exerciseId = e.exerciseId,
+                        orderIndex = e.orderIndex
+                    )
+                )
+            }
+
+            workoutId
+        }
+    }
 
 
     // GUARDAR ENTRENAMIENTO COMPLETO (BOTÓN FINAL)
@@ -177,7 +178,99 @@ class WorkoutRepository @Inject constructor(
             }
         }
     }
+    suspend fun hasWorkoutForDate(userUid: String, date: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            workoutDao.getByDate(userUid, date) != null
+        }
+    }
+
+    suspend fun saveWorkoutFromDayPlanSets(
+        userUid: String,
+        date: String,
+        dayPlanId: Long
+    ): Result<Unit> {
+        return withContext(Dispatchers.IO) {
+            try {
+                if (workoutDao.getByDate(userUid, date) != null) {
+                    return@withContext Result.failure(
+                        Exception("Ya hay un entrenamiento registrado hoy")
+                    )
+                }
+
+                val dayPlan = routineDayPlanDao.getById(dayPlanId)
+                    ?: return@withContext Result.failure(
+                        Exception("No se ha encontrado el plan de hoy")
+                    )
+
+                val routineExercises = routineDayExerciseDao.getByDayPlan(dayPlanId)
+
+                if (routineExercises.isEmpty()) {
+                    return@withContext Result.failure(
+                        Exception("Este día no tiene ejercicios")
+                    )
+                }
+
+                val plansByExercise = mutableMapOf<
+                        com.TFG_JCF.fittrack.data.database.entities.Workout.RoutineDayExerciseEntity,
+                        List<com.TFG_JCF.fittrack.data.database.entities.Workout.RoutineExerciseSetPlanEntity>
+                        >()
+
+                routineExercises.forEach { relation ->
+                    plansByExercise[relation] =
+                        routineExerciseSetPlanDao.getByRoutineDayExercise(relation.id)
+                }
+
+                val exerciseWithoutSets = plansByExercise.entries.firstOrNull {
+                    it.value.isEmpty()
+                }
+
+                if (exerciseWithoutSets != null) {
+                    return@withContext Result.failure(
+                        Exception("Todos los ejercicios deben tener al menos una serie")
+                    )
+                }
+
+                val workoutId = workoutDao.insert(
+                    WorkoutEntity(
+                        userUid = userUid,
+                        date = date,
+                        dayName = dayPlan.dayName
+                    )
+                )
+
+                plansByExercise.forEach { (routineExercise, setPlans) ->
+                    val workoutExerciseId = workoutExerciseDao.insert(
+                        WorkoutExerciseEntity(
+                            workoutId = workoutId,
+                            exerciseId = routineExercise.exerciseId,
+                            orderIndex = routineExercise.orderIndex
+                        )
+                    )
+
+                    setPlans.forEachIndexed { index, plan ->
+                        workoutSetDao.insert(
+                            WorkoutSetEntity(
+                                workoutExerciseId = workoutExerciseId,
+                                setNumber = index + 1,
+                                reps = plan.plannedReps,
+                                weightKg = plan.plannedWeightKg,
+                                rir = plan.plannedRir,
+                                isWarmup = false
+                            )
+                        )
+                    }
+                }
+
+                Result.success(Unit)
+
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        }
+    }
 }
+
+
 
 data class ExerciseWithSets(
     val exerciseId: Long,
