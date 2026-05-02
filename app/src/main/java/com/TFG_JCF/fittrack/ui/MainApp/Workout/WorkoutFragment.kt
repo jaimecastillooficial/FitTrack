@@ -1,17 +1,24 @@
 package com.TFG_JCF.fittrack.ui.MainApp.Workout
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.TFG_JCF.fittrack.R
+import com.TFG_JCF.fittrack.databinding.DialogRegisterWorkoutBinding
 import com.TFG_JCF.fittrack.databinding.FragmentWorkoutBinding
 import com.TFG_JCF.fittrack.ui.MainApp.Workout.RoutineList.RoutineListActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import androidx.core.graphics.drawable.toDrawable
 
 @AndroidEntryPoint
 class WorkoutFragment : Fragment(R.layout.fragment_workout) {
@@ -21,6 +28,7 @@ class WorkoutFragment : Fragment(R.layout.fragment_workout) {
 
     private val viewModel: WorkoutViewModel by viewModels()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -36,13 +44,10 @@ class WorkoutFragment : Fragment(R.layout.fragment_workout) {
         viewModel.loadWorkoutHome()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun initListeners() {
         binding.btnStartWorkout.setOnClickListener {
-            Toast.makeText(
-                requireContext(),
-                "Ir a WorkoutSessionFragment",
-                Toast.LENGTH_SHORT
-            ).show()
+            showRegisterWorkoutDialog()
         }
 
         binding.btnMyRoutines.setOnClickListener {
@@ -65,9 +70,56 @@ class WorkoutFragment : Fragment(R.layout.fragment_workout) {
                 binding.tvActiveRoutineValue.text = state.activeRoutineName
                 binding.tvTodayValue.text = state.todayWorkoutName
                 binding.tvWorkoutMessage.text = state.message
+
                 binding.btnStartWorkout.isEnabled = state.canStartWorkout
+                binding.btnStartWorkout.text = if (state.canStartWorkout) {
+                    "Registrar entreno"
+                } else {
+                    "Entreno no disponible"
+                }
             }
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun showRegisterWorkoutDialog() {
+        val dialogBinding = DialogRegisterWorkoutBinding.inflate(layoutInflater)
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogBinding.root)
+            .create()
+
+        dialogBinding.btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialogBinding.btnRegister.setOnClickListener {
+            dialog.dismiss()
+
+            viewModel.registerTodayWorkout(
+                onSuccess = {
+                    activity?.runOnUiThread {
+                        Toast.makeText(
+                            requireContext(),
+                            "Entrenamiento registrado",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                },
+                onError = { message ->
+                    activity?.runOnUiThread {
+                        Toast.makeText(
+                            requireContext(),
+                            message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            )
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
     }
 
     override fun onDestroyView() {

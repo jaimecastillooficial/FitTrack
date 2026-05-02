@@ -2,61 +2,85 @@ package com.TFG_JCF.fittrack.data.utils
 
 import com.TFG_JCF.fittrack.data.database.dao.Workout.ExerciseDao
 import com.TFG_JCF.fittrack.data.database.entities.Workout.ExerciseEntity
+import com.TFG_JCF.fittrack.data.database.entities.Workout.MovementPattern
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 object ExercisePreloader {
+
+    fun defaultExercises(): List<ExerciseEntity> {
+        return listOf(
+            ExerciseEntity("Press banca", "Pecho", MovementPattern.PUSH),
+            ExerciseEntity("Press inclinado con mancuernas", "Pecho", MovementPattern.PUSH),
+            ExerciseEntity("Fondos en paralelas", "Pecho / Tríceps", MovementPattern.PUSH),
+            ExerciseEntity("Aperturas con mancuernas", "Pecho", MovementPattern.PUSH),
+            ExerciseEntity("Press militar", "Hombro", MovementPattern.PUSH),
+            ExerciseEntity("Elevaciones laterales", "Hombro", MovementPattern.PUSH),
+            ExerciseEntity("Extensión de tríceps en polea", "Tríceps", MovementPattern.PUSH),
+            ExerciseEntity("Extensión unilateral de tríceps", "Tríceps", MovementPattern.PUSH),
+
+            ExerciseEntity("Dominadas", "Espalda", MovementPattern.PULL),
+            ExerciseEntity("Dominadas supinas", "Espalda / Bíceps", MovementPattern.PULL),
+            ExerciseEntity("Remo con barra", "Espalda", MovementPattern.PULL),
+            ExerciseEntity("Remo unilateral con mancuerna", "Espalda", MovementPattern.PULL),
+            ExerciseEntity("Jalón al pecho", "Espalda", MovementPattern.PULL),
+            ExerciseEntity("Pájaros", "Hombro posterior", MovementPattern.PULL),
+            ExerciseEntity("Face pull", "Hombro posterior / Espalda alta", MovementPattern.PULL),
+            ExerciseEntity("Curl bíceps con barra", "Bíceps", MovementPattern.PULL),
+            ExerciseEntity("Curl martillo", "Bíceps", MovementPattern.PULL),
+
+            ExerciseEntity("Sentadilla", "Pierna", MovementPattern.LEGS),
+            ExerciseEntity("Prensa de piernas", "Pierna", MovementPattern.LEGS),
+            ExerciseEntity("Peso muerto rumano", "Femoral / Glúteo", MovementPattern.LEGS),
+            ExerciseEntity("Zancadas", "Pierna / Glúteo", MovementPattern.LEGS),
+            ExerciseEntity("Curl femoral", "Femoral", MovementPattern.LEGS),
+            ExerciseEntity("Extensión de cuádriceps", "Cuádriceps", MovementPattern.LEGS),
+            ExerciseEntity("Elevación de gemelos", "Gemelo", MovementPattern.LEGS),
+
+            ExerciseEntity("Plancha", "Core", MovementPattern.CORE),
+            ExerciseEntity("Elevaciones de piernas", "Core", MovementPattern.CORE),
+            ExerciseEntity("Ab wheel", "Core", MovementPattern.CORE),
+            ExerciseEntity("Russian twists", "Core", MovementPattern.CORE),
+            ExerciseEntity("Pallof press", "Core", MovementPattern.CORE),
+            ExerciseEntity("Dragon flag", "Core", MovementPattern.CORE)
+        )
+    }
 
     fun preloadExercises(
         exerciseDao: ExerciseDao,
         scope: CoroutineScope
     ) {
         scope.launch {
-            val alreadyExists = exerciseDao.getByName("Press banca") != null
+            defaultExercises().forEach { defaultExercise ->
+                val existing = exerciseDao.getByName(defaultExercise.name)
 
-            if (alreadyExists) return@launch
-
-            val exercises = listOf(
-                ExerciseEntity(name = "Press banca", muscleGroup = "Pecho", isPublic = true),
-                ExerciseEntity(name = "Press inclinado con mancuernas", muscleGroup = "Pecho", isPublic = true),
-                ExerciseEntity(name = "Fondos en paralelas", muscleGroup = "Pecho / Tríceps", isPublic = true),
-                ExerciseEntity(name = "Aperturas con mancuernas", muscleGroup = "Pecho", isPublic = true),
-
-                ExerciseEntity(name = "Dominadas", muscleGroup = "Espalda", isPublic = true),
-                ExerciseEntity(name = "Dominadas supinas", muscleGroup = "Espalda / Bíceps", isPublic = true),
-                ExerciseEntity(name = "Remo con barra", muscleGroup = "Espalda", isPublic = true),
-                ExerciseEntity(name = "Remo unilateral con mancuerna", muscleGroup = "Espalda", isPublic = true),
-                ExerciseEntity(name = "Jalón al pecho", muscleGroup = "Espalda", isPublic = true),
-
-                ExerciseEntity(name = "Press militar", muscleGroup = "Hombro", isPublic = true),
-                ExerciseEntity(name = "Elevaciones laterales", muscleGroup = "Hombro", isPublic = true),
-                ExerciseEntity(name = "Pájaros", muscleGroup = "Hombro posterior", isPublic = true),
-                ExerciseEntity(name = "Face pull", muscleGroup = "Hombro posterior / Espalda alta", isPublic = true),
-
-                ExerciseEntity(name = "Curl bíceps con barra", muscleGroup = "Bíceps", isPublic = true),
-                ExerciseEntity(name = "Curl martillo", muscleGroup = "Bíceps", isPublic = true),
-                ExerciseEntity(name = "Extensión de tríceps en polea", muscleGroup = "Tríceps", isPublic = true),
-                ExerciseEntity(name = "Extensión unilateral de tríceps", muscleGroup = "Tríceps", isPublic = true),
-
-                ExerciseEntity(name = "Sentadilla", muscleGroup = "Pierna", isPublic = true),
-                ExerciseEntity(name = "Prensa de piernas", muscleGroup = "Pierna", isPublic = true),
-                ExerciseEntity(name = "Peso muerto rumano", muscleGroup = "Femoral / Glúteo", isPublic = true),
-                ExerciseEntity(name = "Zancadas", muscleGroup = "Pierna / Glúteo", isPublic = true),
-                ExerciseEntity(name = "Curl femoral", muscleGroup = "Femoral", isPublic = true),
-                ExerciseEntity(name = "Extensión de cuádriceps", muscleGroup = "Cuádriceps", isPublic = true),
-                ExerciseEntity(name = "Elevación de gemelos", muscleGroup = "Gemelo", isPublic = true),
-
-                ExerciseEntity(name = "Plancha", muscleGroup = "Core", isPublic = true),
-                ExerciseEntity(name = "Elevaciones de piernas", muscleGroup = "Core", isPublic = true),
-                ExerciseEntity(name = "Ab wheel", muscleGroup = "Core", isPublic = true),
-                ExerciseEntity(name = "Russian twists", muscleGroup = "Core", isPublic = true),
-                ExerciseEntity(name = "Pallof press", muscleGroup = "Core", isPublic = true),
-                ExerciseEntity(name = "Dragon flag", muscleGroup = "Core", isPublic = true)
-            )
-
-            exercises.forEach { exercise ->
-                exerciseDao.insert(exercise)
+                if (existing == null) {
+                    exerciseDao.insert(defaultExercise)
+                } else if (existing.movementPattern == null) {
+                    exerciseDao.update(
+                        existing.copy(
+                            muscleGroup = defaultExercise.muscleGroup,
+                            movementPattern = defaultExercise.movementPattern,
+                            isPublic = true,
+                            createdByUid = null
+                        )
+                    )
+                }
             }
         }
+    }
+
+    private fun ExerciseEntity(
+        name: String,
+        muscleGroup: String,
+        movementPattern: MovementPattern
+    ): ExerciseEntity {
+        return ExerciseEntity(
+            name = name,
+            muscleGroup = muscleGroup,
+            movementPattern = movementPattern,
+            isPublic = true,
+            createdByUid = null
+        )
     }
 }

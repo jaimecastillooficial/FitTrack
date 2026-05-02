@@ -12,6 +12,7 @@ import com.TFG_JCF.fittrack.data.database.dao.User_Bonus.WeightEntryDao
 import com.TFG_JCF.fittrack.data.database.dao.Workout.ExerciseDao
 import com.TFG_JCF.fittrack.data.database.dao.Workout.RoutineDayExerciseDao
 import com.TFG_JCF.fittrack.data.database.dao.Workout.RoutineDayPlanDao
+import com.TFG_JCF.fittrack.data.database.dao.Workout.RoutineExerciseSetPlanDao
 
 import com.TFG_JCF.fittrack.data.database.dao.Workout.RoutineWeekDao
 import com.TFG_JCF.fittrack.data.database.dao.Workout.WorkoutDao
@@ -32,6 +33,7 @@ import com.TFG_JCF.fittrack.data.database.entities.Workout.ExerciseEntity
 import com.TFG_JCF.fittrack.data.database.entities.Workout.RoutineWeekEntity
 import com.TFG_JCF.fittrack.data.database.entities.Workout.RoutineDayPlanEntity
 import com.TFG_JCF.fittrack.data.database.entities.Workout.RoutineDayExerciseEntity
+import com.TFG_JCF.fittrack.data.database.entities.Workout.RoutineExerciseSetPlanEntity
 import com.TFG_JCF.fittrack.data.database.entities.Workout.WorkoutEntity
 import com.TFG_JCF.fittrack.data.database.entities.Workout.WorkoutExerciseEntity
 import com.TFG_JCF.fittrack.data.database.entities.Workout.WorkoutSetEntity
@@ -52,12 +54,13 @@ import com.TFG_JCF.fittrack.data.database.entities.Workout.WorkoutSetEntity
         RoutineWeekEntity::class,
         RoutineDayPlanEntity::class,
         RoutineDayExerciseEntity::class,
+        RoutineExerciseSetPlanEntity::class,
         WorkoutEntity::class,
         WorkoutExerciseEntity::class,
         WorkoutSetEntity::class
     ],
     // Cambiar cada vez que se cambie la base de datos
-    version = 6,
+    version = 7,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -73,6 +76,7 @@ abstract class FitTrackDatabase : RoomDatabase() {
     abstract fun getRoutineWeekDao(): RoutineWeekDao
     abstract fun getRoutineDayPlanDao(): RoutineDayPlanDao
     abstract fun getRoutineDayExerciseDao(): RoutineDayExerciseDao
+    abstract fun getRoutineExerciseSetPlanDao(): RoutineExerciseSetPlanDao
     abstract fun getWorkoutDao(): WorkoutDao
     abstract fun getWorkoutExerciseDao(): WorkoutExerciseDao
     abstract fun getWorkoutSetDao(): WorkoutSetDao

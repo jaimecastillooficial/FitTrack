@@ -6,5 +6,6 @@ data class RoutineExerciseItemUi(
     val exerciseId: Long,
     val name: String,
     val muscleGroup: String?,
-    val movementPattern: MovementPattern?
+    val movementPattern: MovementPattern?,
+    val setSummary: String = "Sin series"
 )

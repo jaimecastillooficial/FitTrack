@@ -3,6 +3,7 @@ package com.TFG_JCF.fittrack.data.database.dao.Workout
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.TFG_JCF.fittrack.data.database.entities.Workout.ExerciseEntity
 
 @Dao
@@ -10,6 +11,9 @@ interface ExerciseDao {
 
     @Insert
     suspend fun insert(exercise: ExerciseEntity): Long
+
+    @Update
+    suspend fun update(exercise: ExerciseEntity)
 
     @Query("SELECT * FROM exercises WHERE id = :id LIMIT 1")
     suspend fun getById(id: Long): ExerciseEntity?

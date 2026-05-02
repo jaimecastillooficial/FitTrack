@@ -15,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FitTrack">
         <activity
+            android:name=".ui.MainApp.Workout.ExerciseSetPlan.ExerciseSetPlanActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.MainApp.Workout.AddRoutineExercise.AddRoutineExerciseActivity"
             android:exported="false" />
         <activity

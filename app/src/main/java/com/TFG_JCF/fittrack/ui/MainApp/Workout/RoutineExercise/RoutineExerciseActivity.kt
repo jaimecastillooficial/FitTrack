@@ -13,6 +13,7 @@ import com.TFG_JCF.fittrack.data.model.Workout.RoutineExerciseItemUi
 import com.TFG_JCF.fittrack.databinding.ActivityRoutineExerciseBinding
 import com.TFG_JCF.fittrack.ui.MainApp.Workout.RoutineExercise.adapter.RoutineExerciseAdapter
 import com.TFG_JCF.fittrack.ui.MainApp.Workout.AddRoutineExercise.AddRoutineExerciseActivity
+import com.TFG_JCF.fittrack.ui.MainApp.Workout.ExerciseSetPlan.ExerciseSetPlanActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -57,12 +58,23 @@ class RoutineExerciseActivity : AppCompatActivity() {
             exerciseList = emptyList(),
             onDeleteClick = { item ->
                 showDeleteDialog(item)
+            },
+            onItemClick = { item ->
+                startActivity(
+                    ExerciseSetPlanActivity.createIntent(
+                        context = this,
+                        dayPlanIds = dayPlanIds,
+                        exerciseId = item.exerciseId,
+                        exerciseName = item.name
+                    )
+                )
             }
         )
 
         binding.rvExercises.layoutManager = LinearLayoutManager(this)
         binding.rvExercises.adapter = adapter
     }
+
 
     private fun initListeners() {
         binding.btnBack.setOnClickListener {
@@ -93,6 +105,7 @@ class RoutineExerciseActivity : AppCompatActivity() {
                 binding.tvEmptyExercises.isVisible = items.isEmpty()
             }
         }
+
     }
 
     private fun showDeleteDialog(item: RoutineExerciseItemUi) {
@@ -117,6 +130,7 @@ class RoutineExerciseActivity : AppCompatActivity() {
             }
             .show()
     }
+
 
     companion object {
         private const val EXTRA_BLOCK_TITLE = "block_title"
