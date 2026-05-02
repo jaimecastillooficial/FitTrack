@@ -137,6 +137,7 @@ class DietFragment : Fragment(R.layout.fragment_diet) {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onResume() {
         super.onResume()
+
         viewModel.loadDietForSelectedDate()
     }
 

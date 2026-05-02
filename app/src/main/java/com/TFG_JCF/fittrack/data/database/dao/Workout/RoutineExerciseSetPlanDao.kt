@@ -19,13 +19,15 @@ interface RoutineExerciseSetPlanDao {
     @Query("DELETE FROM routine_exercise_set_plans WHERE routineDayExerciseId = :routineDayExerciseId")
     suspend fun deleteByRoutineDayExercise(routineDayExerciseId: Long)
 
+    //Busca las series de un ejercicio
     @Query("""
         SELECT * FROM routine_exercise_set_plans
         WHERE routineDayExerciseId = :routineDayExerciseId
         ORDER BY setNumber ASC
     """)
-    suspend fun getByRoutineDayExercise(routineDayExerciseId: Long): List<RoutineExerciseSetPlanEntity>
+    suspend fun getSetsByRoutineDayExercise(routineDayExerciseId: Long): List<RoutineExerciseSetPlanEntity>
 
+    //Se borra y se crea para que por si hay alguna serie metida en el medio se actualice o no moleste
     @Transaction
     suspend fun replaceForRoutineDayExercise(
         routineDayExerciseId: Long,

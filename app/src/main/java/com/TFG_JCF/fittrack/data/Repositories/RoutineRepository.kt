@@ -34,47 +34,48 @@ class RoutineRepository @Inject constructor(
             routineDayPlanDao.getById(id)
         }
     }
+    //Devuelve las series de un ejercicio por ID_ejercicio del dia
     suspend fun getSetPlansForRoutineExercise(
         routineDayExerciseId: Long
     ): List<RoutineExerciseSetPlanEntity> {
         return withContext(Dispatchers.IO) {
-            routineExerciseSetPlanDao.getByRoutineDayExercise(routineDayExerciseId)
+            routineExerciseSetPlanDao.getSetsByRoutineDayExercise(routineDayExerciseId)
         }
     }
 
+    //Obtiene las series de un ejercicio cuando solo tengo el bloque y el exerciseId.
     suspend fun getSetPlansForExerciseInBlock(
         dayPlanIds: List<Long>,
         exerciseId: Long
     ): List<RoutineExerciseSetPlanEntity> {
         return withContext(Dispatchers.IO) {
-            for (dayPlanId in dayPlanIds) {
-                val relation = routineDayExerciseDao.getByDayPlanAndExercise(dayPlanId, exerciseId)
+            val referenceDayPlanId = dayPlanIds.firstOrNull()
+                ?: return@withContext emptyList()
 
-                if (relation != null) {
-                    val plans = routineExerciseSetPlanDao.getByRoutineDayExercise(relation.id)
+            //Compruba que el ejercicio este en ese dia
+            val relation = routineDayExerciseDao.getRoutineDayExerciseByDayPlanAndExercise(
+                dayPlanId = referenceDayPlanId,
+                exerciseId = exerciseId
+            ) ?: return@withContext emptyList()
 
-                    if (plans.isNotEmpty()) {
-                        return@withContext plans
-                    }
-                }
-            }
-
-            emptyList()
+            routineExerciseSetPlanDao.getSetsByRoutineDayExercise(relation.id)
         }
     }
-
+    // Guarda las series del ejercicio en todos los días donde aparece el bloque.
     suspend fun saveSetPlansForExerciseInBlock(
         dayPlanIds: List<Long>,
         exerciseId: Long,
         setPlans: List<RoutineExerciseSetPlanEntity>
     ) {
         withContext(Dispatchers.IO) {
+
             dayPlanIds.forEach { dayPlanId ->
-                val relation = routineDayExerciseDao.getByDayPlanAndExercise(dayPlanId, exerciseId)
+                val relation = routineDayExerciseDao.getRoutineDayExerciseByDayPlanAndExercise(dayPlanId, exerciseId)
                     ?: return@forEach
 
                 val plansForRelation = setPlans.mapIndexed { index, plan ->
                     plan.copy(
+                        //id = 0 = Room genera un ID nuevo para esta fila
                         id = 0,
                         routineDayExerciseId = relation.id,
                         setNumber = index + 1
@@ -198,7 +199,7 @@ class RoutineRepository @Inject constructor(
 
     suspend fun getExercisesForDay(dayPlanId: Long): List<RoutineDayExerciseEntity> {
         return withContext(Dispatchers.IO) {
-            routineDayExerciseDao.getByDayPlan(dayPlanId)
+            routineDayExerciseDao.getRoutineDayExercisesByDayPlan(dayPlanId)
         }
     }
 
@@ -223,7 +224,7 @@ class RoutineRepository @Inject constructor(
     ) {
         withContext(Dispatchers.IO) {
             //Obtiene los ejercicios del dia original
-            val sourceExercises = routineDayExerciseDao.getByDayPlan(fromDayPlanId)
+            val sourceExercises = routineDayExerciseDao.getRoutineDayExercisesByDayPlan(fromDayPlanId)
         //Los inserta
             sourceExercises.forEach { exercise ->
                 val newRelationId = routineDayExerciseDao.insert(
@@ -234,7 +235,7 @@ class RoutineRepository @Inject constructor(
                     )
                 )
 
-                val sourceSetPlans = routineExerciseSetPlanDao.getByRoutineDayExercise(exercise.id)
+                val sourceSetPlans = routineExerciseSetPlanDao.getSetsByRoutineDayExercise(exercise.id)
 
                 val copiedSetPlans = sourceSetPlans.map { plan ->
                     plan.copy(
@@ -257,7 +258,7 @@ class RoutineRepository @Inject constructor(
         withContext(Dispatchers.IO) {
             if (dayPlanIds.isEmpty()) return@withContext
 
-            val referenceExercises = routineDayExerciseDao.getByDayPlan(dayPlanIds.first())
+            val referenceExercises = routineDayExerciseDao.getRoutineDayExercisesByDayPlan(dayPlanIds.first())
 
             val alreadyExists = referenceExercises.any { it.exerciseId == exerciseId }
             if (alreadyExists) return@withContext
@@ -282,7 +283,7 @@ class RoutineRepository @Inject constructor(
     ) {
         withContext(Dispatchers.IO) {
             dayPlanIds.forEach { dayPlanId ->
-                val relations = routineDayExerciseDao.getByDayPlan(dayPlanId)
+                val relations = routineDayExerciseDao.getRoutineDayExercisesByDayPlan(dayPlanId)
                 val relationToDelete = relations.firstOrNull { it.exerciseId == exerciseId }
 
                 if (relationToDelete != null) {

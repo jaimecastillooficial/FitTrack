@@ -16,6 +16,9 @@ class ExerciseSetPlanViewHolder(
     private var repsWatcher: TextWatcher? = null
     private var rirWatcher: TextWatcher? = null
 
+    // Se quitan los TextWatcher anteriores porque el RecyclerView reutiliza las vistas
+    // si no se eliminan antes de volver a hacer bind, se pueden acumular varios listeners
+    // en el mismo EditText y provocar actualizaciones duplicadas o incorrectas.
     fun bind(item: SetPlanInput, position: Int) {
         binding.tvSetNumber.text = "Serie ${position + 1}"
 
@@ -66,7 +69,7 @@ class ExerciseSetPlanViewHolder(
             )
         )
     }
-
+    //Implementa 3 metodos los 2 primeros no hacen nada en esta app
     private fun simpleWatcher(afterChanged: () -> Unit): TextWatcher {
         return object : TextWatcher {
             override fun beforeTextChanged(

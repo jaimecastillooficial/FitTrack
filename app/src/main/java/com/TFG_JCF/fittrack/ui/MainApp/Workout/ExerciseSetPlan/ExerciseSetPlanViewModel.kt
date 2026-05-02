@@ -17,7 +17,7 @@ class ExerciseSetPlanViewModel @Inject constructor(
     private val routineRepository: RoutineRepository
 ) : ViewModel() {
 
-    private val _sets = MutableStateFlow<List<SetPlanInput>>(listOf(SetPlanInput()))
+    private val _sets = MutableStateFlow(listOf(SetPlanInput()))
     val sets: StateFlow<List<SetPlanInput>> = _sets.asStateFlow()
 
     private val currentSets = mutableListOf(SetPlanInput())
