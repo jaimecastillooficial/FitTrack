@@ -28,6 +28,11 @@ class WorkoutRepository @Inject constructor(
         }
     }
 
+    suspend fun getWorkoutHistory(userUid: String): List<WorkoutFull> {
+        return withContext(Dispatchers.IO) {
+            workoutDao.getWorkoutsFullByUser(userUid)
+        }
+    }
 
     // BORRAR WORKOUT
 

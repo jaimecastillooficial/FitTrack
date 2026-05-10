@@ -19,6 +19,7 @@ import com.TFG_JCF.fittrack.ui.MainApp.Workout.RoutineList.RoutineListActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import androidx.core.graphics.drawable.toDrawable
+import com.TFG_JCF.fittrack.ui.MainApp.Workout.WorkoutHistory.WorkoutHistoryActivity
 
 @AndroidEntryPoint
 class WorkoutFragment : Fragment(R.layout.fragment_workout) {
@@ -56,11 +57,8 @@ class WorkoutFragment : Fragment(R.layout.fragment_workout) {
         }
 
         binding.btnHistory.setOnClickListener {
-            Toast.makeText(
-                requireContext(),
-                "Ir a WorkoutHistoryFragment",
-                Toast.LENGTH_SHORT
-            ).show()
+            val intent = Intent(requireContext(), WorkoutHistoryActivity::class.java)
+            startActivity(intent)
         }
     }
 

@@ -41,6 +41,14 @@ interface WorkoutDao {
 
     @Transaction
     @Query("""
+        SELECT * FROM workouts
+        WHERE userUid = :userUid
+        ORDER BY date DESC
+    """)
+    suspend fun getWorkoutsFullByUser(userUid: String): List<WorkoutFull>
+
+    @Transaction
+    @Query("""
     SELECT * FROM workouts
     WHERE userUid = :userUid AND date = :date
 """)

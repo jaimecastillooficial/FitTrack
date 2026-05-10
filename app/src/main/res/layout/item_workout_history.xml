@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardBackgroundColor="@color/ft_surface"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="3dp"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tvWorkoutDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/ft_text_secondary"
+            android:textSize="13sp"
+            tools:text="2026-05-03" />
+
+        <TextView
+            android:id="@+id/tvWorkoutDayName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/ft_text_primary"
+            android:textSize="21sp"
+            android:textStyle="bold"
+            tools:text="PUSH" />
+
+        <TextView
+            android:id="@+id/tvWorkoutSummary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:textColor="@color/ft_text_secondary"
+            android:textSize="14sp"
+            tools:text="5 ejercicios · 18 series" />
+
+        <TextView
+            android:id="@+id/tvWorkoutDetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@color/ft_surface_alt"
+            android:padding="12dp"
+            android:textColor="@color/ft_text_primary"
+            android:textSize="14sp"
+            android:visibility="gone"
+            tools:text="Press banca\nSerie 1: 60 kg · 10 reps · RIR 2" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnToggleDetail"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Ver detalle"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            app:backgroundTint="@color/fui_transparent"
+            app:cornerRadius="14dp"
+            app:strokeColor="@color/ft_border"
+            app:strokeWidth="1dp" />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
