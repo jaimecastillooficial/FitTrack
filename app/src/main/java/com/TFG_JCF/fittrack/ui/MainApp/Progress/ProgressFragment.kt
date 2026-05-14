@@ -1,60 +1,216 @@
 package com.TFG_JCF.fittrack.ui.MainApp.Progress
 
+import android.app.AlertDialog
+import android.app.DatePickerDialog
+import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.TFG_JCF.fittrack.R
+import com.TFG_JCF.fittrack.data.database.entities.User_Bonus.WeightEntryEntity
+import com.TFG_JCF.fittrack.databinding.DialogAddWeightBinding
+import com.TFG_JCF.fittrack.databinding.FragmentProgressBinding
+import com.TFG_JCF.fittrack.ui.MainApp.Progress.adapter.WeightEntryAdapter
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+@AndroidEntryPoint
+class ProgressFragment : Fragment(R.layout.fragment_progress) {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [ProgressFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class ProgressFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var _binding: FragmentProgressBinding? = null
+    private val binding get() = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    private val viewModel: ProgressViewModel by viewModels()
+    private lateinit var adapter: WeightEntryAdapter
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        _binding = FragmentProgressBinding.bind(view)
+
+        initRecycler()
+        initListeners()
+        observeViewModel()
+    }
+
+    private fun initRecycler() {
+        adapter = WeightEntryAdapter(
+            onDeleteClick = { entry ->
+                viewModel.deleteWeightEntry(entry)
+                Toast.makeText(requireContext(), "Registro eliminado", Toast.LENGTH_SHORT).show()
+            }
+        )
+
+        binding.rvWeightEntries.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvWeightEntries.adapter = adapter
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun initListeners() {
+        binding.btnAddWeight.setOnClickListener {
+            showAddWeightDialog()
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_progress, container, false)
+    private fun observeViewModel() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.weightEntries.collect { entries ->
+                adapter.updateList(entries.reversed())
+                updateSummary(entries)
+                updateChart(entries)
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.userProfile.collect { profile ->
+                binding.tvTargetWeight.text = profile?.targetWeight?.let {
+                    "${it} kg"
+                } ?: "Sin objetivo"
+            }
+        }
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ProgressFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ProgressFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    private fun updateSummary(entries: List<WeightEntryEntity>) {
+        if (entries.isEmpty()) {
+            binding.tvCurrentWeight.text = "-- kg"
+            binding.tvTotalChange.text = "-- kg"
+            binding.tvEmptyHistory.visibility = View.VISIBLE
+            return
+        }
+
+        binding.tvEmptyHistory.visibility = View.GONE
+
+        val firstWeight = entries.first().weightKg
+        val lastWeight = entries.last().weightKg
+        val change = lastWeight - firstWeight
+
+        binding.tvCurrentWeight.text = "${lastWeight} kg"
+        binding.tvTotalChange.text = String.format("%.1f kg", change)
+
+        val color = if (change <= 0f) {
+            R.color.ft_success
+        } else {
+            R.color.ft_warning
+        }
+
+        binding.tvTotalChange.setTextColor(
+            ContextCompat.getColor(requireContext(), color)
+        )
+    }
+
+    private fun updateChart(entries: List<WeightEntryEntity>) {
+        if (entries.isEmpty()) {
+            binding.lineChartWeight.clear()
+            binding.lineChartWeight.invalidate()
+            return
+        }
+
+        val chartEntries = entries.mapIndexed { index, entry ->
+            Entry(index.toFloat(), entry.weightKg)
+        }
+
+        val dataSet = LineDataSet(chartEntries, "Peso")
+
+        dataSet.lineWidth = 2.5f
+        dataSet.circleRadius = 4f
+        dataSet.valueTextSize = 10f
+        dataSet.color = ContextCompat.getColor(requireContext(), R.color.ft_primary)
+        dataSet.setCircleColor(ContextCompat.getColor(requireContext(), R.color.ft_primary))
+
+        binding.lineChartWeight.data = LineData(dataSet)
+
+        binding.lineChartWeight.description.isEnabled = false
+        binding.lineChartWeight.legend.isEnabled = false
+        binding.lineChartWeight.axisRight.isEnabled = false
+
+        binding.lineChartWeight.xAxis.position = XAxis.XAxisPosition.BOTTOM
+        binding.lineChartWeight.xAxis.granularity = 1f
+
+        binding.lineChartWeight.animateX(300)
+        binding.lineChartWeight.invalidate()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun showAddWeightDialog() {
+        val dialogBinding = DialogAddWeightBinding.inflate(layoutInflater)
+        var selectedDate = LocalDate.now()
+
+        fun updateDateButtonText() {
+            dialogBinding.btnSelectDate.text = selectedDate.format(
+                DateTimeFormatter.ofPattern("dd/MM/yyyy")
+            )
+        }
+
+        updateDateButtonText()
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogBinding.root)
+            .setCancelable(true)
+            .create()
+
+        dialogBinding.btnSelectDate.setOnClickListener {
+            val dateDialog = DatePickerDialog(
+                requireContext(),
+                { _, year, month, dayOfMonth ->
+                    selectedDate = LocalDate.of(year, month + 1, dayOfMonth)
+                    updateDateButtonText()
+                },
+                selectedDate.year,
+                selectedDate.monthValue - 1,
+                selectedDate.dayOfMonth
+            )
+
+            // Evita registrar peso en fechas futuras.
+            dateDialog.datePicker.maxDate = System.currentTimeMillis()
+            dateDialog.show()
+        }
+
+        dialogBinding.btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialogBinding.btnSave.setOnClickListener {
+            val weight = dialogBinding.etWeight.text
+                .toString()
+                .replace(',', '.')
+                .toFloatOrNull()
+
+            if (weight == null || weight <= 0f) {
+                Toast.makeText(requireContext(), "Introduce un peso válido", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
+
+            viewModel.addWeight(weight, selectedDate)
+
+            Toast.makeText(requireContext(), "Peso registrado", Toast.LENGTH_SHORT).show()
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadProgressData()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

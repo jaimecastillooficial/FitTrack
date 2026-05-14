@@ -1,6 +1,7 @@
 package com.TFG_JCF.fittrack.data.database.dao.User_Bonus
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -12,6 +13,9 @@ interface WeightEntryDao {
     // Si ya existe un peso para ese día (índice único), REPLACE lo sustituye
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entry: WeightEntryEntity)
+
+    @Delete
+    suspend fun delete(entry: WeightEntryEntity)
 
     @Query("""
         SELECT * FROM weight_entries

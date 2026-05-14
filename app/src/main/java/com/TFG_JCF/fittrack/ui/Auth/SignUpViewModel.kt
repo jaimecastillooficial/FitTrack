@@ -72,7 +72,7 @@ class SignUpViewModel @Inject constructor(
         )
 
         viewModelScope.launch {
-            userRepository.insertUserProfile(profile)
+            userRepository.insertUserProfileWithInitialWeight(profile)
 
             val user = userRepository.getUserProfile(profile.uid)
             Log.d("FitTrack_DB", "Usuario leído de BD: $user")
