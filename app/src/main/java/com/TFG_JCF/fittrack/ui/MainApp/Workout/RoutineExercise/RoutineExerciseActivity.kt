@@ -1,7 +1,10 @@
 package com.TFG_JCF.fittrack.ui.MainApp.Workout.RoutineExercise
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -9,11 +12,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.TFG_JCF.fittrack.R
 import com.TFG_JCF.fittrack.data.model.Workout.RoutineExerciseItemUi
 import com.TFG_JCF.fittrack.databinding.ActivityRoutineExerciseBinding
 import com.TFG_JCF.fittrack.ui.MainApp.Workout.RoutineExercise.adapter.RoutineExerciseAdapter
 import com.TFG_JCF.fittrack.ui.MainApp.Workout.AddRoutineExercise.AddRoutineExerciseActivity
 import com.TFG_JCF.fittrack.ui.MainApp.Workout.ExerciseSetPlan.ExerciseSetPlanActivity
+import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -109,26 +114,48 @@ class RoutineExerciseActivity : AppCompatActivity() {
     }
 
     private fun showDeleteDialog(item: RoutineExerciseItemUi) {
-        AlertDialog.Builder(this)
-            .setTitle("Eliminar ejercicio")
-            .setMessage("¿Quieres eliminar ${item.name} de este bloque?")
-            .setNegativeButton("Cancelar", null)
-            .setPositiveButton("Eliminar") { _, _ ->
-                viewModel.removeExerciseFromBlock(
-                    exerciseId = item.exerciseId,
-                    onSuccess = {
-                        runOnUiThread {
-                            Toast.makeText(this, "Ejercicio eliminado", Toast.LENGTH_SHORT).show()
-                        }
-                    },
-                    onError = { message ->
-                        runOnUiThread {
-                            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-                        }
+        val dialogView = layoutInflater.inflate(R.layout.dialog_delete_exercise, null)
+
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+
+        val tvDeleteExerciseMessage =
+            dialogView.findViewById<TextView>(R.id.tvDeleteExerciseMessage)
+
+        val btnCancelDeleteExercise =
+            dialogView.findViewById<MaterialButton>(R.id.btnCancelDeleteExercise)
+
+        val btnConfirmDeleteExercise =
+            dialogView.findViewById<MaterialButton>(R.id.btnConfirmDeleteExercise)
+
+        tvDeleteExerciseMessage.text = "¿Quieres eliminar ${item.name} de este bloque?"
+
+        btnCancelDeleteExercise.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        btnConfirmDeleteExercise.setOnClickListener {
+            dialog.dismiss()
+
+            viewModel.removeExerciseFromBlock(
+                exerciseId = item.exerciseId,
+                onSuccess = {
+                    runOnUiThread {
+                        Toast.makeText(this, "Ejercicio eliminado", Toast.LENGTH_SHORT).show()
                     }
-                )
-            }
-            .show()
+                },
+                onError = { message ->
+                    runOnUiThread {
+                        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            )
+        }
+
+        dialog.show()
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
 

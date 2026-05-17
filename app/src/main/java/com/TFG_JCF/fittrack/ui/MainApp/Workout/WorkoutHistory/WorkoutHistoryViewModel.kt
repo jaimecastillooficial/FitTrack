@@ -58,4 +58,31 @@ class WorkoutHistoryViewModel @Inject constructor(
             "${exerciseFull.exercise.name}\n$setsText"
         }
     }
+    fun deleteWorkout(
+        workout: WorkoutHistoryItemUi,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            val uid = FirebaseAuth.getInstance().currentUser?.uid
+
+            if (uid.isNullOrEmpty()) {
+                onError("No hay usuario logueado")
+                return@launch
+            }
+
+            try {
+                workoutRepository.deleteWorkoutById(
+                    userUid = uid,
+                    workoutId = workout.id
+                )
+
+                loadHistory()
+                onSuccess()
+
+            } catch (e: Exception) {
+                onError(e.message ?: "Error al eliminar entrenamiento")
+            }
+        }
+    }
 }

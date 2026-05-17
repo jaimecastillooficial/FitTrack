@@ -156,6 +156,69 @@
                 android:layout_width="match_parent"
                 android:layout_height="240dp"
                 android:layout_marginTop="10dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:orientation="vertical"
+                android:padding="14dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Calorías de los últimos 7 días"
+                    android:textColor="@color/ft_text_primary"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvCaloriesSummary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/ft_text_secondary"
+                    android:textSize="14sp"
+                    tools:text="Media semanal: 2200 kcal" />
+
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/barChartCalories"
+                    android:layout_width="match_parent"
+                    android:layout_height="240dp"
+                    android:layout_marginTop="10dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:orientation="vertical"
+                android:padding="14dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Entrenamientos por semana"
+                    android:textColor="@color/ft_text_primary"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvWorkoutSummary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/ft_text_secondary"
+                    android:textSize="14sp"
+                    tools:text="Semana actual: 4 entrenamientos" />
+
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/barChartWorkouts"
+                    android:layout_width="match_parent"
+                    android:layout_height="240dp"
+                    android:layout_marginTop="10dp" />
+
+            </LinearLayout>
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
@@ -198,4 +261,5 @@
             tools:listitem="@layout/item_weight_entry" />
 
     </LinearLayout>
+
 </androidx.core.widget.NestedScrollView>

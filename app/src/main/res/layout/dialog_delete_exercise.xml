@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/ft_surface">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:id="@+id/tvDeleteExerciseTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Eliminar ejercicio"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvDeleteExerciseMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="¿Quieres eliminar este ejercicio de este bloque?"
+            android:textColor="#666666"
+            android:textSize="15sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="end"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCancelDeleteExercise"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancelar"
+                android:textAllCaps="false"
+                android:textColor="@color/fittrack"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:backgroundTint="@color/ft_surface"
+                app:cornerRadius="20dp"
+                app:strokeColor="@color/fittrack"
+                app:strokeWidth="1dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnConfirmDeleteExercise"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="10dp"
+                android:text="Eliminar"
+                android:textAllCaps="false"
+                android:textColor="@color/ft_error"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:backgroundTint="@color/ft_surface"
+                app:cornerRadius="20dp"
+                app:strokeColor="@color/ft_error"
+                app:strokeWidth="1dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

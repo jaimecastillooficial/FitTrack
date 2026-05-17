@@ -65,7 +65,7 @@ class DietRepository @Inject constructor(
 
         require(grams > 0f) { "grams debe ser > 0" }
 
-        // 1) Buscar meal si no existe se crea
+        //Buscar meal si no existe se crea
         val existingMeal = mealDao.getMeal(userUid, date, type)
         val mealId =
             if (existingMeal == null) {
@@ -81,7 +81,7 @@ class DietRepository @Inject constructor(
             existingMeal.id
         }
 
-        // 2) Insertar el item
+        //Insertar
         mealItemDao.insert(
             MealItemEntity(
                 mealId = mealId,

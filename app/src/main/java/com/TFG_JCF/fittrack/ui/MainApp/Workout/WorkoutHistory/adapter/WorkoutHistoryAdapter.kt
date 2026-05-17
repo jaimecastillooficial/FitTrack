@@ -6,7 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.TFG_JCF.fittrack.data.model.Workout.WorkoutHistoryItemUi
 import com.TFG_JCF.fittrack.databinding.ItemWorkoutHistoryBinding
 
-class WorkoutHistoryAdapter : RecyclerView.Adapter<WorkoutHistoryViewHolder>() {
+class WorkoutHistoryAdapter(
+    private val onDeleteClick: (WorkoutHistoryItemUi) -> Unit
+) : RecyclerView.Adapter<WorkoutHistoryViewHolder>() {
 
     private val items = mutableListOf<WorkoutHistoryItemUi>()
 
@@ -22,7 +24,10 @@ class WorkoutHistoryAdapter : RecyclerView.Adapter<WorkoutHistoryViewHolder>() {
             parent,
             false
         )
-        return WorkoutHistoryViewHolder(binding)
+        return WorkoutHistoryViewHolder(
+            binding = binding,
+            onDeleteClick = onDeleteClick
+        )
     }
 
     override fun onBindViewHolder(holder: WorkoutHistoryViewHolder, position: Int) {

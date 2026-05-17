@@ -63,5 +63,10 @@ interface WorkoutDao {
     // El tipo de retorno es decir cuando le indicas que va a devolver es lo que hace que ROOM utilize la clase Relation
     suspend fun getWorkoutsFullByRange(userUid: String, fromDate: String, toDate: String): List<WorkoutFull>
 
+    @Query("""
+    DELETE FROM workouts
+    WHERE id = :workoutId AND userUid = :userUid
+""")
+    suspend fun deleteByIdAndUser(workoutId: Long, userUid: String)
 }
 

@@ -34,7 +34,7 @@ class AuthFragment : Fragment() {
         return binding.root
 
     }
-//TODO meter requisitos de complejidad y poder volver atras en el onboarding
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -118,15 +118,6 @@ class AuthFragment : Fragment() {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Error")
         builder.setMessage("Se ha producido un error registrando al usuario")
-        builder.setPositiveButton("Aceptar", null)
-        val dialog: AlertDialog = builder.create()
-        dialog.show()
-    }
-
-    private fun showPasswordAlert() {
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Error")
-        builder.setMessage("Las contraseñas no coinciden")
         builder.setPositiveButton("Aceptar", null)
         val dialog: AlertDialog = builder.create()
         dialog.show()

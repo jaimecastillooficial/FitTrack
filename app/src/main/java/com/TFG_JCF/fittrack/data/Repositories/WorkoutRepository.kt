@@ -133,6 +133,12 @@ class WorkoutRepository @Inject constructor(
             }
         }
     }
+
+    suspend fun deleteWorkoutById(userUid: String, workoutId: Long) {
+        withContext(Dispatchers.IO) {
+            workoutDao.deleteByIdAndUser(workoutId, userUid)
+        }
+    }
 }
 
 

@@ -14,13 +14,21 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.TFG_JCF.fittrack.R
 import com.TFG_JCF.fittrack.data.database.entities.User_Bonus.WeightEntryEntity
+import com.TFG_JCF.fittrack.data.model.Progress.DietCaloriesChart
+
+import com.TFG_JCF.fittrack.data.model.Progress.WorkoutWeekChart
 import com.TFG_JCF.fittrack.databinding.DialogAddWeightBinding
 import com.TFG_JCF.fittrack.databinding.FragmentProgressBinding
 import com.TFG_JCF.fittrack.ui.MainApp.Progress.adapter.WeightEntryAdapter
+import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -46,6 +54,7 @@ class ProgressFragment : Fragment(R.layout.fragment_progress) {
         observeViewModel()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun initRecycler() {
         adapter = WeightEntryAdapter(
             onDeleteClick = { entry ->
@@ -66,6 +75,7 @@ class ProgressFragment : Fragment(R.layout.fragment_progress) {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.weightEntries.collect { entries ->
@@ -80,6 +90,25 @@ class ProgressFragment : Fragment(R.layout.fragment_progress) {
                 binding.tvTargetWeight.text = profile?.targetWeight?.let {
                     "${it} kg"
                 } ?: "Sin objetivo"
+
+                updateCaloriesChart(
+                    points = viewModel.dietCalories.value,
+                    dailyGoal = profile?.dailyCaloriesGoal
+                )
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.dietCalories.collect { calories ->
+                updateCaloriesChart(
+                    points = calories,
+                    dailyGoal = viewModel.userProfile.value?.dailyCaloriesGoal
+                )
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.workoutWeeks.collect { weeks ->
+                updateWorkoutChart(weeks)
             }
         }
     }
@@ -204,6 +233,7 @@ class ProgressFragment : Fragment(R.layout.fragment_progress) {
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onResume() {
         super.onResume()
         viewModel.loadProgressData()
@@ -212,5 +242,125 @@ class ProgressFragment : Fragment(R.layout.fragment_progress) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun updateCaloriesChart(
+        points: List<DietCaloriesChart>,
+        dailyGoal: Int?
+    ) {
+        if (points.isEmpty()) {
+            binding.barChartCalories.clear()
+            binding.barChartCalories.setNoDataText("No hay datos de dieta")
+            binding.barChartCalories.invalidate()
+            binding.tvCaloriesSummary.text = "Sin datos de dieta esta semana"
+            return
+        }
+
+        val entries = points.mapIndexed { index, point ->
+            BarEntry(index.toFloat(), point.calories)
+        }
+
+        val labels = points.map { point ->
+            val date = LocalDate.parse(point.date)
+            date.dayOfMonth.toString()
+        }
+
+        val dataSet = BarDataSet(entries, "Calorías")
+        dataSet.color = ContextCompat.getColor(requireContext(), R.color.ft_primary)
+        dataSet.valueTextSize = 10f
+        dataSet.valueTextColor = ContextCompat.getColor(requireContext(), R.color.ft_text_primary)
+
+        val barData = BarData(dataSet)
+        barData.barWidth = 0.55f
+
+        binding.barChartCalories.data = barData
+
+        binding.barChartCalories.description.isEnabled = false
+        binding.barChartCalories.legend.isEnabled = false
+        binding.barChartCalories.axisRight.isEnabled = false
+        binding.barChartCalories.setFitBars(true)
+
+        binding.barChartCalories.xAxis.position = XAxis.XAxisPosition.BOTTOM
+        binding.barChartCalories.xAxis.granularity = 1f
+        binding.barChartCalories.xAxis.valueFormatter = IndexAxisValueFormatter(labels)
+        binding.barChartCalories.xAxis.textColor =
+            ContextCompat.getColor(requireContext(), R.color.ft_text_secondary)
+
+        binding.barChartCalories.axisLeft.axisMinimum = 0f
+        binding.barChartCalories.axisLeft.textColor =
+            ContextCompat.getColor(requireContext(), R.color.ft_text_secondary)
+
+        binding.barChartCalories.axisLeft.removeAllLimitLines()
+
+        if (dailyGoal != null && dailyGoal > 0) {
+            val limitLine = LimitLine(dailyGoal.toFloat(), "Objetivo")
+            limitLine.lineWidth = 1.5f
+            limitLine.textSize = 10f
+            limitLine.lineColor = ContextCompat.getColor(requireContext(), R.color.ft_warning)
+            limitLine.textColor = ContextCompat.getColor(requireContext(), R.color.ft_warning)
+
+            binding.barChartCalories.axisLeft.addLimitLine(limitLine)
+        }
+
+        val average = points.map { it.calories }.average()
+
+        binding.tvCaloriesSummary.text = if (dailyGoal != null && dailyGoal > 0) {
+            "Media semanal: ${average.toInt()} kcal · Objetivo: $dailyGoal kcal"
+        } else {
+            "Media semanal: ${average.toInt()} kcal"
+        }
+
+        binding.barChartCalories.animateY(400)
+        binding.barChartCalories.invalidate()
+    }
+
+    private fun updateWorkoutChart(
+        weeks: List<WorkoutWeekChart>
+    ) {
+        if (weeks.isEmpty()) {
+            binding.barChartWorkouts.clear()
+            binding.barChartWorkouts.setNoDataText("No hay entrenamientos registrados")
+            binding.barChartWorkouts.invalidate()
+            binding.tvWorkoutSummary.text = "Sin entrenamientos registrados"
+            return
+        }
+
+        val entries = weeks.mapIndexed { index, week ->
+            BarEntry(index.toFloat(), week.workoutCount.toFloat())
+        }
+
+        val labels = weeks.map { it.label }
+
+        val dataSet = BarDataSet(entries, "Entrenos")
+        dataSet.color = ContextCompat.getColor(requireContext(), R.color.ft_primary)
+        dataSet.valueTextSize = 10f
+        dataSet.valueTextColor = ContextCompat.getColor(requireContext(), R.color.ft_text_primary)
+
+        val barData = BarData(dataSet)
+        barData.barWidth = 0.55f
+
+        binding.barChartWorkouts.data = barData
+
+        binding.barChartWorkouts.description.isEnabled = false
+        binding.barChartWorkouts.legend.isEnabled = false
+        binding.barChartWorkouts.axisRight.isEnabled = false
+        binding.barChartWorkouts.setFitBars(true)
+
+        binding.barChartWorkouts.xAxis.position = XAxis.XAxisPosition.BOTTOM
+        binding.barChartWorkouts.xAxis.granularity = 1f
+        binding.barChartWorkouts.xAxis.valueFormatter = IndexAxisValueFormatter(labels)
+        binding.barChartWorkouts.xAxis.textColor =
+            ContextCompat.getColor(requireContext(), R.color.ft_text_secondary)
+
+        binding.barChartWorkouts.axisLeft.axisMinimum = 0f
+        binding.barChartWorkouts.axisLeft.granularity = 1f
+        binding.barChartWorkouts.axisLeft.textColor =
+            ContextCompat.getColor(requireContext(), R.color.ft_text_secondary)
+
+        val currentWeek = weeks.lastOrNull()?.workoutCount ?: 0
+        binding.tvWorkoutSummary.text = "Semana actual: $currentWeek entrenamientos"
+
+        binding.barChartWorkouts.animateY(400)
+        binding.barChartWorkouts.invalidate()
     }
 }

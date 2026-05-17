@@ -6,7 +6,8 @@ import com.TFG_JCF.fittrack.data.model.Workout.WorkoutHistoryItemUi
 import com.TFG_JCF.fittrack.databinding.ItemWorkoutHistoryBinding
 
 class WorkoutHistoryViewHolder(
-    private val binding: ItemWorkoutHistoryBinding
+    private val binding: ItemWorkoutHistoryBinding,
+    private val onDeleteClick: (WorkoutHistoryItemUi) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     private var expanded = false
@@ -24,7 +25,15 @@ class WorkoutHistoryViewHolder(
         binding.btnToggleDetail.setOnClickListener {
             expanded = !expanded
             binding.tvWorkoutDetail.isVisible = expanded
-            binding.btnToggleDetail.text = if (expanded) "Ocultar detalle" else "Ver detalle"
+            binding.btnToggleDetail.text = if (expanded) {
+                "Ocultar detalle"
+            } else {
+                "Ver detalle"
+            }
+        }
+
+        binding.btnDeleteWorkout.setOnClickListener {
+            onDeleteClick(item)
         }
     }
 }
